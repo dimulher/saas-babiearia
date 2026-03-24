@@ -1,0 +1,230 @@
+{
+  "main": {
+    "id": "fc2a58dd1b75478d",
+    "type": "split",
+    "children": [
+      {
+        "id": "1da879bae1c4af30",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3d403dd8899a6883",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Visualização em gráfico"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d4dbf04e42d56478",
+    "type": "split",
+    "children": [
+      {
+        "id": "ea94cf403177b041",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7e168f498ac09dca",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "b44d45a003b04ed1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "f4369f48b5d52228",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b2e93d6b34e12a67",
+    "type": "split",
+    "children": [
+      {
+        "id": "e759b67f1aa1c73f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0e946827e918aae6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Links inversos"
+            }
+          },
+          {
+            "id": "877d427e84449fd9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Links de saída"
+            }
+          },
+          {
+            "id": "9c79080e4efca75d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "3654f04e974384a8",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas as propriedades"
+            }
+          },
+          {
+            "id": "c29c89f4aff4a8ac",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sumário"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "3d403dd8899a6883",
+  "lastOpenFiles": [
+    "storage/framework/views/8bd094e6d5bcbcd58c905fe6d8c6c8c8.php",
+    "storage/framework/views/9a7243d5a911c4cff687db77ed7e33b0.php",
+    "storage/framework/views/284dc09b3b2a46734df01be99e0484cc.php",
+    "storage/framework/views/5744b97831c225e3bef70e1d73688b0b.php",
+    "storage/framework/views/7836c390c22a4cfe8d058983dd7da506.php",
+    "storage/framework/views/0a0f4315a246f908ecb1417126243d6f.php",
+    "storage/framework/views/5e3a2579b693430b6a1ff232a26bd9ce.php",
+    "storage/framework/views/06e45b6cb2fcd3ff6461bd30f8e5a4d4.php",
+    "storage/framework/views/6b88201e0eaade5597bbdba37107d667.php",
+    "storage/framework/views/11fcde6bf23dce62cef584ada6b216c6.php",
+    "storage/framework/views/d7ba9cdf826c236ace818525a4562151.php",
+    "saas-agendamento-barbiearia2026.md",
+    "vendor/mockery/mockery/docs/README.md",
+    "vendor/laravel/framework/src/Illuminate/View/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Validation/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Testing/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Translation/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Support/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Session/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Routing/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Redis/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Queue/README.md",
+    "vendor/laravel/framework/src/Illuminate/Queue/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Process/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Pipeline/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Pagination/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Notifications/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Mail/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Macroable/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Log/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Hashing/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Http/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Filesystem/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Events/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Encryption/LICENSE.md",
+    "vendor/laravel/framework/src/Illuminate/Database/README.md",
+    "vendor/symfony/error-handler/Resources/assets/images/icon-support.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/symfony-logo.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/icon-plus-square.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/icon-minus-square.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/icon-plus-square-o.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/icon-copy.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/icon-minus-square-o.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/icon-book.svg",
+    "vendor/symfony/error-handler/Resources/assets/images/chevron-right.svg",
+    "vendor/livewire/livewire/src/Features/SupportWireLoading/browser_test_image.png",
+    "Sem título 1.canvas",
+    "Sem título.canvas"
+  ]
+}
