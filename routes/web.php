@@ -9,6 +9,7 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\AgendamentoRecorrenteController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\FinanceiroController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ComandaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ServicoController;
@@ -131,47 +132,7 @@ Route::get('/api/check-vip', [AgendamentoController::class, 'checkVip'])->name('
 
 Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
 
-    Route::get('/dashboard', function () {
-        $hoje      = \Carbon\Carbon::today();
-        $inicioMes = $hoje->copy()->startOfMonth();
-        $fimMes    = $hoje->copy()->endOfMonth();
-        
-        $barbeariaId = auth()->user()->barbearia_id;
-        $barbearia   = auth()->user()->barbearia;
-
-        // Métricas de agendamentos
-        $agendamentosHoje      = \App\Models\Agendamento::where('barbearia_id', $barbeariaId)->whereDate('data_inicio', $hoje)->count();
-        $agendamentosMes       = \App\Models\Agendamento::where('barbearia_id', $barbeariaId)->whereBetween('data_inicio', [$inicioMes, $fimMes])->count();
-        $agendamentosPendentes = \App\Models\Agendamento::where('barbearia_id', $barbeariaId)->where('status', 'agendado')->whereDate('data_inicio', '>=', $hoje)->count();
-
-        // Faturamento
-        $faturamentoHoje = \App\Models\Agendamento::where('barbearia_id', $barbeariaId)->whereDate('data_inicio', $hoje)
-            ->where('status', 'concluido')->sum('preco');
-        $faturamentoMes  = \App\Models\Agendamento::where('barbearia_id', $barbeariaId)->whereBetween('data_inicio', [$inicioMes, $fimMes])
-            ->where('status', 'concluido')->sum('preco');
-        $ticketMedio = $agendamentosMes > 0 ? $faturamentoMes / $agendamentosMes : 0;
-
-        // Totais
-        $clientesAtivos  = \App\Models\Cliente::where('barbearia_id', $barbeariaId)->count();
-        $profissionais   = \App\Models\Profissional::where('barbearia_id', $barbeariaId)->count();
-        $servicos        = \App\Models\Servico::where('barbearia_id', $barbeariaId)->where('ativo', true)->count();
-        $profissionaisList = \App\Models\Profissional::where('barbearia_id', $barbeariaId)->where('ativo', true)
-            ->where('aceita_agendamento_online', true)->get();
-
-        $selectedDate = request('date') ? \Carbon\Carbon::parse(request('date')) : $hoje;
-        $agendamentos = \App\Models\Agendamento::where('barbearia_id', $barbeariaId)
-            ->with(['servico', 'profissional'])
-            ->whereDate('data_inicio', $selectedDate)
-            ->orderBy('data_inicio')
-            ->get();
-
-        return view('panel.dashboard', compact(
-            'agendamentosHoje', 'agendamentosMes', 'agendamentosPendentes',
-            'faturamentoHoje', 'faturamentoMes', 'ticketMedio',
-            'clientesAtivos', 'profissionais', 'servicos',
-            'profissionaisList', 'agendamentos', 'selectedDate', 'barbearia'
-        ));
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Notificações
     Route::get('/notificacoes', [\App\Http\Controllers\NotificacaoController::class, 'index'])->name('notificacoes.index');
