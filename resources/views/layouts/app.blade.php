@@ -350,75 +350,100 @@
     <script>
         Turbo.setProgressBarDelay(0);
 
-        // ── Skeleton instantâneo ao clicar ──────────────────────────────
-        const skeleton = `
-        <div class="space-y-6 animate-pulse">
-            <div class="h-8 w-48 bg-gray-800 rounded-2xl"></div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                ${Array(4).fill('<div class="h-28 bg-gray-800/80 rounded-3xl"></div>').join('')}
-            </div>
-            <div class="h-64 bg-gray-800/80 rounded-3xl"></div>
-            <div class="h-48 bg-gray-800/80 rounded-3xl"></div>
-        </div>`;
+        const CACHE_KEY  = 'glowsystem_page_cache';
+        const CACHE_TTL  = 5 * 60 * 1000; // 5 minutos
+        const loadingEl  = document.getElementById('turbo-loading');
 
-        const mainContent = () => document.querySelector('.w-full.lg\\:ps-\\[208px\\] > div');
+        // ── Cache de páginas no sessionStorage ───────────────────────────
+        function cacheGet(url) {
+            try {
+                const raw = sessionStorage.getItem(CACHE_KEY + url);
+                if (!raw) return null;
+                const { html, ts } = JSON.parse(raw);
+                if (Date.now() - ts > CACHE_TTL) { sessionStorage.removeItem(CACHE_KEY + url); return null; }
+                return html;
+            } catch { return null; }
+        }
+        function cacheSet(url, html) {
+            try { sessionStorage.setItem(CACHE_KEY + url, JSON.stringify({ html, ts: Date.now() })); } catch {}
+        }
 
-        document.addEventListener('turbo:visit', () => {
-            document.getElementById('turbo-loading').classList.add('active');
-            const el = mainContent();
-            if (el) {
-                el.style.opacity = '0.3';
-                el.style.transition = 'opacity 0.1s';
+        // ── Conteúdo principal ───────────────────────────────────────────
+        function getMain() { return document.querySelector('.w-full.lg\\:ps-\\[208px\\] > div'); }
+
+        // ── Intercept cliques do menu: mostra cache instantâneo ──────────
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (!href || !href.startsWith('/panel') || href === location.pathname) return;
+
+            const cached = cacheGet(href);
+            if (cached) {
+                const main = getMain();
+                if (main) {
+                    main.innerHTML = cached;
+                    main.style.opacity = '0.6';
+                }
             }
-        });
+            loadingEl.classList.add('active');
+        }, true);
 
         document.addEventListener('turbo:before-render', (e) => {
-            // Fade suave na entrada
             e.detail.newBody.style.opacity = '0';
         });
 
         document.addEventListener('turbo:render', () => {
-            document.getElementById('turbo-loading').classList.remove('active');
-            const el = mainContent();
-            if (el) {
-                el.style.opacity = '0';
-                el.style.transition = 'opacity 0.15s ease';
-                requestAnimationFrame(() => { el.style.opacity = '1'; });
-            }
+            loadingEl.classList.remove('active');
+            document.body.style.opacity = '1';
+            requestAnimationFrame(() => {
+                const main = getMain();
+                if (main) { main.style.opacity = '0'; main.style.transition = 'opacity 0.12s'; requestAnimationFrame(() => { main.style.opacity = '1'; }); }
+            });
             if (window.Alpine) Alpine.initTree(document.body);
         });
 
         document.addEventListener('turbo:load', () => {
-            document.getElementById('turbo-loading').classList.remove('active');
+            loadingEl.classList.remove('active');
             document.body.style.opacity = '1';
             if (window.Alpine) Alpine.initTree(document.body);
 
-            // ── Prefetch agressivo: todas as páginas do menu após 800ms ──
+            // Salva página atual no cache
+            const main = getMain();
+            if (main) cacheSet(location.pathname, main.innerHTML);
+
+            // ── Prefetch todas as páginas do menu (escalonado) ───────────
             setTimeout(() => {
-                const navLinks = document.querySelectorAll('.sidebar-item[href]');
-                const prefetched = new Set();
-                navLinks.forEach((link, i) => {
+                document.querySelectorAll('.sidebar-item[href]').forEach((link, i) => {
                     const href = link.getAttribute('href');
-                    if (!href || prefetched.has(href)) return;
-                    prefetched.add(href);
-                    // Espaça as requisições para não sobrecarregar
+                    if (!href || cacheGet(href)) return;
                     setTimeout(() => {
-                        try { Turbo.cache.prefetchURL(href); } catch(e) {
-                            // fallback: prefetch manual via fetch
-                            fetch(href, { headers: { 'X-Turbo-Request': '1' }, credentials: 'same-origin' }).catch(() => {});
-                        }
-                    }, i * 150);
+                        fetch(href, { credentials: 'same-origin', headers: { 'Accept': 'text/html' } })
+                            .then(r => r.text())
+                            .then(html => {
+                                // Extrai só o conteúdo principal
+                                const doc = new DOMParser().parseFromString(html, 'text/html');
+                                const content = doc.querySelector('.w-full.lg\\:ps-\\[208px\\] > div');
+                                if (content) cacheSet(href, content.innerHTML);
+                            }).catch(() => {});
+                    }, 600 + i * 200);
                 });
-            }, 800);
+            }, 1200);
         });
 
-        // Prefetch imediato ao hover (0ms delay)
+        // Prefetch ao hover
         document.addEventListener('mouseover', (e) => {
-            const link = e.target.closest('a[href]');
+            const link = e.target.closest('a.sidebar-item[href]');
             if (!link) return;
             const href = link.getAttribute('href');
-            if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
-            try { Turbo.cache.prefetchURL(href); } catch(e) {}
+            if (!href || cacheGet(href)) return;
+            fetch(href, { credentials: 'same-origin', headers: { 'Accept': 'text/html' } })
+                .then(r => r.text())
+                .then(html => {
+                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                    const content = doc.querySelector('.w-full.lg\\:ps-\\[208px\\] > div');
+                    if (content) cacheSet(href, content.innerHTML);
+                }).catch(() => {});
         });
     </script>
 </body>
