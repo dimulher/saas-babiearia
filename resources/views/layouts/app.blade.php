@@ -342,35 +342,78 @@
     </div>
 
     <script>
-        // Turbo Drive: SPA navigation — carrega só o body via AJAX
         Turbo.setProgressBarDelay(0);
 
-        const loadingEl = document.getElementById('turbo-loading');
+        // ── Skeleton instantâneo ao clicar ──────────────────────────────
+        const skeleton = `
+        <div class="space-y-6 animate-pulse">
+            <div class="h-8 w-48 bg-gray-800 rounded-2xl"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                ${Array(4).fill('<div class="h-28 bg-gray-800/80 rounded-3xl"></div>').join('')}
+            </div>
+            <div class="h-64 bg-gray-800/80 rounded-3xl"></div>
+            <div class="h-48 bg-gray-800/80 rounded-3xl"></div>
+        </div>`;
+
+        const mainContent = () => document.querySelector('.w-full.lg\\:ps-\\[208px\\] > div');
 
         document.addEventListener('turbo:visit', () => {
-            loadingEl.classList.add('active');
-        });
-        document.addEventListener('turbo:load', () => {
-            loadingEl.classList.remove('active');
-            // Re-inicia Alpine nos novos elementos
-            if (window.Alpine) Alpine.initTree(document.body);
-        });
-        document.addEventListener('turbo:render', () => {
-            loadingEl.classList.remove('active');
+            document.getElementById('turbo-loading').classList.add('active');
+            const el = mainContent();
+            if (el) {
+                el.style.opacity = '0.3';
+                el.style.transition = 'opacity 0.1s';
+            }
         });
 
-        // Prefetch ao hover nos links do menu (200ms de delay)
-        let prefetchTimer;
+        document.addEventListener('turbo:before-render', (e) => {
+            // Fade suave na entrada
+            e.detail.newBody.style.opacity = '0';
+        });
+
+        document.addEventListener('turbo:render', () => {
+            document.getElementById('turbo-loading').classList.remove('active');
+            const el = mainContent();
+            if (el) {
+                el.style.opacity = '0';
+                el.style.transition = 'opacity 0.15s ease';
+                requestAnimationFrame(() => { el.style.opacity = '1'; });
+            }
+            if (window.Alpine) Alpine.initTree(document.body);
+        });
+
+        document.addEventListener('turbo:load', () => {
+            document.getElementById('turbo-loading').classList.remove('active');
+            document.body.style.opacity = '1';
+            if (window.Alpine) Alpine.initTree(document.body);
+
+            // ── Prefetch agressivo: todas as páginas do menu após 800ms ──
+            setTimeout(() => {
+                const navLinks = document.querySelectorAll('.sidebar-item[href]');
+                const prefetched = new Set();
+                navLinks.forEach((link, i) => {
+                    const href = link.getAttribute('href');
+                    if (!href || prefetched.has(href)) return;
+                    prefetched.add(href);
+                    // Espaça as requisições para não sobrecarregar
+                    setTimeout(() => {
+                        try { Turbo.cache.prefetchURL(href); } catch(e) {
+                            // fallback: prefetch manual via fetch
+                            fetch(href, { headers: { 'X-Turbo-Request': '1' }, credentials: 'same-origin' }).catch(() => {});
+                        }
+                    }, i * 150);
+                });
+            }, 800);
+        });
+
+        // Prefetch imediato ao hover (0ms delay)
         document.addEventListener('mouseover', (e) => {
             const link = e.target.closest('a[href]');
             if (!link) return;
             const href = link.getAttribute('href');
             if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
-            prefetchTimer = setTimeout(() => {
-                Turbo.prefetchCache.prefetchURL(href);
-            }, 200);
+            try { Turbo.cache.prefetchURL(href); } catch(e) {}
         });
-        document.addEventListener('mouseout', () => clearTimeout(prefetchTimer));
     </script>
 </body>
 </html>
