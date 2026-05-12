@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'BarberSAAS') }} - @yield('title', 'Painel')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'AgendaSaaS') }} - @yield('title', 'Painel')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.4/dist/turbo.es2017.umd.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -22,6 +24,39 @@
         .card-premium:hover { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); border-color: rgba(139, 92, 246, 0.3); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Turbo progress bar */
+        .turbo-progress-bar {
+            height: 2px;
+            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%);
+            box-shadow: 0 0 8px rgba(124, 58, 237, 0.6);
+        }
+
+        /* Loading overlay durante navegação */
+        #turbo-loading {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        #turbo-loading.active {
+            display: block;
+        }
+        #turbo-loading-bar {
+            position: absolute;
+            top: 0; left: 0;
+            height: 2px;
+            width: 0%;
+            background: linear-gradient(90deg, #7c3aed, #c026d3);
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.8);
+            animation: loading-progress 1.5s ease-in-out infinite;
+        }
+        @keyframes loading-progress {
+            0%   { width: 0%; opacity: 1; }
+            50%  { width: 70%; opacity: 1; }
+            100% { width: 90%; opacity: 0.8; }
+        }
     </style>
 </head>
 <body class="font-sans antialiased bg-[#0B0F19] text-gray-300" x-data="{
@@ -78,6 +113,9 @@
         });
     }
 }">
+
+    {{-- Loading bar --}}
+    <div id="turbo-loading"><div id="turbo-loading-bar"></div></div>
 
     {{-- ==================== HEADER ==================== --}}
     <header class="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-[48] w-full bg-[#0B0F19] border-b border-gray-800 text-sm py-2.5 lg:ps-[208px]">
@@ -303,5 +341,36 @@
         </div>
     </div>
 
+    <script>
+        // Turbo Drive: SPA navigation — carrega só o body via AJAX
+        Turbo.setProgressBarDelay(0);
+
+        const loadingEl = document.getElementById('turbo-loading');
+
+        document.addEventListener('turbo:visit', () => {
+            loadingEl.classList.add('active');
+        });
+        document.addEventListener('turbo:load', () => {
+            loadingEl.classList.remove('active');
+            // Re-inicia Alpine nos novos elementos
+            if (window.Alpine) Alpine.initTree(document.body);
+        });
+        document.addEventListener('turbo:render', () => {
+            loadingEl.classList.remove('active');
+        });
+
+        // Prefetch ao hover nos links do menu (200ms de delay)
+        let prefetchTimer;
+        document.addEventListener('mouseover', (e) => {
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) return;
+            prefetchTimer = setTimeout(() => {
+                Turbo.prefetchCache.prefetchURL(href);
+            }, 200);
+        });
+        document.addEventListener('mouseout', () => clearTimeout(prefetchTimer));
+    </script>
 </body>
 </html>
