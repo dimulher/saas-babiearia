@@ -38,6 +38,11 @@ putenv('APP_EVENTS_CACHE=/tmp/events.php');
 if (!file_exists('/tmp/views')) {
     mkdir('/tmp/views', 0755, true);
 }
+// Força HTTPS no Vercel (proxy SSL termination)
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
 // Carrega o autoload do Composer
 require dirname(__DIR__) . '/vendor/autoload.php';
 
