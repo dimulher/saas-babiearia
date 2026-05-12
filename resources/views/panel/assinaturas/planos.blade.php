@@ -23,15 +23,15 @@
         <div class="bg-gray-900/50 border border-gray-700 rounded-2xl p-6 space-y-5">
             <div>
                 <h3 class="text-lg font-bold text-white">Gratuito</h3>
-                <p class="text-sm text-gray-500 mt-1">Para quem estÃ¡ comeÃ§ando</p>
-                <p class="text-4xl font-bold text-white mt-3">R$ 0<span class="text-base font-normal text-gray-500">/mÃªs</span></p>
+                <p class="text-sm text-gray-500 mt-1">Para quem está começando</p>
+                <p class="text-4xl font-bold text-white mt-3">R$ 0<span class="text-base font-normal text-gray-500">/mês</span></p>
             </div>
             <ul class="space-y-2.5 text-sm">
-                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> AtÃ© 50 agendamentos/mÃªs</li>
+                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> Até 50 agendamentos/mês</li>
                 <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> 1 profissional</li>
                 <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> Link de agendamento</li>
-                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-xmark text-red-400 mt-0.5"></i> WhatsApp automÃ¡tico</li>
-                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-xmark text-red-400 mt-0.5"></i> RelatÃ³rios avanÃ§ados</li>
+                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-xmark text-red-400 mt-0.5"></i> WhatsApp automático</li>
+                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-xmark text-red-400 mt-0.5"></i> Relatórios avançados</li>
             </ul>
             <button class="w-full border-2 border-gray-700 text-gray-500 py-2.5 rounded-xl text-sm font-semibold cursor-default">
                 Plano atual
@@ -44,13 +44,13 @@
             <div>
                 <h3 class="text-lg font-bold text-white">Profissional</h3>
                 <p class="text-sm text-indigo-200 mt-1">Para barbearias em crescimento</p>
-                <p class="text-4xl font-bold text-white mt-3">R$ 89<span class="text-base font-normal text-indigo-200">/mÃªs</span></p>
+                <p class="text-4xl font-bold text-white mt-3">R$ 89<span class="text-base font-normal text-indigo-200">/mês</span></p>
             </div>
             <ul class="space-y-2.5 text-sm">
                 <li class="flex items-start gap-2 text-indigo-100"><i class="fa-solid fa-check text-green-300 mt-0.5"></i> Agendamentos ilimitados</li>
                 <li class="flex items-start gap-2 text-indigo-100"><i class="fa-solid fa-check text-green-300 mt-0.5"></i> Profissionais ilimitados</li>
-                <li class="flex items-start gap-2 text-indigo-100"><i class="fa-solid fa-check text-green-300 mt-0.5"></i> WhatsApp automÃ¡tico</li>
-                <li class="flex items-start gap-2 text-indigo-100"><i class="fa-solid fa-check text-green-300 mt-0.5"></i> RelatÃ³rios completos</li>
+                <li class="flex items-start gap-2 text-indigo-100"><i class="fa-solid fa-check text-green-300 mt-0.5"></i> WhatsApp automático</li>
+                <li class="flex items-start gap-2 text-indigo-100"><i class="fa-solid fa-check text-green-300 mt-0.5"></i> Relatórios completos</li>
                 <li class="flex items-start gap-2 text-indigo-100"><i class="fa-solid fa-check text-green-300 mt-0.5"></i> Comandas e Financeiro</li>
             </ul>
             <button class="w-full bg-gray-900/50 text-indigo-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-50">
@@ -63,14 +63,14 @@
             <div>
                 <h3 class="text-lg font-bold text-white">Premium</h3>
                 <p class="text-sm text-gray-500 mt-1">Para redes e grandes volumes</p>
-                <p class="text-4xl font-bold text-white mt-3">R$ 149<span class="text-base font-normal text-gray-500">/mÃªs</span></p>
+                <p class="text-4xl font-bold text-white mt-3">R$ 149<span class="text-base font-normal text-gray-500">/mês</span></p>
             </div>
             <ul class="space-y-2.5 text-sm">
                 <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> Tudo do Profissional</li>
-                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> MÃºltiplas unidades</li>
-                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> API de integraÃ§Ã£o</li>
-                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> Suporte prioritÃ¡rio</li>
-                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> DomÃ­nio personalizado</li>
+                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> Múltiplas unidades</li>
+                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> API de integração</li>
+                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> Suporte prioritário</li>
+                <li class="flex items-start gap-2 text-gray-400"><i class="fa-solid fa-check text-green-500 mt-0.5"></i> Domínio personalizado</li>
             </ul>
             <button class="w-full border-2 border-indigo-600 text-indigo-600 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-50">
                 Assinar Premium

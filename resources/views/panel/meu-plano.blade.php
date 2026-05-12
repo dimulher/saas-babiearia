@@ -6,7 +6,7 @@
 
     <div class="text-center sm:text-left">
         <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Assinatura e Planos</h1>
-        <p class="text-sm text-gray-400 font-medium">Potencialize seu negÃ³cio com as ferramentas certas.</p>
+        <p class="text-sm text-gray-400 font-medium">Potencialize seu negócio com as ferramentas certas.</p>
     </div>
 
     <!-- Plano atual -->
@@ -23,19 +23,19 @@
         </div>
     </div>
 
-    <!-- Planos disponÃ­veis -->
+    <!-- Planos disponíveis -->
     <div>
-        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8 ml-1">Evolua sua operaÃ§Ã£o</h2>
+        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8 ml-1">Evolua sua operação</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            <!-- BÃ¡sico -->
+            <!-- Básico -->
             <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 flex flex-col hover:border-violet-200 transition-all shadow-sm">
                 <div>
                     <h3 class="text-xs font-bold text-white uppercase tracking-widest">Essential</h3>
                     <div class="flex items-baseline gap-1 mt-4">
                         <span class="text-sm font-bold text-gray-400 italic">R$</span>
                         <p class="text-4xl font-bold text-white tracking-tighter italic">49</p>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">/mÃªs</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">/mês</span>
                     </div>
                 </div>
                 <ul class="space-y-4 flex-1">
@@ -43,13 +43,13 @@
                         <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Agendamentos ilimitados
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-400">
-                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> AtÃ© 3 profissionais
+                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Até 3 profissionais
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-400">
                         <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Link de agendamento personalizado
                     </li>
                     <li class="flex items-center gap-3 text-[10px] font-bold text-gray-300 line-through italic">
-                        <i class="fa-solid fa-xmark text-rose-300"></i> WhatsApp automÃ¡tico
+                        <i class="fa-solid fa-xmark text-rose-300"></i> WhatsApp automático
                     </li>
                 </ul>
                 <button class="w-full border-2 border-gray-800 text-white py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:border-violet-600 hover:text-violet-600 transition-all italic">Upgrade para Essential</button>
@@ -65,7 +65,7 @@
                     <div class="flex items-baseline gap-1 mt-4">
                         <span class="text-sm font-bold text-violet-400 italic">R$</span>
                         <p class="text-4xl font-bold text-white tracking-tighter italic">89</p>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">/mÃªs</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">/mês</span>
                     </div>
                 </div>
                 <ul class="space-y-4 flex-1">
@@ -73,13 +73,13 @@
                         <i class="fa-solid fa-star text-violet-400 text-[10px]"></i> Profissionais Ilimitados
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-200">
-                        <i class="fa-solid fa-star text-violet-400 text-[10px]"></i> WhatsApp AutomÃ¡tico Integrado
+                        <i class="fa-solid fa-star text-violet-400 text-[10px]"></i> WhatsApp Automático Integrado
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-200">
-                        <i class="fa-solid fa-star text-violet-400 text-[10px]"></i> RelatÃ³rios AvanÃ§ados (BI)
+                        <i class="fa-solid fa-star text-violet-400 text-[10px]"></i> Relatórios Avançados (BI)
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-200">
-                        <i class="fa-solid fa-star text-violet-400 text-[10px]"></i> GestÃ£o de ComissÃµes Complexa
+                        <i class="fa-solid fa-star text-violet-400 text-[10px]"></i> Gestão de Comissões Complexa
                     </li>
                 </ul>
                 <button class="w-full bg-violet-600 text-white py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-900/50 italic">Contratar Business Elite</button>
@@ -92,7 +92,7 @@
                     <div class="flex items-baseline gap-1 mt-4">
                         <span class="text-sm font-bold text-gray-400 italic">R$</span>
                         <p class="text-4xl font-bold text-white tracking-tighter italic">149</p>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">/mÃªs</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">/mês</span>
                     </div>
                 </div>
                 <ul class="space-y-4 flex-1">
@@ -100,13 +100,13 @@
                         <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Tudo do Business Elite
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-400">
-                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> GestÃ£o Multi-Unidades (Filiais)
+                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Gestão Multi-Unidades (Filiais)
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-400">
-                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Suporte Concierge PrioritÃ¡rio
+                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Suporte Concierge Prioritário
                     </li>
                     <li class="flex items-center gap-3 text-xs font-bold text-gray-400">
-                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> IntegraÃ§Ã£o via API PÃºblica
+                        <i class="fa-solid fa-check text-emerald-500 text-[10px]"></i> Integração via API Pública
                     </li>
                 </ul>
                 <button class="w-full border-2 border-gray-800 text-white py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:border-violet-600 hover:text-violet-600 transition-all italic">Upgrade para Multi-Unit</button>

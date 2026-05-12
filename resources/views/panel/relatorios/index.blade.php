@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'InteligÃªncia de NegÃ³cio')
+@section('title', 'Inteligência de Negócio')
 
 @section('content')
 <div class="space-y-8" x-data="{ 
@@ -8,12 +8,12 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
-            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">InteligÃªncia de NegÃ³cio</h1>
+            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Inteligência de Negócio</h1>
             <p class="text-sm text-gray-400 font-medium">Insights detalhados e performance do seu estabelecimento.</p>
         </div>
         <div class="bg-gray-900/50 p-1.5 px-4 rounded-2xl border border-gray-800 shadow-sm flex items-center gap-4">
             <form action="{{ route('panel.relatorios.index') }}" method="GET" class="flex items-center gap-3">
-                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">PerÃ­odo:</span>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Período:</span>
                 <input type="month" name="mes" value="{{ $mes }}" class="text-xs font-bold border-none focus:ring-0 outline-none p-0 text-violet-600 bg-transparent uppercase">
                 <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-xl bg-violet-900/30 text-violet-600 hover:bg-violet-600 hover:text-white transition-all shadow-sm">
                     <i class="fa-solid fa-arrows-rotate text-[10px]"></i>
@@ -32,7 +32,7 @@
         <button @click="activeTab = 'clientes'" 
             :class="activeTab === 'clientes' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'" 
             class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap">
-            <i class="fa-solid fa-users mr-2"></i> FidelizaÃ§Ã£o
+            <i class="fa-solid fa-users mr-2"></i> Fidelização
         </button>
         <button @click="activeTab = 'profissionais'" 
             :class="activeTab === 'profissionais' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'" 
@@ -43,15 +43,15 @@
 
     <!-- Tab Content -->
 
-    <!-- 1. ServiÃ§os -->
+    <!-- 1. Serviços -->
     <div x-show="activeTab === 'servicos'" x-cloak x-transition:enter class="space-y-8">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 shadow-sm border border-gray-800 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-24 h-24 bg-violet-900/30 rounded-full -mr-12 -mt-12 opacity-50"></div>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2 relative">Volume de ProduÃ§Ã£o</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2 relative">Volume de Produção</p>
                 <div class="flex items-baseline gap-2 relative">
                     <p class="text-4xl font-bold text-white tracking-tighter italic">{{ $servicosPerformance->sum('qtd') }}</p>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">serviÃ§os</span>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tight">serviços</span>
                 </div>
             </div>
             <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 shadow-sm border border-gray-800 relative overflow-hidden">
@@ -64,9 +64,9 @@
             </div>
             <div class="bg-violet-600 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 shadow-xl text-white relative overflow-hidden group border-none">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-gray-900/50 rounded-full -mr-16 -mt-16 opacity-10 blur-2xl group-hover:scale-125 transition-transform"></div>
-                <p class="text-[10px] text-violet-200 font-bold uppercase tracking-widest mb-2 relative">Bestseller do MÃªs</p>
+                <p class="text-[10px] text-violet-200 font-bold uppercase tracking-widest mb-2 relative">Bestseller do Mês</p>
                 <p class="text-xl font-bold uppercase tracking-tight truncate relative leading-none">{{ $servicoMaisVendido->nome ?? 'â€”' }}</p>
-                <p class="text-[10px] text-violet-200 font-bold mt-2 opacity-80 uppercase tracking-widest">LÃ­der em conversÃ£o</p>
+                <p class="text-[10px] text-violet-200 font-bold mt-2 opacity-80 uppercase tracking-widest">Líder em conversão</p>
             </div>
         </div>
 
@@ -81,7 +81,7 @@
                     <thead class="bg-gray-800/50 text-gray-400 uppercase text-[9px] font-bold tracking-widest">
                         <tr>
                             <th class="px-6 py-5">Nome do Procedimento</th>
-                            <th class="px-6 py-5 text-center">SaÃ­das</th>
+                            <th class="px-6 py-5 text-center">Saídas</th>
                             <th class="px-6 py-5 text-right">Faturamento</th>
                             <th class="px-6 py-5 text-right">Share (%)</th>
                         </tr>
@@ -111,7 +111,7 @@
                                     <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
                                         <i class="fa-solid fa-magnifying-glass-chart text-3xl text-gray-200"></i>
                                     </div>
-                                    <p class="text-base font-bold text-white uppercase tracking-widest">Sem registros no perÃ­odo</p>
+                                    <p class="text-base font-bold text-white uppercase tracking-widest">Sem registros no período</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -125,7 +125,7 @@
     <div x-show="activeTab === 'clientes'" x-cloak x-transition:enter class="space-y-8">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 shadow-sm border border-gray-800">
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2">Novos leads (MÃªs)</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2">Novos leads (Mês)</p>
                 <div class="flex items-baseline gap-2">
                     <p class="text-4xl font-bold text-white tracking-tighter italic">+{{ $clientesNovos }}</p>
                     <span class="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">crescimento</span>
@@ -140,12 +140,12 @@
             </div>
             <div class="bg-gray-900 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 shadow-xl text-white relative overflow-hidden group border-none">
                 <div class="absolute bottom-0 right-0 w-32 h-32 bg-violet-600 rounded-full -mr-16 -mb-16 opacity-20 blur-3xl group-hover:scale-150 transition-transform"></div>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2 relative">RetenÃ§Ã£o MÃ©dia</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2 relative">Retenção Média</p>
                 <div class="flex items-baseline gap-2 relative">
                     <p class="text-4xl font-bold text-white tracking-tighter italic">
                         {{ $clientesAtivos > 0 ? number_format($servicosPerformance->sum('qtd') / $clientesAtivos, 1) : 0 }}
                     </p>
-                    <span class="text-[10px] font-bold text-violet-400 uppercase tracking-widest">visitas / mÃªs</span>
+                    <span class="text-[10px] font-bold text-violet-400 uppercase tracking-widest">visitas / mês</span>
                 </div>
             </div>
         </div>
@@ -155,14 +155,14 @@
                 <h3 class="text-[10px] font-bold text-white uppercase tracking-widest flex items-center gap-3">
                     <i class="fa-solid fa-star text-amber-500"></i> Top 10 Clientes VIP (LTV)
                 </h3>
-                <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-gray-900/50 px-3 py-1 rounded-full border border-gray-800">VitalÃ­cio</span>
+                <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest bg-gray-900/50 px-3 py-1 rounded-full border border-gray-800">Vitalício</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-800/50 text-gray-400 uppercase text-[9px] font-bold tracking-widest">
                         <tr>
                             <th class="px-6 py-5">Perfil do Cliente</th>
-                            <th class="px-6 py-5 text-center">FrequÃªncia</th>
+                            <th class="px-6 py-5 text-center">Frequência</th>
                             <th class="px-6 py-5 text-right">LTV (Gasto Total)</th>
                         </tr>
                     </thead>
@@ -190,7 +190,7 @@
                                     <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
                                         <i class="fa-solid fa-users text-3xl text-gray-200"></i>
                                     </div>
-                                    <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum dado VIP disponÃ­vel</p>
+                                    <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum dado VIP disponível</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -227,10 +227,10 @@
                     
                     <div class="z-10 flex flex-col items-end gap-3 shrink-0">
                          <div class="text-[10px] font-bold text-violet-600 bg-violet-900/30 border border-violet-800 px-4 py-2 rounded-2xl uppercase tracking-tighter shadow-sm">
-                            {{ $totalReceitaServicos > 0 ? number_format(($prof->receita_gerada / $totalReceitaServicos) * 100, 0) : 0 }}% do SalÃ£o
+                            {{ $totalReceitaServicos > 0 ? number_format(($prof->receita_gerada / $totalReceitaServicos) * 100, 0) : 0 }}% do Salão
                          </div>
                          <a href="#" class="text-[10px] font-bold text-gray-400 hover:text-violet-600 uppercase tracking-widest flex items-center gap-2 transition-all">
-                            AnÃ¡lise <i class="fa-solid fa-arrow-right-long text-[8px]"></i>
+                            Análise <i class="fa-solid fa-arrow-right-long text-[8px]"></i>
                          </a>
                     </div>
                 </div>

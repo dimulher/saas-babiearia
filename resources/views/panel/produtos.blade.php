@@ -41,7 +41,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Produtos & Estoque</h1>
-            <p class="text-sm text-gray-400 font-medium">Controle seu inventÃ¡rio e margens de lucro de forma integrada.</p>
+            <p class="text-sm text-gray-400 font-medium">Controle seu inventário e margens de lucro de forma integrada.</p>
         </div>
         <button @click="openModal()" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
             <i class="fa-solid fa-box-open text-xs"></i> Novo Produto
@@ -55,7 +55,7 @@
                 <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
                     <i class="fa-solid fa-magnifying-glass text-xs"></i>
                 </span>
-                <input type="text" placeholder="Pesquisar no inventÃ¡rio..." class="block w-full pl-10 pr-4 py-3 bg-gray-900/50 border-gray-800 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-violet-500 transition-all outline-none">
+                <input type="text" placeholder="Pesquisar no inventário..." class="block w-full pl-10 pr-4 py-3 bg-gray-900/50 border-gray-800 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-violet-500 transition-all outline-none">
             </div>
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-2">
@@ -64,7 +64,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="w-2.5 h-2.5 bg-rose-500 rounded-full animate-pulse shadow-sm shadow-rose-200"></div>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">CrÃ­tico</span>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Crítico</span>
                 </div>
             </div>
         </div>
@@ -74,9 +74,9 @@
                 <thead class="bg-gray-900/80 text-gray-400 uppercase text-[9px] font-bold tracking-widest">
                     <tr>
                         <th class="px-8 py-5">Produto</th>
-                        <th class="px-8 py-5">PreÃ§o Venda</th>
-                        <th class="px-8 py-5 text-center">NÃ­vel de Estoque</th>
-                        <th class="px-8 py-5 text-right">AÃ§Ãµes</th>
+                        <th class="px-8 py-5">Preço Venda</th>
+                        <th class="px-8 py-5 text-center">Nível de Estoque</th>
+                        <th class="px-8 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -159,7 +159,7 @@
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-white uppercase tracking-tight" x-text="editMode ? 'Editar Cadastro' : 'Novo Produto'"></h3>
-                                    <p class="text-xs text-gray-400 font-medium mt-0.5">GestÃ£o tÃ©cnica de inventÃ¡rio e precificaÃ§Ã£o.</p>
+                                    <p class="text-xs text-gray-400 font-medium mt-0.5">Gestão técnica de inventário e precificação.</p>
                                 </div>
                             </div>
                             <button type="button" @click="showModal = false" class="w-10 h-10 flex items-center justify-center hover:bg-gray-800 text-gray-400 rounded-xl transition-all">
@@ -170,27 +170,27 @@
                         <div class="space-y-6">
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nome do Item *</label>
-                                <input type="text" name="nome" x-model="product.nome" required placeholder="Ex: Shampoo PÃ³s-QuÃ­mica 500ml" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                <input type="text" name="nome" x-model="product.nome" required placeholder="Ex: Shampoo Pós-Química 500ml" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">PreÃ§o de Venda (R$) *</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Preço de Venda (R$) *</label>
                                     <input type="number" step="0.01" name="preco_venda" x-model="product.preco_venda" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">PreÃ§o de Custo (R$)</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Preço de Custo (R$)</label>
                                     <input type="number" step="0.01" name="preco_custo" x-model="product.preco_custo" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Estoque DisponÃ­vel *</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Estoque Disponível *</label>
                                     <input type="number" name="estoque_atual" x-model="product.estoque_atual" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Aviso Estoque MÃ­nimo *</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Aviso Estoque Mínimo *</label>
                                     <input type="number" name="estoque_minimo" x-model="product.estoque_minimo" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
@@ -201,19 +201,19 @@
                                     <input type="text" name="unidade" x-model="product.unidade" placeholder="un, kg, ml..." class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">CÃ³digo de Barras / SKU</label>
-                                    <input type="text" name="codigo" x-model="product.codigo" placeholder="ID Ãºnico do produto" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Código de Barras / SKU</label>
+                                    <input type="text" name="codigo" x-model="product.codigo" placeholder="ID único do produto" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
 
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Notas Adicionais</label>
-                                <textarea name="descricao" x-model="product.descricao" rows="3" placeholder="InformaÃ§Ãµes do fornecedor ou detalhes tÃ©cnicos..." class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
+                                <textarea name="descricao" x-model="product.descricao" rows="3" placeholder="Informações do fornecedor ou detalhes técnicos..." class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-900/80 px-8 py-8 sm:flex sm:flex-row-reverse gap-4">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic" x-text="editMode ? 'Salvar AlteraÃ§Ãµes' : 'Adicionar ao Estoque'"></button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic" x-text="editMode ? 'Salvar Alterações' : 'Adicionar ao Estoque'"></button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-10 py-4 bg-gray-900/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Descartar</button>
                     </div>
                 </form>

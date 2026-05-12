@@ -42,7 +42,7 @@
             <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm shadow-sm overflow-hidden border border-gray-800">
                 <div class="px-6 py-5 border-b border-gray-50 bg-gray-900/80 flex justify-between items-center">
                     <h2 class="text-xs font-bold text-white uppercase tracking-widest">Itens do Atendimento</h2>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $comanda->itens->count() }} LanÃ§amentos</span>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $comanda->itens->count() }} Lançamentos</span>
                 </div>
                 
                 @if($comanda->itens->isEmpty())
@@ -50,7 +50,7 @@
                         <div class="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mb-4">
                             <i class="fa-solid fa-receipt text-2xl text-gray-200"></i>
                         </div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nenhum item lanÃ§ado ainda</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nenhum item lançado ainda</p>
                     </div>
                 @else
                     <ul class="divide-y divide-gray-50">
@@ -87,10 +87,10 @@
                 @endif
             </div>
             
-            <!-- FormulÃ¡rios de AdiÃ§Ã£o (Apenas se Aberta) -->
+            <!-- Formulários de Adição (Apenas se Aberta) -->
             @if($comanda->status === 'aberta')
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Add ServiÃ§o -->
+                    <!-- Add Serviço -->
                     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 border border-gray-800 shadow-sm">
                         <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                             <i class="fa-solid fa-wand-magic-sparkles text-violet-500"></i>
@@ -102,14 +102,14 @@
                             <input type="hidden" name="quantidade" value="1">
                             <div>
                                 <select name="item_id" required class="block w-full px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
-                                    <option value="">Selecione um serviÃ§o...</option>
+                                    <option value="">Selecione um serviço...</option>
                                     @foreach($servicos as $servico)
                                         <option value="{{ $servico->id }}">{{ $servico->nome }} - R$ {{ number_format($servico->preco, 2, ',', '.') }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <button type="submit" class="w-full bg-violet-900/30 text-violet-600 hover:bg-violet-600 hover:text-white font-bold text-[10px] uppercase tracking-widest py-3.5 px-4 rounded-2xl transition-all border border-violet-800 shadow-sm shadow-violet-900/20">
-                                LanÃ§ar Procedimento
+                                Lançar Procedimento
                             </button>
                         </form>
                     </div>
@@ -133,7 +133,7 @@
                                 <input type="number" name="quantidade" value="1" min="1" required class="w-20 px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none text-center">
                             </div>
                             <button type="submit" class="w-full bg-violet-900/30 text-violet-600 hover:bg-violet-600 hover:text-white font-bold text-[10px] uppercase tracking-widest py-3.5 px-4 rounded-2xl transition-all border border-violet-800 shadow-sm shadow-violet-900/20">
-                                LanÃ§ar Produto
+                                Lançar Produto
                             </button>
                         </form>
                     </div>
@@ -162,7 +162,7 @@
                     </div>
                     <div class="h-px bg-gray-800 my-6"></div>
                     <div class="flex justify-between items-end">
-                        <span class="text-[10px] font-bold text-violet-400 uppercase tracking-widest">Total LÃ­quido</span>
+                        <span class="text-[10px] font-bold text-violet-400 uppercase tracking-widest">Total Líquido</span>
                         <span class="text-4xl font-bold text-white tracking-tighter">R$ {{ number_format($comanda->total, 2, ',', '.') }}</span>
                     </div>
                 </div>
@@ -174,7 +174,7 @@
                     </button>
                 @else
                     <div class="bg-gray-800/50 rounded-2xl p-5 border border-gray-700 relative">
-                        <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2">HistÃ³rico de TransaÃ§Ã£o</p>
+                        <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2">Histórico de Transação</p>
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-bold text-gray-200 capitalize">{{ str_replace('_', ' ', $comanda->forma_pagamento) }}</span>
                             <i class="fa-solid fa-credit-card text-violet-500"></i>
@@ -219,12 +219,12 @@
                         </div>
                         
                         <div class="bg-gray-800/50 p-6 rounded-[24px] border border-gray-800 mb-8 text-center">
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Ã  Receber</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total à Receber</p>
                             <p class="text-4xl font-bold text-white tracking-tighter italic">R$ {{ number_format($comanda->total, 2, ',', '.') }}</p>
                         </div>
 
                         <div>
-                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 block mb-4">Escolha o MÃ©todo</label>
+                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 block mb-4">Escolha o Método</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <!-- Dinheiro -->
                                 <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'dinheiro' ? 'border-violet-600 bg-violet-900/30 ring-1 ring-violet-600' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
@@ -242,20 +242,20 @@
                                         <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'pix' ? 'text-violet-900' : 'text-gray-500'">PIX</span>
                                     </div>
                                 </label>
-                                <!-- CartÃ£o de CrÃ©dito -->
+                                <!-- Cartão de Crédito -->
                                 <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'cartao_credito' ? 'border-violet-600 bg-violet-900/30 ring-1 ring-violet-600' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
                                     <input type="radio" name="forma_pagamento" value="cartao_credito" x-model="formaPagamento" class="sr-only">
                                     <div class="flex flex-col items-center justify-center w-full gap-2">
                                         <i class="fa-solid fa-credit-card" :class="formaPagamento === 'cartao_credito' ? 'text-violet-600' : 'text-gray-400'"></i>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_credito' ? 'text-violet-900' : 'text-gray-500'">CrÃ©dito</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_credito' ? 'text-violet-900' : 'text-gray-500'">Crédito</span>
                                     </div>
                                 </label>
-                                <!-- CartÃ£o de DÃ©bito -->
+                                <!-- Cartão de Débito -->
                                 <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'cartao_debito' ? 'border-violet-600 bg-violet-900/30 ring-1 ring-violet-600' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
                                     <input type="radio" name="forma_pagamento" value="cartao_debito" x-model="formaPagamento" class="sr-only">
                                     <div class="flex flex-col items-center justify-center w-full gap-2">
                                         <i class="fa-solid fa-card-credit-stack" :class="formaPagamento === 'cartao_debito' ? 'text-violet-600' : 'text-gray-400'"></i>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_debito' ? 'text-violet-900' : 'text-gray-500'">DÃ©bito</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_debito' ? 'text-violet-900' : 'text-gray-500'">Débito</span>
                                     </div>
                                 </label>
                             </div>

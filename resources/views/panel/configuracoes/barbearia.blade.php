@@ -6,7 +6,7 @@
 
     <div class="text-center sm:text-left">
         <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Perfil do Estabelecimento</h1>
-        <p class="text-sm text-gray-400 font-medium">Configure a identidade visual e informaÃ§Ãµes de contato da sua unidade.</p>
+        <p class="text-sm text-gray-400 font-medium">Configure a identidade visual e informações de contato da sua unidade.</p>
     </div>
 
     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-10 space-y-10 shadow-sm rounded-[32px]">
@@ -47,8 +47,8 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">EndereÃ§o Completo</label>
-                <input type="text" placeholder="Rua, NÃºmero, Bairro"
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Endereço Completo</label>
+                <input type="text" placeholder="Rua, Número, Bairro"
                     class="block w-full px-6 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
             </div>
 
@@ -77,7 +77,7 @@
 
         <div class="pt-8 border-t border-gray-50">
             <button class="w-full sm:w-auto bg-violet-600 text-white px-12 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-900/20 active:scale-95 italic">
-                Preservar AlteraÃ§Ãµes <i class="fa-solid fa-check ml-2"></i>
+                Preservar Alterações <i class="fa-solid fa-check ml-2"></i>
             </button>
         </div>
     </div>

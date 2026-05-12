@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">GestÃ£o de Comandas</h1>
+            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Gestão de Comandas</h1>
             <p class="text-sm text-gray-400 font-medium">Controle o atendimento do seu estabelecimento em tempo real.</p>
         </div>
         <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3 rounded-2xl text-sm font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
@@ -75,8 +75,8 @@
                     <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mb-6">
                         <i class="fa-solid fa-box-archive text-3xl text-gray-200"></i>
                     </div>
-                    <p class="text-base font-bold text-white uppercase tracking-widest">Sem histÃ³rico</p>
-                    <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">As comandas finalizadas aparecerÃ£o aqui</p>
+                    <p class="text-base font-bold text-white uppercase tracking-widest">Sem histórico</p>
+                    <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">As comandas finalizadas aparecerão aqui</p>
                 </div>
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -127,7 +127,7 @@
                                 <h3 class="text-xl font-bold text-white uppercase tracking-tight" id="modal-title">
                                     Iniciar Atendimento
                                 </h3>
-                                <p class="text-xs text-gray-400 font-medium mt-1">Preencha os dados bÃ¡sicos para abrir a comanda.</p>
+                                <p class="text-xs text-gray-400 font-medium mt-1">Preencha os dados básicos para abrir a comanda.</p>
                                 
                                 <div class="mt-8 space-y-6">
                                     <div class="space-y-2">
@@ -148,8 +148,8 @@
                                     </div>
 
                                     <div class="space-y-2">
-                                        <label for="observacoes" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">ObservaÃ§Ãµes Internas</label>
-                                        <textarea name="observacoes" id="observacoes" rows="2" placeholder="InformaÃ§Ãµes adicionais sobre o atendimento..." 
+                                        <label for="observacoes" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Observações Internas</label>
+                                        <textarea name="observacoes" id="observacoes" rows="2" placeholder="Informações adicionais sobre o atendimento..." 
                                             class="block w-full px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
                                     </div>
                                 </div>

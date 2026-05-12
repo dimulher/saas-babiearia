@@ -46,8 +46,8 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">GestÃ£o da Equipe</h1>
-            <p class="text-sm text-gray-400 font-medium">Gerencie os especialistas e suas configuraÃ§Ãµes de atendimento.</p>
+            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Gestão da Equipe</h1>
+            <p class="text-sm text-gray-400 font-medium">Gerencie os especialistas e suas configurações de atendimento.</p>
         </div>
         <button @click="openModal()" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-violet-900/20">
             <i class="fa-solid fa-user-plus text-xs"></i> Novo Integrante
@@ -75,9 +75,9 @@
                     <tr>
                         <th class="px-8 py-5">Especialista</th>
                         <th class="px-8 py-5">Contato</th>
-                        <th class="px-8 py-5 text-center">ComissÃ£o</th>
+                        <th class="px-8 py-5 text-center">Comissão</th>
                         <th class="px-8 py-5 text-center">Agenda Online</th>
-                        <th class="px-8 py-5 text-right">AÃ§Ãµes</th>
+                        <th class="px-8 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-800/50">
@@ -123,7 +123,7 @@
                             </td>
                             <td class="px-8 py-5 text-center">
                                 @if($profissional->aceita_agendamento_online && $profissional->is_online)
-                                    <span class="px-4 py-1.5 bg-emerald-900/30 text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-emerald-800 shadow-sm shadow-emerald-900/20">VisÃ­vel</span>
+                                    <span class="px-4 py-1.5 bg-emerald-900/30 text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-emerald-800 shadow-sm shadow-emerald-900/20">Visível</span>
                                 @elseif($profissional->aceita_agendamento_online && !$profissional->is_online)
                                     <span class="px-4 py-1.5 bg-gray-900/50 text-gray-500 rounded-full text-[9px] font-bold uppercase tracking-widest border border-gray-800 opacity-60">Offline</span>
                                 @else
@@ -132,8 +132,8 @@
                             </td>
                             <td class="px-8 py-5">
                                 <div class="flex items-center justify-end gap-4">
-                                    <button type="button" @click='confirmCode(@json($profissional))' class="text-indigo-400 hover:text-indigo-300 text-[10px] font-bold uppercase tracking-widest transition-colors" title="Gerar ou resetar cÃ³digo">
-                                        Gerar CÃ³digo
+                                    <button type="button" @click='confirmCode(@json($profissional))' class="text-indigo-400 hover:text-indigo-300 text-[10px] font-bold uppercase tracking-widest transition-colors" title="Gerar ou resetar código">
+                                        Gerar Código
                                     </button>
                                     <button type="button" @click='openModal(@json($profissional))' class="text-violet-400 hover:text-violet-300 text-[10px] font-bold uppercase tracking-widest transition-colors">Editar</button>
                                     <button type="button" @click='confirmDelete(@json($profissional))' class="text-gray-400 hover:text-rose-500 transition-colors">
@@ -149,7 +149,7 @@
                                     <i class="fa-solid fa-user-group text-3xl text-gray-200"></i>
                                 </div>
                                 <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum integrante cadastrado</p>
-                                <p class="text-[10px] text-gray-500 mt-2 uppercase font-bold tracking-widest">Inicie a gestÃ£o da sua equipe clicando em "Novo Integrante".</p>
+                                <p class="text-[10px] text-gray-500 mt-2 uppercase font-bold tracking-widest">Inicie a gestão da sua equipe clicando em "Novo Integrante".</p>
                             </td>
                         </tr>
                     @endforelse
@@ -213,7 +213,7 @@
                         </div>
                     </div>
                     <div class="bg-gray-900 border-t border-gray-800 px-8 py-8 sm:flex sm:flex-row-reverse gap-4">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-500 transition-all sm:w-auto italic" x-text="editMode ? 'Salvar AlteraÃ§Ãµes' : 'Criar Cadastro'"></button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-500 transition-all sm:w-auto italic" x-text="editMode ? 'Salvar Alterações' : 'Criar Cadastro'"></button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-transparent px-10 py-4 bg-gray-800 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-700 hover:text-white transition-all sm:mt-0 sm:w-auto">Descartar</button>
                     </div>
                 </form>
@@ -221,7 +221,7 @@
         </div>
     </div>
 
-    <!-- Modal ConfirmaÃ§Ã£o de ExclusÃ£o -->
+    <!-- Modal Confirmação de Exclusão -->
     <div x-show="showDeleteModal" x-cloak class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div x-show="showDeleteModal" x-transition.opacity class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" @click="showDeleteModal = false"></div>
@@ -234,7 +234,7 @@
                         <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
                     </div>
                     <h3 class="text-lg font-bold text-white uppercase tracking-tight mb-2">Remover Profissional</h3>
-                    <p class="text-sm text-gray-400 mb-8">Tem certeza que deseja remover o integrante <span class="text-white font-bold" x-text="profToDelete?.nome"></span> da sua equipe? Esta aÃ§Ã£o nÃ£o poderÃ¡ ser desfeita e ele perderÃ¡ o acesso ao painel.</p>
+                    <p class="text-sm text-gray-400 mb-8">Tem certeza que deseja remover o integrante <span class="text-white font-bold" x-text="profToDelete?.nome"></span> da sua equipe? Esta ação não poderá ser desfeita e ele perderá o acesso ao painel.</p>
                     
                     <div class="flex items-center gap-3 w-full">
                         <button type="button" @click="showDeleteModal = false" class="flex-1 py-3.5 bg-gray-800/50 hover:bg-gray-800 text-gray-400 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">Cancelar</button>
@@ -249,7 +249,7 @@
         </div>
     </div>
 
-    <!-- Modal Gerar CÃ³digo -->
+    <!-- Modal Gerar Código -->
     <div x-show="showCodeModal" x-cloak class="fixed inset-0 z-[60] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div x-show="showCodeModal" x-transition.opacity class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" @click="showCodeModal = false"></div>
@@ -261,8 +261,8 @@
                     <div class="w-16 h-16 rounded-full bg-indigo-900/30 flex items-center justify-center text-indigo-400 mb-6 border border-indigo-800">
                         <i class="fa-solid fa-key text-2xl"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-white uppercase tracking-tight mb-2">CÃ³digo de Acesso</h3>
-                    <p class="text-sm text-gray-400 mb-8">Deseja gerar um novo cÃ³digo de acesso para <span class="text-white font-bold" x-text="profToGenerate?.nome"></span>? Isso invalidarÃ¡ o cÃ³digo anterior se houver.</p>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-tight mb-2">Código de Acesso</h3>
+                    <p class="text-sm text-gray-400 mb-8">Deseja gerar um novo código de acesso para <span class="text-white font-bold" x-text="profToGenerate?.nome"></span>? Isso invalidará o código anterior se houver.</p>
                     
                     <div class="flex items-center gap-3 w-full">
                         <button type="button" @click="showCodeModal = false" class="flex-1 py-3.5 bg-gray-800/50 hover:bg-gray-800 text-gray-400 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">Cancelar</button>

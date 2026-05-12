@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Bloquear HorÃ¡rios')
+@section('title', 'Bloquear Horários')
 
 @section('content')
 <div class="space-y-6" x-data="{ showModal: {{ $errors->any() ? 'true' : 'false' }} }">
@@ -7,7 +7,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Bloqueio de Agenda</h1>
-            <p class="text-sm text-gray-400 font-medium">Reserve horÃ¡rios para pausas, reuniÃµes ou folgas da equipe.</p>
+            <p class="text-sm text-gray-400 font-medium">Reserve horários para pausas, reuniões ou folgas da equipe.</p>
         </div>
         <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
             <i class="fa-solid fa-calendar-xmark text-xs"></i> Novo Bloqueio
@@ -26,9 +26,9 @@
                 <thead class="bg-gray-900/80 text-gray-400 uppercase text-[9px] font-bold tracking-widest">
                     <tr>
                         <th class="px-8 py-5">Especialista</th>
-                        <th class="px-8 py-5">PerÃ­odo</th>
-                        <th class="px-8 py-5">Motivo / DescriÃ§Ã£o</th>
-                        <th class="px-8 py-5 text-right">AÃ§Ãµes</th>
+                        <th class="px-8 py-5">Período</th>
+                        <th class="px-8 py-5">Motivo / Descrição</th>
+                        <th class="px-8 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -50,12 +50,12 @@
                                     </div>
                                     <div class="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                                         <i class="fa-regular fa-clock"></i>
-                                        {{ substr($bloqueio->hora_inicio, 0, 5) }} Ã s {{ substr($bloqueio->hora_fim, 0, 5) }}
+                                        {{ substr($bloqueio->hora_inicio, 0, 5) }} às {{ substr($bloqueio->hora_fim, 0, 5) }}
                                     </div>
                                 </div>
                             </td>
                             <td class="px-8 py-5">
-                                <p class="text-sm text-gray-400 font-medium italic">"{{ $bloqueio->motivo ?? 'Sem descriÃ§Ã£o' }}"</p>
+                                <p class="text-sm text-gray-400 font-medium italic">"{{ $bloqueio->motivo ?? 'Sem descrição' }}"</p>
                             </td>
                             <td class="px-8 py-5 text-right">
                                 <form action="{{ route('panel.bloquear-horarios.destroy', $bloqueio->id) }}" method="POST" class="inline">
@@ -73,8 +73,8 @@
                                 <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <i class="fa-solid fa-calendar-check text-3xl text-gray-200"></i>
                                 </div>
-                                <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum horÃ¡rio bloqueado</p>
-                                <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">A agenda estÃ¡ 100% disponÃ­vel para novos clientes.</p>
+                                <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum horário bloqueado</p>
+                                <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">A agenda está 100% disponível para novos clientes.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -101,7 +101,7 @@
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-white uppercase tracking-tight">Criar Bloqueio</h3>
-                                    <p class="text-xs text-gray-400 font-medium mt-0.5">Indisponibilize horÃ¡rios especÃ­ficos.</p>
+                                    <p class="text-xs text-gray-400 font-medium mt-0.5">Indisponibilize horários específicos.</p>
                                 </div>
                             </div>
                             <button type="button" @click="showModal = false" class="w-10 h-10 flex items-center justify-center hover:bg-gray-800 text-gray-400 rounded-xl transition-all">
@@ -127,7 +127,7 @@
 
                             <div class="grid grid-cols-2 gap-5">
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Hora InÃ­cio</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Hora Início</label>
                                     <input type="time" name="hora_inicio" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
@@ -138,7 +138,7 @@
 
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Motivo / Notas</label>
-                                <textarea name="motivo" rows="2" placeholder="Ex: HorÃ¡rio de almoÃ§o, ReuniÃ£o tÃ©cnica..." class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
+                                <textarea name="motivo" rows="2" placeholder="Ex: Horário de almoço, Reunião técnica..." class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
                             </div>
                         </div>
                     </div>

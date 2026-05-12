@@ -6,7 +6,7 @@
     showModal: {{ $errors->any() ? 'true' : 'false' }},
     professional: null,
     expedientes: [],
-    diasSemana: ['Domingo', 'Segunda', 'TerÃ§a', 'Quarta', 'Quinta', 'Sexta', 'SÃ¡bado'],
+    diasSemana: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
 
     openModal(prof) {
         this.professional = prof;
@@ -32,7 +32,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Jornada de Trabalho</h1>
-            <p class="text-sm text-gray-400 font-medium">Configure os horÃ¡rios de atendimento de cada especialista.</p>
+            <p class="text-sm text-gray-400 font-medium">Configure os horários de atendimento de cada especialista.</p>
         </div>
     </div>
 
@@ -57,14 +57,14 @@
                                     {{ $diasAtivos > 0 ? "$diasAtivos dias ativos" : 'Inativo' }}
                                 </span>
                                 @if($diasAtivos > 0)
-                                    <span class="text-[10px] text-gray-400 font-medium ml-1">DisponÃ­vel para agendamentos</span>
+                                    <span class="text-[10px] text-gray-400 font-medium ml-1">Disponível para agendamentos</span>
                                 @endif
                             </div>
                         </div>
                     </div>
                     <button @click="openModal({{ json_encode($profissional) }})" class="flex items-center justify-center gap-3 bg-gray-900/50 border border-gray-700 text-gray-300 px-8 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all shadow-sm active:scale-95 italic">
                         <i class="fa-solid fa-clock-rotate-left"></i>
-                        Configurar HorÃ¡rios
+                        Configurar Horários
                     </button>
                 </div>
             @empty
@@ -73,7 +73,7 @@
                         <i class="fa-solid fa-user-slash text-3xl text-gray-200"></i>
                     </div>
                     <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum especialista</p>
-                    <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">Cadastre alguÃ©m na equipe para definir expedientes.</p>
+                    <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">Cadastre alguém na equipe para definir expedientes.</p>
                 </div>
             @endforelse
         </div>
@@ -113,9 +113,9 @@
                                     <tr class="text-[9px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-800">
                                         <th class="text-left py-5 px-6">Dia da Semana</th>
                                         <th class="text-center py-5 px-6">Status</th>
-                                        <th class="text-center py-5 px-6">InÃ­cio</th>
+                                        <th class="text-center py-5 px-6">Início</th>
                                         <th class="text-center py-5 px-6">Fim</th>
-                                        <th class="text-center py-5 px-6">InÃ­cio Intervalo</th>
+                                        <th class="text-center py-5 px-6">Início Intervalo</th>
                                         <th class="text-center py-5 px-6">Fim Intervalo</th>
                                     </tr>
                                 </thead>
@@ -149,7 +149,7 @@
                         </div>
                     </div>
                     <div class="bg-gray-900/80 px-8 py-8 sm:flex sm:flex-row-reverse gap-4">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic">Confirmar AlteraÃ§Ãµes</button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic">Confirmar Alterações</button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-10 py-4 bg-gray-900/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Descartar</button>
                     </div>
                 </form>

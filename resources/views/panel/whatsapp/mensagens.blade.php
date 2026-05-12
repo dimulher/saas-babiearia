@@ -26,28 +26,28 @@
         <button @click="tab = 'mensagens'" 
             :class="tab === 'mensagens' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
             class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
-            Fluxos AutomÃ¡ticos
+            Fluxos Automáticos
         </button>
         <button @click="tab = 'configuracao'" 
             :class="tab === 'configuracao' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
             class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
-            Painel de ConexÃ£o
+            Painel de Conexão
         </button>
     </div>
 
     <!-- Content Sections -->
     <div class="w-full">
         
-        <!-- Mensagens automÃ¡ticas -->
+        <!-- Mensagens automáticas -->
         <div x-show="tab === 'mensagens'" x-cloak x-transition:enter class="space-y-6">
 
             @php
             $mensagens = [
-                ['titulo' => 'ConfirmaÃ§Ã£o de Agendamento', 'icon' => 'fa-calendar-check', 'desc' => 'Disparado instantaneamente apÃ³s a reserva.', 'ativa' => true],
-                ['titulo' => 'Lembrete EstratÃ©gico (24h)', 'icon' => 'fa-clock', 'desc' => 'Reduza faltas enviando um alerta um dia antes.', 'ativa' => true],
+                ['titulo' => 'Confirmação de Agendamento', 'icon' => 'fa-calendar-check', 'desc' => 'Disparado instantaneamente após a reserva.', 'ativa' => true],
+                ['titulo' => 'Lembrete Estratégico (24h)', 'icon' => 'fa-clock', 'desc' => 'Reduza faltas enviando um alerta um dia antes.', 'ativa' => true],
                 ['titulo' => 'Check-in Imediato (1h)', 'icon' => 'fa-bolt', 'desc' => 'Alerta final para preparo do cliente.', 'ativa' => false],
-                ['titulo' => 'Aviso de Cancelamento', 'icon' => 'fa-calendar-xmark', 'desc' => 'ConfirmaÃ§Ã£o de que o horÃ¡rio foi liberado.', 'ativa' => true],
-                ['titulo' => 'NPS / AvaliaÃ§Ã£o PÃ³s-Venda', 'icon' => 'fa-star', 'desc' => 'Colete feedbacks apÃ³s a conclusÃ£o do serviÃ§o.', 'ativa' => false],
+                ['titulo' => 'Aviso de Cancelamento', 'icon' => 'fa-calendar-xmark', 'desc' => 'Confirmação de que o horário foi liberado.', 'ativa' => true],
+                ['titulo' => 'NPS / Avaliação Pós-Venda', 'icon' => 'fa-star', 'desc' => 'Colete feedbacks após a conclusão do serviço.', 'ativa' => false],
             ];
             @endphp
 
@@ -82,14 +82,14 @@
 
                     <div x-show="editando" x-collapse class="mt-6 space-y-4">
                         <div class="relative">
-                            <textarea rows="5" class="w-full bg-gray-800/50 border border-gray-800 rounded-2xl px-5 py-4 text-sm font-medium focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none leading-relaxed italic text-gray-400" placeholder="OlÃ¡ {nome}, seu agendamento foi confirmado..."></textarea>
+                            <textarea rows="5" class="w-full bg-gray-800/50 border border-gray-800 rounded-2xl px-5 py-4 text-sm font-medium focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none leading-relaxed italic text-gray-400" placeholder="Olá {nome}, seu agendamento foi confirmado..."></textarea>
                             <div class="absolute bottom-4 right-4 flex gap-2">
                                 <div class="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
                             </div>
                         </div>
                         
                         <div class="bg-violet-50/50 p-4 rounded-2xl border border-violet-800">
-                            <p class="text-[9px] font-bold text-violet-400 uppercase tracking-widest mb-3">Tags DinÃ¢micas DisponÃ­veis:</p>
+                            <p class="text-[9px] font-bold text-violet-400 uppercase tracking-widest mb-3">Tags Dinâmicas Disponíveis:</p>
                             <div class="flex flex-wrap gap-2">
                                 @foreach(['{cliente}', '{data}', '{hora}', '{profissional}', '{servico}'] as $v)
                                 <span class="text-[9px] bg-gray-900/50 text-violet-600 px-3 py-1 rounded-lg font-bold border border-violet-800 shadow-sm cursor-copy hover:border-violet-300 transition-colors">{{ $v }}</span>
@@ -106,7 +106,7 @@
             </div>
         </div>
 
-        <!-- ConfiguraÃ§Ã£o -->
+        <!-- Configuração -->
         <div x-show="tab === 'configuracao'" x-cloak x-transition:enter class="flex justify-center py-10">
             <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm shadow-2xl border border-gray-800 p-10 space-y-8 max-w-lg w-full text-center relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-500"></div>
@@ -115,15 +115,15 @@
                     <div class="w-20 h-20 bg-emerald-900/30 rounded-3xl flex items-center justify-center mx-auto mb-6 text-emerald-600 shadow-sm border border-emerald-800">
                         <i class="fa-brands fa-whatsapp text-4xl"></i>
                     </div>
-                    <h2 class="text-xl font-bold text-white uppercase tracking-tight mb-2">SincronizaÃ§Ã£o de Dispositivo</h2>
-                    <p class="text-xs text-gray-400 font-medium">Abra o WhatsApp no seu celular, acesse Aparelhos Conectados e escaneie o cÃ³digo abaixo.</p>
+                    <h2 class="text-xl font-bold text-white uppercase tracking-tight mb-2">Sincronização de Dispositivo</h2>
+                    <p class="text-xs text-gray-400 font-medium">Abra o WhatsApp no seu celular, acesse Aparelhos Conectados e escaneie o código abaixo.</p>
                 </div>
 
                 <div class="relative group">
                     <div class="aspect-square bg-gray-800/50 rounded-[40px] flex flex-col items-center justify-center border-4 border-dashed border-gray-800 p-8 group-hover:border-emerald-200 transition-all">
                         <div class="w-full h-full bg-gray-900 rounded-[32px] shadow-inner flex flex-col items-center justify-center text-gray-200 gap-4 opacity-50">
                             <i class="fa-solid fa-qrcode text-6xl"></i>
-                            <p class="text-[9px] font-bold uppercase tracking-widest">Aguardando geraÃ§Ã£o...</p>
+                            <p class="text-[9px] font-bold uppercase tracking-widest">Aguardando geração...</p>
                         </div>
                     </div>
                     
@@ -138,7 +138,7 @@
                 <div class="pt-4 space-y-4">
                     <div class="flex items-center gap-3 justify-center text-gray-400">
                          <i class="fa-solid fa-shield-halved text-xs text-emerald-500"></i>
-                         <p class="text-[10px] font-bold uppercase tracking-widest">ConexÃ£o Criptografada ponta-a-ponta</p>
+                         <p class="text-[10px] font-bold uppercase tracking-widest">Conexão Criptografada ponta-a-ponta</p>
                     </div>
                 </div>
             </div>

@@ -6,7 +6,7 @@
 
     <div class="text-center sm:text-left">
         <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Regras de Agendamento</h1>
-        <p class="text-sm text-gray-400 font-medium">Defina a lÃ³gica e as restriÃ§Ãµes para as reservas dos seus clientes.</p>
+        <p class="text-sm text-gray-400 font-medium">Defina a lógica e as restrições para as reservas dos seus clientes.</p>
     </div>
 
     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 shadow-sm">
@@ -24,7 +24,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">AntecedÃªncia MÃ¡xima (Dias)</label>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Antecedência Máxima (Dias)</label>
                     <input type="number" value="30"
                         class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none italic">
                 </div>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="space-y-4 pt-6 border-t border-gray-50">
-            <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 ml-1">Workflow e AutomaÃ§Ã£o</h3>
+            <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 ml-1">Workflow e Automação</h3>
             
             <label class="flex items-center justify-between p-4 bg-gray-900/80 rounded-2xl border border-gray-800 cursor-pointer hover:bg-violet-900/30 transition-colors group" x-data="{ v: true }">
                 <div class="flex items-center gap-4">
@@ -45,8 +45,8 @@
                         <i class="fa-solid fa-bolt-lightning"></i>
                     </div>
                     <div>
-                        <p class="text-xs font-bold text-white uppercase tracking-widest">AprovaÃ§Ã£o InstantÃ¢nea</p>
-                        <p class="text-[10px] text-gray-400 font-medium">Confirmar automaticamente sem intervenÃ§Ã£o manual.</p>
+                        <p class="text-xs font-bold text-white uppercase tracking-widest">Aprovação Instantânea</p>
+                        <p class="text-[10px] text-gray-400 font-medium">Confirmar automaticamente sem intervenção manual.</p>
                     </div>
                 </div>
                 <button type="button" @click="v = !v" :class="v ? 'bg-violet-600' : 'bg-gray-200'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-all shadow-inner">
@@ -61,7 +61,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-white uppercase tracking-widest">Lembrete via E-mail</p>
-                        <p class="text-[10px] text-gray-400 font-medium">Disparo automÃ¡tico 24 horas antes do evento.</p>
+                        <p class="text-[10px] text-gray-400 font-medium">Disparo automático 24 horas antes do evento.</p>
                     </div>
                 </div>
                 <button type="button" @click="v = !v" :class="v ? 'bg-violet-600' : 'bg-gray-200'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-all shadow-inner">
@@ -76,7 +76,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-bold text-white uppercase tracking-widest">Lembrete via WhatsApp</p>
-                        <p class="text-[10px] text-gray-400 font-medium">Requer integraÃ§Ã£o Business ativa.</p>
+                        <p class="text-[10px] text-gray-400 font-medium">Requer integração Business ativa.</p>
                     </div>
                 </div>
                 <button type="button" @click="v = !v" :class="v ? 'bg-emerald-500' : 'bg-gray-200'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-all shadow-inner">

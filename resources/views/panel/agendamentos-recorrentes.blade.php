@@ -4,13 +4,13 @@
 @section('content')
 <div class="space-y-6" x-data="{ 
     showModal: {{ $errors->any() ? 'true' : 'false' }},
-    diasSemana: ['Domingo', 'Segunda', 'TerÃ§a', 'Quarta', 'Quinta', 'Sexta', 'SÃ¡bado']
+    diasSemana: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
 }">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Atendimentos Recorrentes</h1>
-            <p class="text-sm text-gray-400 font-medium">Gerencie clientes com horÃ¡rios periÃ³dicos fixos no estabelecimento.</p>
+            <p class="text-sm text-gray-400 font-medium">Gerencie clientes com horários periódicos fixos no estabelecimento.</p>
         </div>
         <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
             <i class="fa-solid fa-calendar-plus text-xs"></i> Novo Recorrente
@@ -53,10 +53,10 @@
                         <th class="px-8 py-5">Cliente / Contato</th>
                         <th class="px-8 py-5">Especialista</th>
                         <th class="px-8 py-5 text-center">Procedimento</th>
-                        <th class="px-8 py-5 text-center">FrequÃªncia</th>
-                        <th class="px-8 py-5 text-center">HorÃ¡rio</th>
+                        <th class="px-8 py-5 text-center">Frequência</th>
+                        <th class="px-8 py-5 text-center">Horário</th>
                         <th class="px-8 py-5 text-center">Status</th>
-                        <th class="px-8 py-5 text-right">AÃ§Ãµes</th>
+                        <th class="px-8 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -115,7 +115,7 @@
                                     <i class="fa-solid fa-calendar-days text-3xl text-gray-200"></i>
                                 </div>
                                 <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum recorrente cadastrado</p>
-                                <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">Clique em "Novo Recorrente" para automatizar seus horÃ¡rios.</p>
+                                <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">Clique em "Novo Recorrente" para automatizar seus horários.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -141,8 +141,8 @@
                                     <i class="fa-solid fa-calendar-check text-xl"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">Nova RecorrÃªncia</h3>
-                                    <p class="text-xs text-gray-400 font-medium mt-0.5">Defina um horÃ¡rio fixo para o cliente.</p>
+                                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">Nova Recorrência</h3>
+                                    <p class="text-xs text-gray-400 font-medium mt-0.5">Defina um horário fixo para o cliente.</p>
                                 </div>
                             </div>
                             <button type="button" @click="showModal = false" class="w-10 h-10 flex items-center justify-center hover:bg-gray-800 text-gray-400 rounded-xl transition-all">
@@ -173,7 +173,7 @@
                                 </div>
 
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">ServiÃ§o</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Serviço</label>
                                     <select name="servico_id" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
                                         <option value="">Selecione</option>
                                         @foreach($servicos as $s)
@@ -193,14 +193,14 @@
                                     </select>
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">HorÃ¡rio Fixo</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Horário Fixo</label>
                                     <input type="time" name="hora" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-900/80 px-8 py-8 sm:flex sm:flex-row-reverse gap-4">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic">Confirmar RecorrÃªncia</button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic">Confirmar Recorrência</button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-10 py-4 bg-gray-900/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Descartar</button>
                     </div>
                 </form>

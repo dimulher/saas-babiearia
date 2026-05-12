@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'ServiÃ§os')
+@section('title', 'Serviços')
 
 @section('content')
 <div class="space-y-6" x-data="{ 
@@ -36,15 +36,15 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">CatÃ¡logo de ServiÃ§os</h1>
+            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Catálogo de Serviços</h1>
             <p class="text-sm text-gray-400 font-medium">Defina os procedimentos e valores oferecidos aos seus clientes.</p>
         </div>
         <button @click="openModal()" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
-            <i class="fa-solid fa-plus text-xs"></i> Novo ServiÃ§o
+            <i class="fa-solid fa-plus text-xs"></i> Novo Serviço
         </button>
     </div>
 
-    <!-- Lista de ServiÃ§os -->
+    <!-- Lista de Serviços -->
     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm shadow-sm overflow-hidden border border-gray-800 rounded-[32px]">
         <div class="p-8 border-b border-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-900/30">
             <div class="relative flex-1 max-w-md">
@@ -64,9 +64,9 @@
                 <thead class="bg-gray-900/80 text-gray-400 uppercase text-[9px] font-bold tracking-widest">
                     <tr>
                         <th class="px-8 py-5">Procedimento</th>
-                        <th class="px-8 py-5">PreÃ§o Base</th>
-                        <th class="px-8 py-5 text-center">DuraÃ§Ã£o</th>
-                        <th class="px-8 py-5 text-right">GestÃ£o</th>
+                        <th class="px-8 py-5">Preço Base</th>
+                        <th class="px-8 py-5 text-center">Duração</th>
+                        <th class="px-8 py-5 text-right">Gestão</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -81,7 +81,7 @@
                                         <div class="font-bold text-white group-hover:text-violet-600 transition-colors uppercase tracking-tight">{{ $servico->nome }}</div>
                                         @if($servico->disponivel_online)
                                             <div class="text-[9px] text-emerald-600 font-bold uppercase tracking-widest mt-0.5 flex items-center gap-1 opacity-80">
-                                                <i class="fa-solid fa-globe"></i> VisÃ­vel Online
+                                                <i class="fa-solid fa-globe"></i> Visível Online
                                             </div>
                                         @endif
                                     </div>
@@ -98,7 +98,7 @@
                                 <form action="{{ route('panel.servicos.destroy', $servico->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Excluir permanentemente este serviÃ§o?')" class="text-gray-300 hover:text-rose-600 transition-colors">
+                                    <button type="submit" onclick="return confirm('Excluir permanentemente este serviço?')" class="text-gray-300 hover:text-rose-600 transition-colors">
                                         <i class="fa-solid fa-trash-can text-sm"></i>
                                     </button>
                                 </form>
@@ -110,7 +110,7 @@
                                 <div class="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <i class="fa-solid fa-magic-wand-sparkles text-3xl text-gray-200"></i>
                                 </div>
-                                <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum serviÃ§o disponÃ­vel</p>
+                                <p class="text-base font-bold text-white uppercase tracking-widest">Nenhum serviço disponível</p>
                                 <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">Comece cadastrando seu primeiro procedimento.</p>
                             </td>
                         </tr>
@@ -120,7 +120,7 @@
         </div>
     </div>
 
-    <!-- Modal Novo/Editar ServiÃ§o -->
+    <!-- Modal Novo/Editar Serviço -->
     <div x-show="showModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div x-show="showModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" @click="showModal = false"></div>
@@ -142,7 +142,7 @@
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-white uppercase tracking-tight" x-text="editMode ? 'Editar Procedimento' : 'Novo Procedimento'"></h3>
-                                    <p class="text-xs text-gray-400 font-medium mt-1">Configure os detalhes do serviÃ§o oferecido.</p>
+                                    <p class="text-xs text-gray-400 font-medium mt-1">Configure os detalhes do serviço oferecido.</p>
                                 </div>
                             </div>
                             <button type="button" @click="showModal = false" class="w-10 h-10 flex items-center justify-center hover:bg-gray-800 text-gray-400 rounded-xl transition-all">
@@ -159,19 +159,19 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">PreÃ§o (R$)</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Preço (R$)</label>
                                     <input type="number" step="0.01" name="preco" x-model="service.preco" required
                                         class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">DuraÃ§Ã£o (Minutos)</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Duração (Minutos)</label>
                                     <input type="number" name="duracao_minutos" x-model="service.duracao_minutos" required
                                         class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Cor no CalendÃ¡rio</label>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Cor no Calendário</label>
                                 <div class="flex items-center gap-4">
                                     <input type="color" name="cor" x-model="service.cor" class="w-14 h-14 rounded-2xl border-none p-0 cursor-pointer overflow-hidden shadow-sm">
                                     <span class="text-xs font-bold text-gray-500 uppercase tracking-widest italic" x-text="service.cor"></span>
@@ -179,8 +179,8 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">DescriÃ§Ã£o Detalhada</label>
-                                <textarea name="descricao" x-model="service.descricao" rows="2" placeholder="O que estÃ¡ incluso neste serviÃ§o?..."
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Descrição Detalhada</label>
+                                <textarea name="descricao" x-model="service.descricao" rows="2" placeholder="O que está incluso neste serviço?..."
                                     class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
                             </div>
 
@@ -190,8 +190,8 @@
                                         <i class="fa-solid fa-globe"></i>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-bold text-white uppercase tracking-widest">DisponÃ­vel Online</p>
-                                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Permitir agendamento pelo link pÃºblico.</p>
+                                        <p class="text-[10px] font-bold text-white uppercase tracking-widest">Disponível Online</p>
+                                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Permitir agendamento pelo link público.</p>
                                     </div>
                                 </div>
                                 <div @click="online = !online; service.disponivel_online = online" class="relative inline-flex h-6 w-11 items-center rounded-full transition-all shadow-inner" :class="online ? 'bg-violet-600' : 'bg-gray-200'">
@@ -202,7 +202,7 @@
                         </div>
                     </div>
                     <div class="bg-gray-900/80 px-8 py-8 sm:flex sm:flex-row-reverse gap-4">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic" x-text="editMode ? 'Salvar AlteraÃ§Ãµes' : 'Criar ServiÃ§o'"></button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic" x-text="editMode ? 'Salvar Alterações' : 'Criar Serviço'"></button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-10 py-4 bg-gray-900/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Descartar</button>
                     </div>
                 </form>

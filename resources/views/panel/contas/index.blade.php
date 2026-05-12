@@ -9,7 +9,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Contas & Fluxo</h1>
-            <p class="text-sm text-gray-400 font-medium">Gerencie suas receitas e despesas de forma estratÃ©gica.</p>
+            <p class="text-sm text-gray-400 font-medium">Gerencie suas receitas e despesas de forma estratégica.</p>
         </div>
         <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3 rounded-2xl text-sm font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
             <i class="fa-solid fa-plus text-xs"></i> Nova Conta
@@ -49,12 +49,12 @@
             <table class="w-full text-sm text-left">
                 <thead class="bg-gray-800/50 text-gray-400 uppercase text-[9px] font-bold tracking-widest">
                     <tr>
-                        <th class="px-6 py-5">DescriÃ§Ã£o</th>
+                        <th class="px-6 py-5">Descrição</th>
                         <th class="px-6 py-5">Categoria</th>
                         <th class="px-6 py-5 text-center">Vencimento</th>
                         <th class="px-6 py-5 text-center">Status</th>
                         <th class="px-6 py-5 text-right">Valor</th>
-                        <th class="px-6 py-5 text-right">AÃ§Ãµes</th>
+                        <th class="px-6 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -110,7 +110,7 @@
                                     <i class="fa-solid fa-file-invoice-dollar text-3xl text-gray-200"></i>
                                 </div>
                                 <p class="text-base font-bold text-white uppercase tracking-widest">Nenhuma conta cadastrada</p>
-                                <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">Organize suas finanÃ§as cadastrando sua primeira conta.</p>
+                                <p class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest">Organize suas finanças cadastrando sua primeira conta.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -136,8 +136,8 @@
                                     <i class="fa-solid fa-receipt text-xl"></i>
                                 </div>
                                 <div>
-                                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">LanÃ§amento Financeiro</h3>
-                                    <p class="text-xs text-gray-400 font-medium mt-0.5">Registre uma nova entrada ou saÃ­da.</p>
+                                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">Lançamento Financeiro</h3>
+                                    <p class="text-xs text-gray-400 font-medium mt-0.5">Registre uma nova entrada ou saída.</p>
                                 </div>
                             </div>
                             <button type="button" @click="showModal = false" class="w-10 h-10 flex items-center justify-center hover:bg-gray-800 text-gray-400 rounded-xl transition-all">
@@ -147,7 +147,7 @@
 
                         <div class="space-y-6">
                             <div class="space-y-2">
-                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">DescriÃ§Ã£o</label>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Descrição</label>
                                 <input type="text" name="descricao" required placeholder="Ex: Aluguel, Compra de Shampoos" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                             </div>
 
@@ -157,9 +157,9 @@
                                     <input type="number" step="0.01" name="valor" required placeholder="0,00" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Tipo de LanÃ§amento</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Tipo de Lançamento</label>
                                     <select name="tipo" required class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
-                                        <option value="despesa">Despesa (SaÃ­da)</option>
+                                        <option value="despesa">Despesa (Saída)</option>
                                         <option value="receita">Receita (Entrada)</option>
                                     </select>
                                 </div>
@@ -175,7 +175,7 @@
                                     <select name="categoria" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                         <option value="">Selecione...</option>
                                         <option value="Aluguel">Aluguel</option>
-                                        <option value="SalÃ¡rios">SalÃ¡rios</option>
+                                        <option value="Salários">Salários</option>
                                         <option value="Produtos">Produtos</option>
                                         <option value="Infraestrutura">Infraestrutura</option>
                                         <option value="Outros">Outros</option>
@@ -185,7 +185,7 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-2">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">RecorrÃªncia</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Recorrência</label>
                                     <select name="recorrencia" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                                         <option value="nenhuma">Nenhuma</option>
                                         <option value="semanal">Semanal</option>
@@ -201,7 +201,7 @@
                         </div>
                     </div>
                     <div class="bg-gray-800/50 px-6 py-6 sm:px-8 sm:flex sm:flex-row-reverse gap-3">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-lg shadow-violet-900/20 px-6 py-3 bg-violet-600 text-xs font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto">LanÃ§ar Conta</button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-lg shadow-violet-900/20 px-6 py-3 bg-violet-600 text-xs font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto">Lançar Conta</button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-6 py-3 bg-gray-900/50 text-xs font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Cancelar</button>
                     </div>
                 </form>

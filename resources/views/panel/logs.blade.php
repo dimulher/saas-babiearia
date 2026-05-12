@@ -7,7 +7,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Rastreabilidade</h1>
-            <p class="text-sm text-gray-400 font-medium">Auditoria completa de todas as aÃ§Ãµes realizadas no sistema.</p>
+            <p class="text-sm text-gray-400 font-medium">Auditoria completa de todas as ações realizadas no sistema.</p>
         </div>
         <a href="{{ route('panel.logs.export', request()->all()) }}" class="btn-premium flex items-center justify-center gap-2 bg-gray-900/50 border border-gray-800 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-gray-800/50 transition-all shadow-sm">
             <i class="fa-solid fa-file-export text-xs text-violet-600"></i> Exportar Dados
@@ -23,7 +23,7 @@
                     <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-300 group-focus-within:text-violet-600 transition-colors">
                         <i class="fa-solid fa-magnifying-glass text-xs"></i>
                     </span>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="AÃ§Ã£o ou usuÃ¡rio..." 
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Ação ou usuário..." 
                         class="block w-full pl-10 pr-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-xs font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 <select name="acao" class="block w-full py-3.5 px-4 bg-gray-800/50 border-gray-800 rounded-2xl text-xs font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none appearance-none cursor-pointer">
                     <option value="todas">Todos os eventos</option>
                     <option value="cliente_criado" {{ request('acao') == 'cliente_criado' ? 'selected' : '' }}>Cliente Cadastrado</option>
-                    <option value="servico_criado" {{ request('acao') == 'servico_criado' ? 'selected' : '' }}>ServiÃ§o Cadastrado</option>
+                    <option value="servico_criado" {{ request('acao') == 'servico_criado' ? 'selected' : '' }}>Serviço Cadastrado</option>
                     <option value="produto_criado" {{ request('acao') == 'produto_criado' ? 'selected' : '' }}>Produto Cadastrado</option>
                     <option value="profissional_criado" {{ request('acao') == 'profissional_criado' ? 'selected' : '' }}>Profissional Cadastrado</option>
                     <option value="comanda_fechada" {{ request('acao') == 'comanda_fechada' ? 'selected' : '' }}>Comanda Fechada</option>
@@ -41,7 +41,7 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Data EspecÃ­fica</label>
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Data Específica</label>
                 <input type="date" name="data" value="{{ request('data') }}" 
                     class="block w-full py-3.5 px-4 bg-gray-800/50 border-gray-800 rounded-2xl text-xs font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
             </div>
@@ -60,8 +60,8 @@
                     <tr>
                         <th class="px-8 py-5 italic">Stamp (Data/Hora)</th>
                         <th class="px-8 py-5">Agente</th>
-                        <th class="px-8 py-5 text-center">AÃ§Ã£o Realizada</th>
-                        <th class="px-8 py-5">Payload / DescriÃ§Ã£o</th>
+                        <th class="px-8 py-5 text-center">Ação Realizada</th>
+                        <th class="px-8 py-5">Payload / Descrição</th>
                         <th class="px-8 py-5 text-right">IP Origem</th>
                     </tr>
                 </thead>

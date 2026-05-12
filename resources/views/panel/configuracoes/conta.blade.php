@@ -1,15 +1,15 @@
 @extends('layouts.app')
-@section('title', 'Perfil de UsuÃ¡rio - GlowSystem')
+@section('title', 'Perfil de Usuário - GlowSystem')
 
 @section('content')
 <div class="space-y-8 max-w-2xl mx-auto">
 
     <div class="text-center sm:text-left">
-        <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Perfil de UsuÃ¡rio</h1>
-        <p class="text-sm text-gray-400 font-medium">Gerencie suas credenciais de acesso e informaÃ§Ãµes pessoais.</p>
+        <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Perfil de Usuário</h1>
+        <p class="text-sm text-gray-400 font-medium">Gerencie suas credenciais de acesso e informações pessoais.</p>
     </div>
 
-    <!-- InformaÃ§Ãµes Pessoais -->
+    <!-- Informações Pessoais -->
     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 shadow-sm">
         <div class="flex flex-col sm:flex-row items-center gap-6">
             <div class="w-20 h-20 bg-violet-900/30 rounded-[28px] flex items-center justify-center text-2xl font-bold text-violet-600 border-2 border-violet-800 italic">
@@ -17,7 +17,7 @@
             </div>
             <div class="text-center sm:text-left">
                 <h3 class="text-xs font-bold text-white uppercase tracking-widest">Identidade Visual</h3>
-                <p class="text-[10px] text-gray-400 font-medium mt-1">Sua imagem serÃ¡ exibida nos logs e relatÃ³rios.</p>
+                <p class="text-[10px] text-gray-400 font-medium mt-1">Sua imagem será exibida nos logs e relatórios.</p>
                 <button class="mt-3 text-[10px] font-bold text-violet-600 uppercase tracking-widest hover:text-violet-800 flex items-center gap-2">
                     <i class="fa-solid fa-camera-retro"></i> Mudar Avatar
                 </button>
@@ -27,7 +27,7 @@
         <div class="grid grid-cols-1 gap-6 pt-4 border-t border-gray-50">
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nome Completo</label>
-                <input type="text" value="{{ auth()->user()->name ?? 'UsuÃ¡rio' }}"
+                <input type="text" value="{{ auth()->user()->name ?? 'Usuário' }}"
                     class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
             </div>
 
@@ -52,11 +52,11 @@
         </div>
     </div>
 
-    <!-- SeguranÃ§a -->
+    <!-- Segurança -->
     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 shadow-sm">
         <div>
-            <h2 class="text-xs font-bold text-white uppercase tracking-widest">SeguranÃ§a da Conta</h2>
-            <p class="text-[10px] text-gray-400 font-medium mt-1">Recomendamos senhas fortes com nÃºmeros e sÃ­mbolos.</p>
+            <h2 class="text-xs font-bold text-white uppercase tracking-widest">Segurança da Conta</h2>
+            <p class="text-[10px] text-gray-400 font-medium mt-1">Recomendamos senhas fortes com números e símbolos.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-6">
@@ -94,12 +94,12 @@
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <div>
-                <h2 class="text-xs font-bold text-rose-900 uppercase tracking-widest">Procedimento CrÃ­tico</h2>
-                <p class="text-[10px] text-rose-600/70 font-bold uppercase tracking-tighter">A exclusÃ£o da conta Ã© um processo irreversÃ­vel.</p>
+                <h2 class="text-xs font-bold text-rose-900 uppercase tracking-widest">Procedimento Crítico</h2>
+                <p class="text-[10px] text-rose-600/70 font-bold uppercase tracking-tighter">A exclusão da conta é um processo irreversível.</p>
             </div>
         </div>
         <button class="w-full sm:w-auto px-6 py-3 bg-gray-900/50 border border-rose-200 text-rose-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all italic">
-            Solicitar ExclusÃ£o de Conta
+            Solicitar Exclusão de Conta
         </button>
     </div>
 
