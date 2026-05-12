@@ -19,9 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
             return redirect()->route('login');
         });
 
-        // Só retorna JSON em produção para erros não-auth (evita stack trace público)
+        // Mostra o erro real para diagnóstico
         $exceptions->render(function (Throwable $e, Illuminate\Http\Request $request) {
-            if (app()->environment('local')) return null; // usa handler padrão em dev
-            return response()->json(['error' => 'Erro interno do servidor.'], 500);
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file'  => str_replace(base_path(), '', $e->getFile()),
+                'line'  => $e->getLine(),
+            ], 500);
         });
     })->create();
