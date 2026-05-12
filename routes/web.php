@@ -263,5 +263,7 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
 });
 
 Route::get('/', function () {
-    return redirect()->route('panel.dashboard');
+    return auth()->check()
+        ? redirect()->route('panel.dashboard')
+        : redirect()->route('login');
 });
