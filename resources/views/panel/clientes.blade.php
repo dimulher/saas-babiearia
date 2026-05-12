@@ -28,9 +28,37 @@
             </tr>
         </thead>
         <tbody>
-            <tr><td colspan="4" class="py-12 text-center text-gray-400 text-sm">Nenhum resultado encontrado. Tente ampliar a sua pesquisa.</td></tr>
+            @forelse($clientes as $cliente)
+            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                <td class="py-3 px-2"><input type="checkbox" class="rounded border-gray-300 text-indigo-600"></td>
+                <td class="py-3 px-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-xs font-bold text-indigo-600">
+                            {{ strtoupper(substr($cliente->nome, 0, 1)) }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-800">{{ $cliente->nome }}</p>
+                            @if($cliente->email)<p class="text-xs text-gray-400">{{ $cliente->email }}</p>@endif
+                        </div>
+                    </div>
+                </td>
+                <td class="py-3 px-2 text-sm text-gray-600">{{ $cliente->telefone ?? '—' }}</td>
+                <td class="py-3 px-2">
+                    <span class="text-xs px-2 py-0.5 rounded-full
+                        {{ $cliente->tipo === 'vip' ? 'bg-yellow-100 text-yellow-700' :
+                           ($cliente->tipo === 'assinante' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-500') }}">
+                        {{ ucfirst($cliente->tipo) }}
+                    </span>
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="4" class="py-12 text-center text-gray-400 text-sm">Nenhum cliente encontrado.</td></tr>
+            @endforelse
         </tbody>
     </table>
-    <p class="text-xs text-gray-400 mt-3">Exibindo 0 resultados</p>
+    <div class="mt-3 flex items-center justify-between">
+        <p class="text-xs text-gray-400">Exibindo {{ $clientes->count() }} de {{ $clientes->total() }} resultados</p>
+        {{ $clientes->links() }}
+    </div>
 </div>
 @endsection

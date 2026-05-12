@@ -4,117 +4,116 @@
 @section('content')
 <div class="space-y-6">
 
-    <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-900">Agendamentos</h1>
-        <button onclick="document.getElementById('modal-novo-agendamento').classList.remove('hidden')"
-            class="flex items-center gap-2 bg-gray-900 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-800">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            Novo Agendamento
-        </button>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-extrabold text-white uppercase tracking-tight">Agenda de Atendimento</h1>
+            <p class="text-sm text-gray-400 font-medium">Organize os horários e especialistas do seu estabelecimento.</p>
+        </div>
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white rounded-2xl border border-gray-200 p-4 flex flex-wrap gap-3">
-        <input type="date" value="{{ now()->format('Y-m-d') }}"
-            class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        <select class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option>Todos profissionais</option>
-        </select>
-        <select class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="">Todos os status</option>
-            <option value="pendente">Pendente</option>
-            <option value="confirmado">Confirmado</option>
-            <option value="concluido">Concluído</option>
-            <option value="cancelado">Cancelado</option>
-            <option value="faltou">Faltou</option>
-        </select>
-    </div>
+    <form action="{{ route('panel.agendamentos') }}" method="GET" class="bg-[#111827] border border-gray-800/50 rounded-3xl p-6 flex flex-wrap items-center gap-4 shadow-sm">
+        <div class="flex items-center gap-2 bg-[#0B0F19] px-4 py-2.5 rounded-xl border border-gray-800">
+            <i class="fa-solid fa-calendar text-violet-500 text-xs"></i>
+            <input type="date" name="date" value="{{ $date }}" onchange="this.form.submit()"
+                class="bg-transparent border-none p-0 text-xs font-bold uppercase tracking-widest focus:ring-0 text-gray-300">
+        </div>
+        <div class="flex items-center gap-2 bg-[#0B0F19] px-4 py-2.5 rounded-xl border border-gray-800">
+            <i class="fa-solid fa-user-tie text-violet-500 text-xs"></i>
+            <select name="profissional_id" onchange="this.form.submit()" class="bg-transparent border-none p-0 text-xs font-bold uppercase tracking-widest focus:ring-0 text-gray-300 pr-8">
+                <option value="">Todos profissionais</option>
+                @foreach($profissionais as $prof)
+                    <option value="{{ $prof->id }}" {{ $profissionalId == $prof->id ? 'selected' : '' }}>{{ $prof->nome }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="flex items-center gap-2 bg-[#0B0F19] px-4 py-2.5 rounded-xl border border-gray-800">
+            <i class="fa-solid fa-filter text-violet-500 text-xs"></i>
+            <select name="status" onchange="this.form.submit()" class="bg-transparent border-none p-0 text-xs font-bold uppercase tracking-widest focus:ring-0 text-gray-300 pr-8">
+                <option value="">Todos os status</option>
+                <option value="pendente" {{ $status == 'pendente' ? 'selected' : '' }}>Pendente</option>
+                <option value="confirmado" {{ $status == 'confirmado' ? 'selected' : '' }}>Confirmado</option>
+                <option value="concluido" {{ $status == 'concluido' ? 'selected' : '' }}>Concluído</option>
+                <option value="cancelado" {{ $status == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                <option value="faltou" {{ $status == 'faltou' ? 'selected' : '' }}>Faltou</option>
+            </select>
+        </div>
+    </form>
 
     <!-- Calendário semanal + lista -->
-    <div class="bg-white rounded-2xl border border-gray-200 p-6">
+    <div class="bg-[#111827] border border-gray-800/50 rounded-3xl p-8 shadow-sm">
 
         <!-- Navegação semanal -->
-        <div class="flex items-center justify-between mb-6">
-            <button class="p-2 hover:bg-gray-100 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            </button>
-            <div class="flex gap-2">
-                @php $inicioSemana = now()->startOfWeek(); @endphp
+        <div class="flex items-center justify-between mb-10 pb-6 border-b border-gray-800/50">
+            @php 
+                $dataSelecionada = \Carbon\Carbon::parse($date);
+                $inicioSemana = $dataSelecionada->copy()->startOfWeek(); 
+            @endphp
+            <a href="{{ route('panel.agendamentos', ['date' => $inicioSemana->copy()->subWeek()->format('Y-m-d'), 'profissional_id' => $profissionalId, 'status' => $status]) }}" class="w-10 h-10 flex items-center justify-center hover:bg-violet-900/30 hover:text-violet-400 text-gray-500 rounded-xl transition-all">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            <div class="flex gap-4 overflow-x-auto overflow-y-hidden py-4 -my-4 no-scrollbar items-center">
                 @for($i = 0; $i < 7; $i++)
                     @php $dia = $inicioSemana->copy()->addDays($i); @endphp
-                    <div class="flex flex-col items-center w-14 py-2 px-1 rounded-xl cursor-pointer {{ $dia->isToday() ? 'bg-indigo-600 text-white' : 'hover:bg-gray-50 text-gray-600' }}">
-                        <span class="text-xs font-medium">{{ strtoupper($dia->locale('pt_BR')->isoFormat('ddd')) }}</span>
-                        <span class="text-lg font-bold">{{ $dia->day }}</span>
-                    </div>
+                    <a href="{{ route('panel.agendamentos', ['date' => $dia->format('Y-m-d'), 'profissional_id' => $profissionalId, 'status' => $status]) }}" class="flex flex-col items-center min-w-[65px] py-3 px-2 rounded-2xl cursor-pointer transition-all {{ $dia->isSameDay($dataSelecionada) ? 'bg-violet-600 text-white shadow-lg shadow-violet-900/20 scale-110 border border-violet-500' : 'hover:bg-gray-800 text-gray-500 border border-transparent' }}">
+                        <span class="text-[9px] font-bold uppercase tracking-[0.2em] mb-1 opacity-80">{{ strtoupper($dia->locale('pt_BR')->isoFormat('ddd')) }}</span>
+                        <span class="text-xl font-bold tracking-tighter">{{ $dia->day }}</span>
+                    </a>
                 @endfor
             </div>
-            <button class="p-2 hover:bg-gray-100 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </button>
+            <a href="{{ route('panel.agendamentos', ['date' => $inicioSemana->copy()->addWeek()->format('Y-m-d'), 'profissional_id' => $profissionalId, 'status' => $status]) }}" class="w-10 h-10 flex items-center justify-center hover:bg-violet-900/30 hover:text-violet-400 text-gray-500 rounded-xl transition-all">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
         </div>
 
+        @if($agendamentos->isEmpty())
         <!-- Estado vazio -->
-        <div class="flex flex-col items-center justify-center py-16 text-gray-400">
-            <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            <p class="text-base font-medium text-gray-500">Nenhum agendamento para este dia</p>
-            <p class="text-sm text-gray-400 mt-1">Clique em "Novo Agendamento" para começar</p>
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400 bg-gray-900 rounded-3xl border border-dashed border-gray-700">
+            <i class="fa-regular fa-calendar-xmark text-5xl mb-4 text-gray-600"></i>
+            <h3 class="text-base font-bold text-white uppercase tracking-tight">Sem agendamentos registrados</h3>
+            <p class="text-[10px] text-gray-500 mt-2 uppercase font-bold tracking-widest">A agenda deste dia está livre até o momento.</p>
         </div>
+        @else
+        <!-- Lista de Agendamentos -->
+        <div class="space-y-3">
+            @foreach($agendamentos as $agendamento)
+            <div class="bg-[#0B0F19] border border-gray-800 hover:border-gray-700 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all group">
+                <div class="flex items-center gap-5">
+                    <div class="text-center w-16">
+                        <div class="text-lg font-bold text-white tracking-tighter">{{ \Carbon\Carbon::parse($agendamento->data_inicio)->format('H:i') }}</div>
+                        <div class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">{{ \Carbon\Carbon::parse($agendamento->data_fim)->format('H:i') }}</div>
+                    </div>
+                    <div class="h-10 w-px bg-gray-800"></div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white uppercase tracking-tight group-hover:text-violet-400 transition-colors">{{ $agendamento->cliente_nome ?? 'Cliente Não Informado' }}</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">{{ $agendamento->servico->nome ?? 'Serviço Excluído' }} - R$ {{ number_format($agendamento->preco, 2, ',', '.') }}</p>
+                        <div class="flex items-center gap-2 mt-2.5">
+                            <div class="w-5 h-5 bg-violet-900/30 rounded-full flex items-center justify-center text-violet-400 text-[8px] font-bold uppercase border border-violet-800/50">
+                                {{ $agendamento->profissional->initials ?? '?' }}
+                            </div>
+                            <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase">{{ $agendamento->profissional->nome ?? 'Profissional Excluído' }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    @if($agendamento->status == 'pendente')
+                        <span class="px-3 py-1 bg-amber-900/30 text-amber-500 rounded-full text-[9px] font-bold uppercase tracking-widest border border-amber-800/50">Pendente</span>
+                    @elseif($agendamento->status == 'confirmado')
+                        <span class="px-3 py-1 bg-blue-900/30 text-blue-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-blue-800/50">Confirmado</span>
+                    @elseif($agendamento->status == 'concluido')
+                        <span class="px-3 py-1 bg-emerald-900/30 text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-emerald-800/50">Concluído</span>
+                    @elseif($agendamento->status == 'cancelado' || $agendamento->status == 'faltou')
+                        <span class="px-3 py-1 bg-rose-900/30 text-rose-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-rose-800/50">{{ $agendamento->status }}</span>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
     </div>
 
 </div>
 
-<!-- Modal Novo Agendamento -->
-<div id="modal-novo-agendamento" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 p-6">
-        <div class="flex items-center justify-between mb-5">
-            <h2 class="text-lg font-bold text-gray-900">Novo Agendamento</h2>
-            <button onclick="document.getElementById('modal-novo-agendamento').classList.add('hidden')"
-                class="p-1 hover:bg-gray-100 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
 
-        <form class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
-                <input type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nome do cliente">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Profissional</label>
-                <select class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option>Selecione um profissional</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Serviço</label>
-                <select class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <option>Selecione um serviço</option>
-                </select>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Data</label>
-                    <input type="date" value="{{ now()->format('Y-m-d') }}" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Horário</label>
-                    <input type="time" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Observações</label>
-                <textarea rows="2" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Opcional..."></textarea>
-            </div>
-            <div class="flex gap-3 pt-2">
-                <button type="button" onclick="document.getElementById('modal-novo-agendamento').classList.add('hidden')"
-                    class="flex-1 border border-gray-200 text-gray-700 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-50">
-                    Cancelar
-                </button>
-                <button type="submit" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700">
-                    Salvar Agendamento
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
 @endsection

@@ -2,224 +2,288 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="space-y-4 sm:space-y-6 max-w-7xl mx-auto">
+<div class="space-y-6 max-w-7xl mx-auto">
 
-    {{-- Boas-vindas --}}
-    <div class="bg-white rounded-xl border border-gray-200 px-5 py-5">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    {{-- ══════════ BOAS-VINDAS + LINK DO PROPRIETÁRIO ══════════ --}}
+    <div class="relative bg-gradient-to-br from-[#13082a] via-[#1a0d38] to-[#0f0720] border border-violet-900/30 rounded-3xl overflow-hidden px-6 py-6">
+        {{-- Glow de fundo --}}
+        <div class="absolute top-0 right-0 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/5 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h2 class="text-xl font-bold text-gray-800">Bem-vindo, gabriel!</h2>
-                <p class="text-sm text-gray-500 mt-0.5">{{ now()->isoFormat('dddd, D [de] MMMM [de] YYYY') }}</p>
+                <p class="text-xs font-bold text-violet-400 uppercase tracking-widest mb-1">Painel de Controle</p>
+                <h2 class="text-2xl font-extrabold text-white tracking-tight">Bem-vindo, {{ auth()->user()->name ?? 'Proprietário' }}!</h2>
+                <p class="text-sm text-gray-500 mt-1 font-medium">{{ now()->locale('pt_BR')->isoFormat('dddd, D [de] MMMM [de] YYYY') }}</p>
             </div>
-            <a href="/agendar/gabriel" target="_blank"
-               class="flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm px-5 py-2.5 rounded-lg font-semibold uppercase tracking-wide w-full sm:w-auto">
-                <i class="fa-solid fa-link text-xs"></i> Link de Agendamento
+            {{-- Link do proprietário (todos os funcionários) --}}
+            <a href="{{ url('/agendar/' . auth()->user()->barbearia->slug) }}" target="_blank"
+               class="flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white text-sm px-5 py-3 rounded-xl font-bold uppercase tracking-wider transition-all shadow-lg shadow-violet-900/30 w-full sm:w-auto justify-center">
+                <i class="fa-solid fa-link text-xs"></i>
+                Link do Estabelecimento
             </a>
         </div>
+    </div>
 
-        {{-- 4 Cards: empilhados no mobile, grade no desktop --}}
-        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <div class="bg-blue-50 rounded-xl p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-calendar-check text-white text-base"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-blue-600 font-medium">Agendamentos Hoje</p>
-                    <p class="text-3xl font-bold text-blue-700 leading-none mt-1">0</p>
-                </div>
+    {{-- ══════════ GRID DE MÉTRICAS ══════════ --}}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+        {{-- Faturamento do Mês --}}
+        <div class="col-span-2 lg:col-span-1 bg-[#111827] border border-gray-800 hover:border-violet-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-violet-900/40 text-violet-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-violet-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-circle-dollar-to-slot text-lg"></i>
             </div>
-            <div class="bg-green-50 rounded-xl p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-users text-white text-base"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-green-600 font-medium">Clientes Ativos</p>
-                    <p class="text-3xl font-bold text-green-700 leading-none mt-1">0</p>
-                </div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Faturamento Mês</p>
+                <p class="text-xl font-black text-white leading-none mt-1">R$ {{ number_format($faturamentoMes, 2, ',', '.') }}</p>
+                <p class="text-[10px] text-gray-500 font-medium mt-1">Hoje: R$ {{ number_format($faturamentoHoje, 2, ',', '.') }}</p>
             </div>
-            <div class="bg-purple-50 rounded-xl p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-user-group text-white text-base"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-purple-600 font-medium">Profissionais</p>
-                    <p class="text-3xl font-bold text-purple-700 leading-none mt-1">0</p>
-                </div>
+        </div>
+
+        {{-- Agendamentos hoje --}}
+        <div class="bg-[#111827] border border-gray-800 hover:border-blue-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-blue-900/30 text-blue-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-calendar-check text-lg"></i>
             </div>
-            <div class="bg-yellow-50 rounded-xl p-4 flex items-center gap-4">
-                <div class="w-12 h-12 bg-yellow-400 rounded-xl flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-scissors text-white text-base"></i>
-                </div>
-                <div>
-                    <p class="text-xs text-yellow-600 font-medium">Serviços</p>
-                    <p class="text-3xl font-bold text-yellow-600 leading-none mt-1">0</p>
-                </div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Hoje</p>
+                <p class="text-2xl font-black text-white leading-none mt-1">{{ $agendamentosHoje }}</p>
+                <p class="text-[10px] text-blue-500 font-bold mt-1">Agendamentos</p>
+            </div>
+        </div>
+
+        {{-- Agendamentos no mês --}}
+        <div class="bg-[#111827] border border-gray-800 hover:border-emerald-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-emerald-900/30 text-emerald-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Mês</p>
+                <p class="text-2xl font-black text-white leading-none mt-1">{{ $agendamentosMes }}</p>
+                <p class="text-[10px] text-emerald-500 font-bold mt-1">Agendamentos</p>
+            </div>
+        </div>
+
+        {{-- Pendentes --}}
+        <div class="bg-[#111827] border border-gray-800 hover:border-amber-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-amber-900/30 text-amber-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-hourglass-half text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pendentes</p>
+                <p class="text-2xl font-black text-white leading-none mt-1">{{ $agendamentosPendentes }}</p>
+                <p class="text-[10px] text-amber-500 font-bold mt-1">Confirmados</p>
             </div>
         </div>
     </div>
 
-    {{-- Agenda + Coluna direita --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-
-        {{-- AGENDA (coluna principal) --}}
-        <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-5" x-data="{ tab: 'proximos' }">
-            <h3 class="font-semibold text-gray-700 mb-4 flex items-center gap-2 text-sm">
-                <i class="fa-solid fa-calendar-days text-indigo-500"></i> Agenda
-            </h3>
-
-            {{-- Data atual --}}
-            <p class="text-center text-xl font-semibold text-gray-800 mb-4">
-                {{ now()->isoFormat('D [de] MMMM [de] YYYY') }}
-            </p>
-
-            {{-- Navegação semanal --}}
-            <div class="flex items-center gap-1 mb-4">
-                <button class="p-2 hover:bg-gray-100 rounded-lg shrink-0">
-                    <i class="fa-solid fa-chevron-left text-gray-400 text-xs"></i>
-                </button>
-                <div class="flex-1 grid grid-cols-5 sm:grid-cols-7 gap-1 overflow-hidden">
-                    @php
-                        $startOfWeek = now()->startOfWeek();
-                        // Mobile: mostra 5 dias centrado no dia atual (2 antes, hoje, 2 depois)
-                        $todayIndex = now()->dayOfWeek; // 0=dom
-                        $mobileStart = now()->copy()->subDays(2);
-                    @endphp
-
-                    {{-- Mobile: 5 dias ao redor do hoje --}}
-                    @for($i = 0; $i < 5; $i++)
-                        @php $day = $mobileStart->copy()->addDays($i); @endphp
-                        <button class="flex flex-col items-center py-2 rounded-xl text-xs font-medium sm:hidden {{ $day->isToday() ? 'bg-indigo-600 text-white' : 'hover:bg-gray-100 text-gray-600 border border-gray-100' }}">
-                            <span class="text-xs">{{ strtoupper(mb_substr($day->locale('pt_BR')->isoFormat('ddd'), 0, 3)) }}</span>
-                            <span class="text-base font-bold mt-0.5">{{ $day->day }}</span>
-                        </button>
-                    @endfor
-
-                    {{-- Desktop: 7 dias da semana --}}
-                    @for($i = 0; $i < 7; $i++)
-                        @php $day = $startOfWeek->copy()->addDays($i); @endphp
-                        <button class="hidden sm:flex flex-col items-center py-2 rounded-xl text-xs font-medium {{ $day->isToday() ? 'bg-indigo-600 text-white' : 'hover:bg-gray-100 text-gray-600' }}">
-                            <span>{{ strtoupper(mb_substr($day->locale('pt_BR')->isoFormat('ddd'), 0, 3)) }}</span>
-                            <span class="text-base font-bold mt-0.5">{{ $day->day }}</span>
-                        </button>
-                    @endfor
-                </div>
-                <button class="p-2 hover:bg-gray-100 rounded-lg shrink-0">
-                    <i class="fa-solid fa-chevron-right text-gray-400 text-xs"></i>
-                </button>
+    {{-- Linha 2 de métricas --}}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {{-- Ticket Médio --}}
+        <div class="bg-[#111827] border border-gray-800 hover:border-fuchsia-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-fuchsia-900/30 text-fuchsia-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-fuchsia-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-receipt text-lg"></i>
             </div>
-
-            {{-- Filtro profissional --}}
-            <div class="mb-3">
-                <select class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-600 bg-white">
-                    <option>
-                        <i class="fa-solid fa-user"></i> Todos profissionais
-                    </option>
-                </select>
-            </div>
-
-            {{-- Botão Novo Agendamento (full width no mobile, igual BarberBook) --}}
-            <a href="/panel/agendamentos"
-               class="flex items-center justify-center gap-2 w-full bg-gray-900 hover:bg-gray-800 text-white text-sm py-3 rounded-lg font-semibold uppercase tracking-wide mb-4">
-                <i class="fa-solid fa-calendar-plus text-xs"></i> Novo Agendamento
-            </a>
-
-            {{-- Tabs Próximos / Anteriores --}}
-            <div class="flex gap-1 border-b border-gray-200 mb-4">
-                <button @click="tab='proximos'"
-                    :class="tab==='proximos' ? 'border-b-2 border-indigo-600 text-indigo-600 font-semibold' : 'text-gray-500 hover:text-gray-700'"
-                    class="pb-2.5 px-3 text-sm flex items-center gap-1.5 transition-colors">
-                    <i class="fa-solid fa-calendar-check text-xs"></i> Próximos
-                </button>
-                <button @click="tab='anteriores'"
-                    :class="tab==='anteriores' ? 'border-b-2 border-indigo-600 text-indigo-600 font-semibold' : 'text-gray-500 hover:text-gray-700'"
-                    class="pb-2.5 px-3 text-sm flex items-center gap-1.5 transition-colors">
-                    <i class="fa-solid fa-calendar-xmark text-xs"></i> Anteriores
-                </button>
-            </div>
-
-            {{-- Empty state --}}
-            <div class="flex flex-col items-center justify-center py-12 text-gray-400">
-                <i class="fa-regular fa-calendar-xmark text-4xl mb-3 text-gray-300"></i>
-                <p class="text-sm text-gray-500">Nenhum agendamento encontrado para esta data</p>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Ticket Médio</p>
+                <p class="text-xl font-black text-white leading-none mt-1">R$ {{ number_format($ticketMedio, 2, ',', '.') }}</p>
+                <p class="text-[10px] text-fuchsia-500 font-bold mt-1">Por atendimento</p>
             </div>
         </div>
 
-        {{-- COLUNA DIREITA --}}
-        <div class="space-y-4">
+        {{-- Clientes --}}
+        <div class="bg-[#111827] border border-gray-800 hover:border-teal-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-teal-900/30 text-teal-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-teal-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-users text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Clientes</p>
+                <p class="text-2xl font-black text-white leading-none mt-1">{{ $clientesAtivos }}</p>
+                <p class="text-[10px] text-teal-500 font-bold mt-1">Cadastrados</p>
+            </div>
+        </div>
 
-            {{-- Link de Agendamento --}}
-            <div class="bg-white rounded-xl border border-gray-200 p-4">
-                <h4 class="font-semibold text-gray-700 mb-3 flex items-center gap-2 text-sm">
-                    <i class="fa-solid fa-link text-indigo-500"></i> Seu Link de Agendamento
-                </h4>
-                <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5">
-                    <span class="text-xs text-gray-500 flex-1 truncate">seudominio.com/gabriel</span>
-                    <button class="text-xs text-indigo-600 font-semibold hover:text-indigo-700 flex items-center gap-1 shrink-0">
-                        <i class="fa-regular fa-copy"></i> Copiar
-                    </button>
+        {{-- Equipe --}}
+        <div class="bg-[#111827] border border-gray-800 hover:border-violet-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-violet-900/30 text-violet-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-violet-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-user-group text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Equipe</p>
+                <p class="text-2xl font-black text-white leading-none mt-1">{{ $profissionais }}</p>
+                <p class="text-[10px] text-violet-500 font-bold mt-1">Profissionais</p>
+            </div>
+        </div>
+
+        {{-- Catálogo --}}
+        <div class="bg-[#111827] border border-gray-800 hover:border-orange-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
+            <div class="w-12 h-12 bg-orange-900/30 text-orange-400 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-magic-wand-sparkles text-lg"></i>
+            </div>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Catálogo</p>
+                <p class="text-2xl font-black text-white leading-none mt-1">{{ $servicos }}</p>
+                <p class="text-[10px] text-orange-500 font-bold mt-1">Serviços ativos</p>
+            </div>
+        </div>
+    </div>
+
+    {{-- ══════════ AGENDA + COLUNA DIREITA ══════════ --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {{-- AGENDAMENTOS HOJE (compacto) --}}
+        <div class="lg:col-span-2 bg-[#111827] border border-gray-800/50 rounded-3xl p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-white flex items-center gap-2 text-sm">
+                    <i class="fa-solid fa-calendar-check text-violet-500"></i>
+                    Agendamentos de Hoje
+                </h3>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest bg-gray-900 px-3 py-1 rounded-full border border-gray-800">
+                        {{ $selectedDate->locale('pt_BR')->isoFormat('ddd, D MMM') }}
+                    </span>
+                    <a href="/panel/agendamentos" class="text-[10px] font-black text-violet-400 hover:text-violet-300 uppercase tracking-widest transition-colors">
+                        Ver tudo →
+                    </a>
                 </div>
-                <p class="text-xs text-gray-400 mt-2 leading-relaxed">Compartilhe este link com seus clientes para que possam agendar serviços diretamente.</p>
             </div>
 
-            {{-- Ações Rápidas --}}
-            <div class="bg-white rounded-xl border border-gray-200 p-4">
-                <h4 class="font-semibold text-gray-700 mb-3 text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-yellow-400"></i> Ações Rápidas
+            @if($agendamentos->isEmpty())
+            <div class="flex flex-col items-center justify-center py-10 text-gray-700 border border-dashed border-gray-800 rounded-2xl">
+                <i class="fa-regular fa-calendar-xmark text-3xl mb-2"></i>
+                <p class="text-xs font-medium text-gray-500">Nenhum agendamento hoje</p>
+            </div>
+            @else
+            <div class="space-y-2">
+                @foreach($agendamentos as $ag)
+                <div class="flex items-center gap-3 px-3 py-2.5 bg-gray-900/60 border border-gray-800 hover:border-violet-800/40 rounded-xl transition-all group">
+                    <span class="text-xs font-black text-violet-400 w-10 shrink-0">{{ $ag->data_inicio->format('H:i') }}</span>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-white truncate">{{ $ag->nome_cliente }}</p>
+                        <p class="text-[10px] text-gray-500 truncate">{{ $ag->servico?->nome }} · {{ $ag->profissional?->nome }}</p>
+                    </div>
+                    <div class="shrink-0 text-right">
+                        <p class="text-xs font-black text-white">R$ {{ number_format($ag->preco, 2, ',', '.') }}</p>
+                        <span class="text-[9px] font-bold uppercase
+                            {{ $ag->status === 'concluido' ? 'text-emerald-400' : ($ag->status === 'cancelado' ? 'text-red-400' : 'text-violet-400') }}">
+                            {{ $ag->status }}
+                        </span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <a href="/panel/agendamentos" class="flex items-center justify-center gap-1.5 mt-4 py-2.5 text-[10px] font-black text-gray-500 hover:text-violet-400 uppercase tracking-widest border border-gray-800 hover:border-violet-800/40 rounded-xl transition-all">
+                <i class="fa-solid fa-calendar-days text-[9px]"></i> Ver agenda completa
+            </a>
+            @endif
+        </div>
+
+
+        {{-- COLUNA DIREITA --}}
+        <div class="space-y-5">
+
+            {{-- Links de Agendamento por Profissional --}}
+            <div class="bg-[#111827] border border-gray-800/50 rounded-3xl p-5">
+                <h4 class="font-bold text-white mb-4 flex items-center gap-2 text-sm uppercase tracking-tight">
+                    <i class="fa-solid fa-link text-violet-500"></i> Links de Agendamento
                 </h4>
-                <div class="space-y-0.5">
-                    @foreach([
-                        ['/panel/agendamentos', 'bg-blue-100', 'fa-calendar-days', 'text-blue-600', 'Ver minha agenda', 'Gerencie seus agendamentos'],
-                        ['/panel/profissionais', 'bg-purple-100', 'fa-user-group', 'text-purple-600', 'Profissionais', 'Gerencie sua equipe'],
-                        ['/panel/servicos', 'bg-yellow-100', 'fa-scissors', 'text-yellow-600', 'Serviços', 'Gerencie seus serviços'],
-                        ['/panel/clientes', 'bg-green-100', 'fa-users', 'text-green-600', 'Clientes', 'Gerencie seus clientes'],
-                    ] as [$url, $bg, $icon, $color, $label, $desc])
-                    <a href="{{ $url }}" class="flex items-center justify-between px-3 py-2.5 hover:bg-gray-50 rounded-lg group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 {{ $bg }} rounded-lg flex items-center justify-center shrink-0">
-                                <i class="fa-solid {{ $icon }} {{ $color }} text-sm"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-700">{{ $label }}</p>
-                                <p class="text-xs text-gray-400">{{ $desc }}</p>
-                            </div>
+
+                {{-- Link do Proprietário --}}
+                <div class="mb-3">
+                    <p class="text-[10px] font-black text-violet-400 uppercase tracking-widest mb-1.5">Estabelecimento (todos os profissionais)</p>
+                    <div class="flex items-center gap-2 bg-gray-900 border border-violet-800/40 rounded-xl px-3 py-2.5">
+                        <i class="fa-solid fa-store text-violet-500 text-xs shrink-0"></i>
+                        <span class="text-xs text-gray-400 flex-1 truncate font-medium">{{ url('/agendar/' . auth()->user()->barbearia->slug) }}</span>
+                        <button onclick="navigator.clipboard.writeText('{{ url('/agendar/' . auth()->user()->barbearia->slug) }}').then(() => { this.innerHTML='<i class=\'fa-solid fa-check\'></i>'; setTimeout(()=>{ this.innerHTML='<i class=\'fa-regular fa-copy\'></i>'; }, 1500) })"
+                            class="text-violet-500 hover:text-violet-300 transition-colors shrink-0">
+                            <i class="fa-regular fa-copy text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {{-- Divisor --}}
+                @if($profissionaisList->count())
+                <div class="flex items-center gap-2 my-3">
+                    <div class="flex-1 h-px bg-gray-800"></div>
+                    <span class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Por profissional</span>
+                    <div class="flex-1 h-px bg-gray-800"></div>
+                </div>
+
+                <div class="space-y-2">
+                    @foreach($profissionaisList as $p)
+                    <div>
+                        <div class="flex items-center gap-2 bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl px-3 py-2.5 transition-colors">
+                            <div class="w-6 h-6 bg-violet-900/50 rounded-lg flex items-center justify-center text-[10px] font-black text-violet-400 shrink-0">{{ $p->initials }}</div>
+                            <span class="text-xs text-gray-400 flex-1 truncate font-medium">{{ $p->nome }}</span>
+                            <button onclick="navigator.clipboard.writeText('{{ url('/agendar/' . auth()->user()->barbearia->slug . '?funcionario=' . $p->id) }}').then(() => { this.innerHTML='<i class=\'fa-solid fa-check text-emerald-400\'></i>'; setTimeout(()=>{ this.innerHTML='<i class=\'fa-regular fa-copy\'></i>'; }, 1500) })"
+                                class="text-gray-500 hover:text-violet-400 transition-colors shrink-0">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                            <a href="{{ url('/agendar/' . auth()->user()->barbearia->slug . '?funcionario=' . $p->id) }}" target="_blank"
+                               class="text-gray-600 hover:text-violet-400 transition-colors shrink-0">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-gray-300 text-xs group-hover:text-gray-400"></i>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+
+            {{-- Acesso Rápido --}}
+            <div class="bg-[#111827] border border-gray-800/50 rounded-3xl p-5">
+                <h4 class="font-bold text-white mb-3 text-sm uppercase tracking-tight flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-amber-400"></i> Acesso Rápido
+                </h4>
+                <div class="space-y-1">
+                    @foreach([
+                        ['/panel/agendamentos',  'fa-calendar-days',       'text-blue-400',    'Agendamentos',   'Ver agenda completa'],
+                        ['/panel/financeiro',    'fa-circle-dollar-to-slot','text-emerald-400', 'Financeiro',     'Relatório financeiro'],
+                        ['/panel/profissionais', 'fa-user-group',           'text-violet-400',  'Equipe',         'Gerenciar profissionais'],
+                        ['/panel/servicos',      'fa-magic-wand-sparkles',  'text-amber-400',   'Serviços',       'Catálogo de serviços'],
+                        ['/panel/clientes',      'fa-users',                'text-teal-400',    'Clientes',       'Base de clientes'],
+                    ] as [$url, $icon, $color, $label, $desc])
+                    <a href="{{ $url }}" class="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-800 rounded-xl group transition-all">
+                        <i class="fa-solid {{ $icon }} {{ $color }} text-sm w-4 text-center group-hover:scale-110 transition-transform"></i>
+                        <div class="flex-1">
+                            <p class="text-xs font-bold text-gray-200">{{ $label }}</p>
+                            <p class="text-[10px] text-gray-500 font-medium">{{ $desc }}</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-gray-700 text-[10px] group-hover:text-gray-400 group-hover:translate-x-0.5 transition-all"></i>
                     </a>
                     @endforeach
                 </div>
             </div>
 
-            {{-- Guia de Início --}}
-            <div class="bg-white rounded-xl border border-gray-200 p-4">
-                <h4 class="font-semibold text-gray-700 mb-3 text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-lightbulb text-yellow-400"></i> Guia de Início
+            {{-- Onboarding --}}
+            <div class="bg-gradient-to-br from-violet-900 to-purple-950 border border-violet-800/30 rounded-3xl p-5 shadow-xl shadow-violet-900/20">
+                <h4 class="font-bold text-white mb-4 text-sm flex items-center gap-2 uppercase tracking-widest">
+                    <i class="fa-solid fa-rocket text-violet-300"></i> Onboarding
                 </h4>
-                <ol class="space-y-2.5">
-                    @foreach([
-                        'Configure o nome da barbearia e os horários de funcionamento',
-                        'Escolha o intervalo de tempo entre os agendamentos',
-                        'Adicione os serviços oferecidos pela barbearia',
-                        'Insira os dados dos profissionais da equipe',
-                    ] as $i => $step)
-                    <li class="flex items-start gap-2.5 text-xs text-gray-600">
-                        <span class="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold shrink-0 mt-0.5 text-xs">{{ $i + 1 }}</span>
-                        <a href="#" class="text-indigo-600 hover:underline leading-relaxed">{{ $step }}</a>
+                <ol class="space-y-3">
+                    @php
+                        $steps = [
+                            ['label' => 'Dados do Estabelecimento', 'url' => route('panel.configuracoes.barbearia'),  'completed' => $barbearia?->email != null],
+                            ['label' => 'Regras de Agendamento',    'url' => route('panel.configuracoes.agendamento'),'completed' => true],
+                            ['label' => 'Cadastrar Serviços',       'url' => route('panel.servicos'),                 'completed' => $servicos > 0],
+                            ['label' => 'Cadastrar Equipe',         'url' => route('panel.profissionais'),            'completed' => $profissionais > 0],
+                        ];
+                    @endphp
+                    @foreach($steps as $i => $step)
+                    <li class="flex items-center gap-3 text-xs">
+                        @if($step['completed'])
+                            <span class="w-5 h-5 bg-violet-500/30 text-violet-200 rounded-full flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-check text-[10px]"></i>
+                            </span>
+                            <a href="{{ $step['url'] }}" class="text-violet-300/60 line-through font-medium">{{ $step['label'] }}</a>
+                        @else
+                            <span class="w-5 h-5 bg-black/30 text-white rounded-full flex items-center justify-center font-black shrink-0 text-[10px]">{{ $i + 1 }}</span>
+                            <a href="{{ $step['url'] }}" class="text-white hover:underline font-bold">{{ $step['label'] }}</a>
+                        @endif
                     </li>
                     @endforeach
                 </ol>
-            </div>
-
-            {{-- Avisos --}}
-            <div class="bg-white rounded-xl border border-gray-200 p-4">
-                <h4 class="font-semibold text-gray-700 mb-3 text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-bell text-red-500"></i> Avisos Importantes
-                </h4>
-                <div class="flex flex-col items-center py-5 text-gray-400">
-                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-2">
-                        <i class="fa-solid fa-check text-green-500"></i>
-                    </div>
-                    <p class="text-xs text-gray-400">Nenhum aviso no momento.</p>
-                </div>
             </div>
 
         </div>

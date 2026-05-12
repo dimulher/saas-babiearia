@@ -10,9 +10,11 @@ class Profissional extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'profissionais';
+
     protected $fillable = [
         'barbearia_id', 'nome', 'email', 'telefone', 'foto',
-        'comissao_percentual', 'ativo', 'aceita_agendamento_online',
+        'comissao_percentual', 'ativo', 'aceita_agendamento_online', 'codigo_acesso',
     ];
 
     protected $casts = [
@@ -30,6 +32,11 @@ class Profissional extends Model
     {
         $words = explode(' ', $this->nome);
         return strtoupper(substr($words[0], 0, 1) . (isset($words[1]) ? substr($words[1], 0, 1) : ''));
+    }
+
+    public function getLinkAgendamentoAttribute(): string
+    {
+        return url('/agendar?funcionario=' . $this->id);
     }
 
     public function agendamentosHoje()

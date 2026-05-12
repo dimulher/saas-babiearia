@@ -23,10 +23,23 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('comanda_itens', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('comanda_id')->constrained('comandas')->cascadeOnDelete();
+            $table->foreignId('servico_id')->nullable()->constrained('servicos')->nullOnDelete();
+            $table->foreignId('produto_id')->nullable()->constrained('produtos')->nullOnDelete();
+            $table->string('descricao');
+            $table->integer('quantidade')->default(1);
+            $table->decimal('preco_unitario', 10, 2);
+            $table->decimal('subtotal', 10, 2);
+            $table->timestamps();
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('comanda_itens');
         Schema::dropIfExists('produtos');
     }
 };

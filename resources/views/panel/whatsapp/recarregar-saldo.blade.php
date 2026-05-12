@@ -1,67 +1,104 @@
 @extends('layouts.app')
-@section('title', 'Recarregar Saldo WhatsApp')
+@section('title', 'Recarregar Saldo Business - GlowSystem')
 
 @section('content')
-<div class="space-y-6 max-w-2xl">
+<div class="space-y-8 max-w-2xl mx-auto">
 
-    <h1 class="text-2xl font-bold text-gray-900">Recarregar Saldo</h1>
-
-    <!-- Saldo atual -->
-    <div class="bg-green-50 border border-green-100 rounded-2xl p-6 flex items-center justify-between">
-        <div>
-            <p class="text-sm text-green-600 font-medium">Saldo Disponível</p>
-            <p class="text-4xl font-black text-green-700 mt-1">R$ 0,00</p>
-            <p class="text-xs text-green-500 mt-1">Usado para envio de mensagens automáticas via WhatsApp</p>
-        </div>
-        <i class="fa-brands fa-whatsapp text-6xl text-green-200"></i>
+    <div class="text-center sm:text-left">
+        <h1 class="text-2xl font-bold text-white uppercase tracking-tight">CrÃ©ditos de Mensageria</h1>
+        <p class="text-sm text-gray-400 font-medium">Gerencie seu saldo para automaÃ§Ãµes de WhatsApp.</p>
     </div>
 
-    <!-- Opções de recarga -->
-    <div class="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
-        <h2 class="text-base font-semibold text-gray-900">Escolha o valor da recarga</h2>
-        <div class="grid grid-cols-3 gap-3" x-data="{ valor: 10 }">
+    <!-- Saldo atual -->
+    <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 flex items-center justify-between relative overflow-hidden shadow-sm">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-900/30 rounded-full -mr-16 -mt-16 opacity-50"></div>
+        <div class="relative z-10">
+            <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mb-1">Saldo Atual DisponÃ­vel</p>
+            <div class="flex items-baseline gap-2">
+                <span class="text-xl font-bold text-emerald-500 tracking-tighter italic">R$</span>
+                <p class="text-5xl font-bold text-white tracking-tighter italic">0,00</p>
+            </div>
+            <p class="text-[9px] text-gray-400 font-bold mt-2 uppercase tracking-widest">VÃ¡lido para envios ilimitados atÃ© o fim do saldo.</p>
+        </div>
+        <div class="relative z-10 hidden sm:block">
+            <div class="w-20 h-20 bg-emerald-900/30 rounded-3xl flex items-center justify-center text-emerald-600 border border-emerald-800 shadow-sm">
+                <i class="fa-brands fa-whatsapp text-4xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- OpÃ§Ãµes de recarga -->
+    <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 shadow-sm">
+        <div>
+            <h2 class="text-xs font-bold text-white uppercase tracking-widest mb-1">Selecionar Valor de Recarga</h2>
+            <p class="text-[10px] text-gray-400 font-medium">Escolha um dos pacotes prÃ©-definidos para agilizar seu processo.</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" x-data="{ valor: 10 }">
             @foreach([10, 20, 50, 100, 200, 500] as $v)
             <button @click="valor = {{ $v }}"
-                :class="valor === {{ $v }} ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-semibold' : 'border-gray-200 text-gray-700 hover:border-gray-300'"
-                class="border-2 rounded-xl py-3 text-sm transition-colors">
-                R$ {{ number_format($v, 2, ',', '.') }}
+                :class="valor === {{ $v }} ? 'bg-violet-600 border-violet-600 text-white shadow-lg shadow-violet-900/20' : 'bg-gray-800/50 border-gray-800 text-gray-500 hover:border-violet-200'"
+                class="border-2 rounded-2xl py-4 text-xs font-bold transition-all active:scale-95 italic">
+                R$ {{ number_format($v, 0, ',', '.') }}
             </button>
             @endforeach
 
-            <div class="col-span-3">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Ou digite um valor personalizado</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">R$</span>
-                    <input type="number" min="5" class="w-full border border-gray-200 rounded-xl pl-8 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0,00">
+            <div class="col-span-full mt-4">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Outro valor especÃ­fico</label>
+                <div class="relative group">
+                    <span class="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 group-focus-within:text-violet-600 transition-colors italic">R$</span>
+                    <input type="number" min="5" class="w-full bg-gray-800/50 border border-gray-800 rounded-2xl pl-12 pr-6 py-4 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all italic text-gray-300" placeholder="0,00">
                 </div>
             </div>
         </div>
 
-        <div class="border-t border-gray-100 pt-4">
-            <h3 class="text-sm font-medium text-gray-900 mb-3">Forma de Pagamento</h3>
-            <div class="space-y-2" x-data="{ metodo: 'pix' }">
-                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer" :class="metodo === 'pix' ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'">
-                    <input type="radio" name="metodo" value="pix" x-model="metodo" class="text-indigo-600">
-                    <i class="fa-solid fa-qrcode text-gray-600"></i>
-                    <span class="text-sm text-gray-700 font-medium">PIX (instantâneo)</span>
+        <div class="pt-6 border-t border-gray-50">
+            <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-4">Meio de Pagamento</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-data="{ metodo: 'pix' }">
+                <label @click="metodo = 'pix'" class="flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95" :class="metodo === 'pix' ? 'border-violet-600 bg-violet-50/50' : 'border-gray-50 bg-gray-900/80 hover:border-gray-700'">
+                    <div class="w-10 h-10 rounded-xl bg-gray-900/50 flex items-center justify-center text-violet-600 shadow-sm">
+                        <i class="fa-solid fa-qrcode text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-bold text-white uppercase tracking-widest">PIX</p>
+                        <p class="text-[8px] text-gray-400 font-bold uppercase tracking-tighter">LiberaÃ§Ã£o InstantÃ¢nea</p>
+                    </div>
+                    <input type="radio" name="metodo" value="pix" x-model="metodo" class="hidden">
+                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors" :class="metodo === 'pix' ? 'border-violet-600 bg-violet-600' : 'border-gray-300'">
+                        <div class="w-2 h-2 rounded-full bg-gray-900/50" x-show="metodo === 'pix'"></div>
+                    </div>
                 </label>
-                <label class="flex items-center gap-3 p-3 border rounded-xl cursor-pointer" :class="metodo === 'cartao' ? 'border-indigo-300 bg-indigo-50' : 'border-gray-200'">
-                    <input type="radio" name="metodo" value="cartao" x-model="metodo" class="text-indigo-600">
-                    <i class="fa-solid fa-credit-card text-gray-600"></i>
-                    <span class="text-sm text-gray-700 font-medium">Cartão de Crédito</span>
+
+                <label @click="metodo = 'cartao'" class="flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95" :class="metodo === 'cartao' ? 'border-violet-600 bg-violet-50/50' : 'border-gray-50 bg-gray-900/80 hover:border-gray-700'">
+                    <div class="w-10 h-10 rounded-xl bg-gray-900/50 flex items-center justify-center text-violet-600 shadow-sm">
+                        <i class="fa-solid fa-credit-card text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-bold text-white uppercase tracking-widest">CartÃ£o</p>
+                        <p class="text-[8px] text-gray-400 font-bold uppercase tracking-tighter">CrÃ©dito em atÃ© 1h</p>
+                    </div>
+                    <input type="radio" name="metodo" value="cartao" x-model="metodo" class="hidden">
+                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors" :class="metodo === 'cartao' ? 'border-violet-600 bg-violet-600' : 'border-gray-300'">
+                        <div class="w-2 h-2 rounded-full bg-gray-900/50" x-show="metodo === 'cartao'"></div>
+                    </div>
                 </label>
             </div>
         </div>
 
-        <button class="w-full bg-indigo-600 text-white py-3 rounded-xl text-sm font-semibold hover:bg-indigo-700">
-            Recarregar Agora
+        <button class="w-full bg-violet-600 text-white py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-900/20 flex items-center justify-center gap-3">
+            Finalizar Recarga <i class="fa-solid fa-arrow-right-long"></i>
         </button>
     </div>
 
-    <!-- Histórico de recargas -->
-    <div class="bg-white rounded-2xl border border-gray-200 p-6">
-        <h2 class="text-base font-semibold text-gray-900 mb-4">Histórico de Recargas</h2>
-        <div class="text-center py-8 text-gray-400 text-sm">Nenhuma recarga realizada ainda.</div>
+    <!-- HistÃ³rico de recargas -->
+    <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 shadow-sm">
+        <h2 class="text-xs font-bold text-white uppercase tracking-widest mb-6">HistÃ³rico Recente</h2>
+        <div class="flex flex-col items-center justify-center py-12 text-center opacity-40">
+            <div class="w-16 h-16 bg-gray-800/50 rounded-full flex items-center justify-center mb-4 border border-gray-800">
+                <i class="fa-solid fa-receipt text-2xl text-gray-300"></i>
+            </div>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sem movimentaÃ§Ãµes registradas</p>
+        </div>
     </div>
 
 </div>

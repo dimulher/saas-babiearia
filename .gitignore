@@ -1,9 +1,12 @@
 /node_modules
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
-/vendor
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
 .env
 .env.backup
 .env.production
@@ -16,3 +19,12 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+*.sqlite
+*.sqlite-journal
+database/database.sqlite
+
+scratch/
+
+/vendor
+/bootstrap/cache/*.php
+!bootstrap/cache/.gitignore

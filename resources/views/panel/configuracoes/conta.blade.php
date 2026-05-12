@@ -1,71 +1,105 @@
 @extends('layouts.app')
-@section('title', 'Minha Conta')
+@section('title', 'Perfil de UsuÃ¡rio - GlowSystem')
 
 @section('content')
-<div class="space-y-6 max-w-2xl">
+<div class="space-y-8 max-w-2xl mx-auto">
 
-    <h1 class="text-2xl font-bold text-gray-900">Minha Conta</h1>
+    <div class="text-center sm:text-left">
+        <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Perfil de UsuÃ¡rio</h1>
+        <p class="text-sm text-gray-400 font-medium">Gerencie suas credenciais de acesso e informaÃ§Ãµes pessoais.</p>
+    </div>
 
-    <!-- Avatar e info básica -->
-    <div class="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
-        <h2 class="text-base font-semibold text-gray-900 border-b border-gray-100 pb-3">Informações Pessoais</h2>
-
-        <div class="flex items-center gap-5">
-            <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-2xl font-bold text-indigo-600">G</div>
-            <div>
-                <p class="text-sm font-medium text-gray-900">Foto de perfil</p>
-                <p class="text-xs text-gray-500 mt-0.5">JPG ou PNG, máx. 2MB</p>
-                <button class="mt-1.5 text-xs text-indigo-600 font-medium hover:text-indigo-800">Alterar foto</button>
+    <!-- InformaÃ§Ãµes Pessoais -->
+    <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 shadow-sm">
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+            <div class="w-20 h-20 bg-violet-900/30 rounded-[28px] flex items-center justify-center text-2xl font-bold text-violet-600 border-2 border-violet-800 italic">
+                {{ substr(auth()->user()->name ?? 'G', 0, 1) }}
+            </div>
+            <div class="text-center sm:text-left">
+                <h3 class="text-xs font-bold text-white uppercase tracking-widest">Identidade Visual</h3>
+                <p class="text-[10px] text-gray-400 font-medium mt-1">Sua imagem serÃ¡ exibida nos logs e relatÃ³rios.</p>
+                <button class="mt-3 text-[10px] font-bold text-violet-600 uppercase tracking-widest hover:text-violet-800 flex items-center gap-2">
+                    <i class="fa-solid fa-camera-retro"></i> Mudar Avatar
+                </button>
             </div>
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
-            <input type="text" value="Gabriel" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <div class="grid grid-cols-1 gap-6 pt-4 border-t border-gray-50">
+            <div class="space-y-2">
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nome Completo</label>
+                <input type="text" value="{{ auth()->user()->name ?? 'UsuÃ¡rio' }}"
+                    class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
+                    <input type="email" value="{{ auth()->user()->email ?? '' }}"
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Telefone Contato</label>
+                    <input type="text" placeholder="(00) 00000-0000"
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                </div>
+            </div>
         </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
-            <input type="email" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
-            <input type="text" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="(00) 00000-0000">
-        </div>
-        <div class="pt-2">
-            <button class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700">
-                Salvar alterações
+
+        <div class="pt-6 border-t border-gray-50">
+            <button class="w-full sm:w-auto bg-violet-600 text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-900/20 active:scale-95 italic">
+                Atualizar Cadastro <i class="fa-solid fa-user-check ml-2"></i>
             </button>
         </div>
     </div>
 
-    <!-- Segurança -->
-    <div class="bg-white rounded-2xl border border-gray-200 p-6 space-y-5">
-        <h2 class="text-base font-semibold text-gray-900 border-b border-gray-100 pb-3">Segurança</h2>
+    <!-- SeguranÃ§a -->
+    <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 shadow-sm">
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Senha atual</label>
-            <input type="password" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <h2 class="text-xs font-bold text-white uppercase tracking-widest">SeguranÃ§a da Conta</h2>
+            <p class="text-[10px] text-gray-400 font-medium mt-1">Recomendamos senhas fortes com nÃºmeros e sÃ­mbolos.</p>
         </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nova senha</label>
-            <input type="password" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+        <div class="grid grid-cols-1 gap-6">
+            <div class="space-y-2">
+                <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Senha Atual</label>
+                <input type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nova Senha</label>
+                    <input type="password" placeholder="Nova senha"
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Confirmar Nova Senha</label>
+                    <input type="password" placeholder="Repetir senha"
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                </div>
+            </div>
         </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar nova senha</label>
-            <input type="password" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
-        <div class="pt-2">
-            <button class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700">
-                Alterar senha
+
+        <div class="pt-6 border-t border-gray-50">
+            <button class="w-full sm:w-auto bg-gray-900 text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-violet-600 transition-all shadow-xl active:scale-95 italic">
+                Redefinir Acesso <i class="fa-solid fa-lock ml-2"></i>
             </button>
         </div>
     </div>
 
     <!-- Zona de perigo -->
-    <div class="bg-red-50 border border-red-100 rounded-2xl p-6 space-y-3">
-        <h2 class="text-base font-semibold text-red-900">Zona de Perigo</h2>
-        <p class="text-sm text-red-600">Estas ações são irreversíveis. Tenha certeza antes de prosseguir.</p>
-        <button class="border border-red-300 text-red-600 px-4 py-2 rounded-xl text-sm font-medium hover:bg-red-100">
-            Excluir minha conta
+    <div class="bg-rose-50/50 border border-rose-100 rounded-[32px] p-8 space-y-4">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-gray-900/50 rounded-xl flex items-center justify-center text-rose-500 shadow-sm border border-rose-100">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h2 class="text-xs font-bold text-rose-900 uppercase tracking-widest">Procedimento CrÃ­tico</h2>
+                <p class="text-[10px] text-rose-600/70 font-bold uppercase tracking-tighter">A exclusÃ£o da conta Ã© um processo irreversÃ­vel.</p>
+            </div>
+        </div>
+        <button class="w-full sm:w-auto px-6 py-3 bg-gray-900/50 border border-rose-200 text-rose-600 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all italic">
+            Solicitar ExclusÃ£o de Conta
         </button>
     </div>
 

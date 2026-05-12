@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "1da879bae1c4af30",
+        "id": "82f1e6dcb27c580b",
         "type": "tabs",
         "children": [
           {
-            "id": "3d403dd8899a6883",
+            "id": "05258fc5ca6111a9",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -37,7 +37,7 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": true
               },
               "icon": "lucide-folder-closed",
               "title": "Explorador de arquivos"
@@ -74,7 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 288.5
   },
   "right": {
     "id": "b2e93d6b34e12a67",
@@ -162,8 +162,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -176,20 +175,22 @@
       "bases:Criar nova base": false
     }
   },
-  "active": "3d403dd8899a6883",
+  "active": "05258fc5ca6111a9",
   "lastOpenFiles": [
-    "storage/framework/views/8bd094e6d5bcbcd58c905fe6d8c6c8c8.php",
-    "storage/framework/views/9a7243d5a911c4cff687db77ed7e33b0.php",
-    "storage/framework/views/284dc09b3b2a46734df01be99e0484cc.php",
-    "storage/framework/views/5744b97831c225e3bef70e1d73688b0b.php",
-    "storage/framework/views/7836c390c22a4cfe8d058983dd7da506.php",
-    "storage/framework/views/0a0f4315a246f908ecb1417126243d6f.php",
-    "storage/framework/views/5e3a2579b693430b6a1ff232a26bd9ce.php",
-    "storage/framework/views/06e45b6cb2fcd3ff6461bd30f8e5a4d4.php",
-    "storage/framework/views/6b88201e0eaade5597bbdba37107d667.php",
-    "storage/framework/views/11fcde6bf23dce62cef584ada6b216c6.php",
-    "storage/framework/views/d7ba9cdf826c236ace818525a4562151.php",
     "saas-agendamento-barbiearia2026.md",
+    "Sem título.canvas",
+    "Sem título.md",
+    "Sem título 1",
+    "Sem título",
+    "sistema de vendas.md",
+    "resources/views/panel/dashboard.blade.php.tmp.5912.1774361430246",
+    "resources/views/layouts/app.blade.php.tmp.5912.1774361302800",
+    "storage/framework/views/7af80b5fbf1a2dfe2412e5d7c8870776.php",
+    "storage/framework/views/7f48f11dca3fffa282b24f8e652e1867.php",
+    "storage/framework/views/1568885023eacc5d76ed3be905880cdb.php",
+    "storage/framework/views/1857f18f35000896f2b8248f3ea0ff6f.php",
+    "storage/framework/views/dd9337fa17513db974ba04cf0522d1fe.php",
+    "storage/framework/views/fb520dbd43bb8298ddce64151fe85a95.php",
     "vendor/mockery/mockery/docs/README.md",
     "vendor/laravel/framework/src/Illuminate/View/LICENSE.md",
     "vendor/laravel/framework/src/Illuminate/Validation/LICENSE.md",
@@ -212,8 +213,6 @@
     "vendor/laravel/framework/src/Illuminate/Http/LICENSE.md",
     "vendor/laravel/framework/src/Illuminate/Filesystem/LICENSE.md",
     "vendor/laravel/framework/src/Illuminate/Events/LICENSE.md",
-    "vendor/laravel/framework/src/Illuminate/Encryption/LICENSE.md",
-    "vendor/laravel/framework/src/Illuminate/Database/README.md",
     "vendor/symfony/error-handler/Resources/assets/images/icon-support.svg",
     "vendor/symfony/error-handler/Resources/assets/images/symfony-logo.svg",
     "vendor/symfony/error-handler/Resources/assets/images/icon-plus-square.svg",
@@ -224,7 +223,6 @@
     "vendor/symfony/error-handler/Resources/assets/images/icon-book.svg",
     "vendor/symfony/error-handler/Resources/assets/images/chevron-right.svg",
     "vendor/livewire/livewire/src/Features/SupportWireLoading/browser_test_image.png",
-    "Sem título 1.canvas",
-    "Sem título.canvas"
+    "Sem título 1.canvas"
   ]
 }

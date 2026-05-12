@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('agendamentos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barbearia_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('profissional_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('profissional_id')->constrained('profissionais')->cascadeOnDelete();
             $table->foreignId('cliente_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('servico_id')->constrained()->cascadeOnDelete();
             $table->string('cliente_nome')->nullable(); // para agendamentos sem cadastro

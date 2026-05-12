@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('expedientes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barbearia_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('profissional_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('profissional_id')->nullable()->constrained('profissionais')->nullOnDelete();
             $table->tinyInteger('dia_semana'); // 0=Dom, 1=Seg ... 6=Sáb
             $table->time('hora_inicio');
             $table->time('hora_fim');
@@ -24,7 +24,7 @@ return new class extends Migration
         Schema::create('horarios_bloqueados', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barbearia_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('profissional_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('profissional_id')->nullable()->constrained('profissionais')->nullOnDelete();
             $table->dateTime('data_inicio');
             $table->dateTime('data_fim');
             $table->string('motivo')->nullable();

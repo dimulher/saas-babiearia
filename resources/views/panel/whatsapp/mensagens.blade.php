@@ -1,89 +1,147 @@
 @extends('layouts.app')
-@section('title', 'WhatsApp - Mensagens')
+@section('title', 'WhatsApp Business - GlowSystem')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-8" x-data="{ tab: 'mensagens' }">
 
-    <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-900">WhatsApp</h1>
-        <div class="flex items-center gap-3">
-            <span class="flex items-center gap-2 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600 font-medium">
-                <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div>
+            <h1 class="text-2xl font-bold text-white uppercase tracking-tight">WhatsApp Business</h1>
+            <p class="text-sm text-gray-400 font-medium">Automatize o relacionamento com seus clientes via WhatsApp.</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="flex items-center gap-2 px-4 py-2 bg-rose-50 border border-rose-100 rounded-2xl text-[10px] text-rose-600 font-bold uppercase tracking-widest shadow-sm">
+                <span class="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
                 Desconectado
             </span>
-            <button class="bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-green-700">
-                Conectar WhatsApp
+            <button class="bg-emerald-600 text-white px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-100 flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp text-sm"></i> Conectar Agora
             </button>
         </div>
     </div>
 
-    <!-- Tabs -->
-    <div x-data="{ tab: 'mensagens' }" class="space-y-4">
-        <div class="flex gap-2 border-b border-gray-200">
-            <button @click="tab = 'mensagens'" :class="tab === 'mensagens' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
-                class="px-4 py-2.5 text-sm font-medium transition-colors">Mensagens Automáticas</button>
-            <button @click="tab = 'configuracao'" :class="tab === 'configuracao' ? 'border-b-2 border-indigo-600 text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
-                class="px-4 py-2.5 text-sm font-medium transition-colors">Configuração</button>
-        </div>
+    <!-- Navigation Tabs -->
+    <div class="flex gap-2 p-1 bg-gray-800 rounded-[20px] w-fit border border-gray-700/50">
+        <button @click="tab = 'mensagens'" 
+            :class="tab === 'mensagens' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+            class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
+            Fluxos AutomÃ¡ticos
+        </button>
+        <button @click="tab = 'configuracao'" 
+            :class="tab === 'configuracao' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+            class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
+            Painel de ConexÃ£o
+        </button>
+    </div>
 
-        <!-- Mensagens automáticas -->
-        <div x-show="tab === 'mensagens'" class="space-y-4">
+    <!-- Content Sections -->
+    <div class="w-full">
+        
+        <!-- Mensagens automÃ¡ticas -->
+        <div x-show="tab === 'mensagens'" x-cloak x-transition:enter class="space-y-6">
 
             @php
             $mensagens = [
-                ['titulo' => 'Confirmação de Agendamento', 'desc' => 'Enviada quando o agendamento é criado', 'ativa' => true],
-                ['titulo' => 'Lembrete (24h antes)', 'desc' => 'Lembrete enviado 24 horas antes do horário', 'ativa' => true],
-                ['titulo' => 'Lembrete (1h antes)', 'desc' => 'Lembrete enviado 1 hora antes do horário', 'ativa' => false],
-                ['titulo' => 'Cancelamento', 'desc' => 'Enviada quando o agendamento é cancelado', 'ativa' => true],
-                ['titulo' => 'Avaliação pós-atendimento', 'desc' => 'Enviada após o atendimento concluído', 'ativa' => false],
+                ['titulo' => 'ConfirmaÃ§Ã£o de Agendamento', 'icon' => 'fa-calendar-check', 'desc' => 'Disparado instantaneamente apÃ³s a reserva.', 'ativa' => true],
+                ['titulo' => 'Lembrete EstratÃ©gico (24h)', 'icon' => 'fa-clock', 'desc' => 'Reduza faltas enviando um alerta um dia antes.', 'ativa' => true],
+                ['titulo' => 'Check-in Imediato (1h)', 'icon' => 'fa-bolt', 'desc' => 'Alerta final para preparo do cliente.', 'ativa' => false],
+                ['titulo' => 'Aviso de Cancelamento', 'icon' => 'fa-calendar-xmark', 'desc' => 'ConfirmaÃ§Ã£o de que o horÃ¡rio foi liberado.', 'ativa' => true],
+                ['titulo' => 'NPS / AvaliaÃ§Ã£o PÃ³s-Venda', 'icon' => 'fa-star', 'desc' => 'Colete feedbacks apÃ³s a conclusÃ£o do serviÃ§o.', 'ativa' => false],
             ];
             @endphp
 
-            @foreach($mensagens as $msg)
-            <div class="bg-white rounded-2xl border border-gray-200 p-5" x-data="{ ativa: {{ $msg['ativa'] ? 'true' : 'false' }}, editando: false }">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-900">{{ $msg['titulo'] }}</h3>
-                        <p class="text-xs text-gray-500 mt-0.5">{{ $msg['desc'] }}</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                @foreach($mensagens as $msg)
+                <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-6 transition-all hover:border-violet-200 group" x-data="{ ativa: {{ $msg['ativa'] ? 'true' : 'false' }}, editando: false }">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-violet-900/30 flex items-center justify-center text-violet-600 border border-violet-800 group-hover:bg-violet-600 group-hover:text-white transition-all shadow-sm">
+                                <i class="fa-solid {{ $msg['icon'] }} text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-bold text-white uppercase tracking-widest">{{ $msg['titulo'] }}</h3>
+                                <p class="text-[10px] text-gray-400 font-medium mt-1">{{ $msg['desc'] }}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-3">
+                            <button @click="ativa = !ativa" :class="ativa ? 'bg-emerald-500' : 'bg-gray-200'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-all shadow-inner">
+                                <span :class="ativa ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-gray-900/50 transition-transform shadow-sm"></span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <button @click="editando = !editando" class="text-xs text-indigo-600 font-medium hover:text-indigo-800">
-                            <span x-text="editando ? 'Fechar' : 'Editar'"></span>
+
+                    <div class="mt-8 flex items-center justify-between pt-6 border-t border-gray-50">
+                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="ativa ? 'text-emerald-500' : 'text-gray-300'">
+                            {{ $msg['ativa'] ? 'Fluxo Ativo' : 'Pausado' }}
+                        </span>
+                        <button @click="editando = !editando" class="text-[10px] font-bold text-violet-600 hover:text-violet-800 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fa-solid fa-pen-to-square"></i> <span x-text="editando ? 'Fechar Editor' : 'Customizar Script'"></span>
                         </button>
-                        <button @click="ativa = !ativa" :class="ativa ? 'bg-green-500' : 'bg-gray-200'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors">
-                            <span :class="ativa ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"></span>
-                        </button>
+                    </div>
+
+                    <div x-show="editando" x-collapse class="mt-6 space-y-4">
+                        <div class="relative">
+                            <textarea rows="5" class="w-full bg-gray-800/50 border border-gray-800 rounded-2xl px-5 py-4 text-sm font-medium focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none leading-relaxed italic text-gray-400" placeholder="OlÃ¡ {nome}, seu agendamento foi confirmado..."></textarea>
+                            <div class="absolute bottom-4 right-4 flex gap-2">
+                                <div class="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-violet-50/50 p-4 rounded-2xl border border-violet-800">
+                            <p class="text-[9px] font-bold text-violet-400 uppercase tracking-widest mb-3">Tags DinÃ¢micas DisponÃ­veis:</p>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach(['{cliente}', '{data}', '{hora}', '{profissional}', '{servico}'] as $v)
+                                <span class="text-[9px] bg-gray-900/50 text-violet-600 px-3 py-1 rounded-lg font-bold border border-violet-800 shadow-sm cursor-copy hover:border-violet-300 transition-colors">{{ $v }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end pt-2">
+                            <button class="bg-gray-900 text-white px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg">Atualizar Script</button>
+                        </div>
                     </div>
                 </div>
-                <div x-show="editando" class="mt-4 pt-4 border-t border-gray-100">
-                    <textarea rows="4" class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono" placeholder="Olá {nome}, seu agendamento foi confirmado para {data} às {hora} com {profissional}.&#10;&#10;Aguardamos você!"></textarea>
-                    <div class="flex gap-2 mt-3">
-                        <span class="text-xs text-gray-500">Variáveis: </span>
-                        @foreach(['{nome}', '{data}', '{hora}', '{profissional}', '{servico}'] as $v)
-                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">{{ $v }}</span>
-                        @endforeach
-                    </div>
-                    <button class="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-indigo-700">Salvar mensagem</button>
-                </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
 
-        <!-- Configuração -->
-        <div x-show="tab === 'configuracao'" class="bg-white rounded-2xl border border-gray-200 p-6 space-y-5 max-w-lg">
-            <div>
-                <h2 class="text-base font-semibold text-gray-900 mb-1">Conectar WhatsApp</h2>
-                <p class="text-sm text-gray-500">Escaneie o QR Code com seu WhatsApp para conectar</p>
-            </div>
-            <div class="flex items-center justify-center bg-gray-50 rounded-2xl h-56 border-2 border-dashed border-gray-300">
-                <div class="text-center">
-                    <i class="fa-brands fa-whatsapp text-5xl text-gray-300 mb-3"></i>
-                    <p class="text-sm text-gray-400">QR Code aparecerá aqui ao conectar</p>
+        <!-- ConfiguraÃ§Ã£o -->
+        <div x-show="tab === 'configuracao'" x-cloak x-transition:enter class="flex justify-center py-10">
+            <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm shadow-2xl border border-gray-800 p-10 space-y-8 max-w-lg w-full text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-emerald-500"></div>
+                
+                <div>
+                    <div class="w-20 h-20 bg-emerald-900/30 rounded-3xl flex items-center justify-center mx-auto mb-6 text-emerald-600 shadow-sm border border-emerald-800">
+                        <i class="fa-brands fa-whatsapp text-4xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-white uppercase tracking-tight mb-2">SincronizaÃ§Ã£o de Dispositivo</h2>
+                    <p class="text-xs text-gray-400 font-medium">Abra o WhatsApp no seu celular, acesse Aparelhos Conectados e escaneie o cÃ³digo abaixo.</p>
+                </div>
+
+                <div class="relative group">
+                    <div class="aspect-square bg-gray-800/50 rounded-[40px] flex flex-col items-center justify-center border-4 border-dashed border-gray-800 p-8 group-hover:border-emerald-200 transition-all">
+                        <div class="w-full h-full bg-gray-900 rounded-[32px] shadow-inner flex flex-col items-center justify-center text-gray-200 gap-4 opacity-50">
+                            <i class="fa-solid fa-qrcode text-6xl"></i>
+                            <p class="text-[9px] font-bold uppercase tracking-widest">Aguardando geraÃ§Ã£o...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Overlay de carregamento sim -->
+                    <div class="absolute inset-0 flex items-center justify-center bg-gray-900/50/60 backdrop-blur-[2px] rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity">
+                         <button class="bg-emerald-600 text-white px-8 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-2xl shadow-emerald-200 hover:scale-105 active:scale-95 transition-all">
+                            Gerar Novo Token
+                         </button>
+                    </div>
+                </div>
+
+                <div class="pt-4 space-y-4">
+                    <div class="flex items-center gap-3 justify-center text-gray-400">
+                         <i class="fa-solid fa-shield-halved text-xs text-emerald-500"></i>
+                         <p class="text-[10px] font-bold uppercase tracking-widest">ConexÃ£o Criptografada ponta-a-ponta</p>
+                    </div>
                 </div>
             </div>
-            <button class="w-full bg-green-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-green-700">
-                Gerar QR Code
-            </button>
         </div>
     </div>
 

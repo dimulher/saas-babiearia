@@ -13,7 +13,8 @@ class Agendamento extends Model
     protected $fillable = [
         'barbearia_id', 'profissional_id', 'cliente_id', 'servico_id',
         'cliente_nome', 'cliente_telefone', 'data_inicio', 'data_fim',
-        'preco', 'status', 'observacoes', 'agendado_online', 'lembrete_enviado',
+        'preco', 'status', 'observacoes', 'descricao', 'produtos_solicitados',
+        'agendado_online', 'lembrete_enviado',
     ];
 
     protected $casts = [

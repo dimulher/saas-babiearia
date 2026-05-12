@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('comandas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barbearia_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('profissional_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('profissional_id')->nullable()->constrained('profissionais')->nullOnDelete();
             $table->foreignId('cliente_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('agendamento_id')->nullable()->constrained()->nullOnDelete();
             $table->string('cliente_nome')->nullable();
