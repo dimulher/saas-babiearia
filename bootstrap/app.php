@@ -14,12 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // Redireciona para login em vez de mostrar erro JSON
+        $exceptions->render(function (Illuminate\Auth\AuthenticationException $e, Illuminate\Http\Request $request) {
+            return redirect()->route('login');
+        });
+
+        // Só retorna JSON em produção para erros não-auth (evita stack trace público)
         $exceptions->render(function (Throwable $e, Illuminate\Http\Request $request) {
-            return response()->json([
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ], 500);
+            if (app()->environment('local')) return null; // usa handler padrão em dev
+            return response()->json(['error' => 'Erro interno do servidor.'], 500);
         });
     })->create();

@@ -9,15 +9,18 @@ use App\Models\Servico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RelatorioController
+class RelatorioController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
+        if (!$user) return redirect()->route('login');
+
         $mes = $request->get('mes', now()->format('Y-m'));
         $start = \Carbon\Carbon::parse($mes)->startOfMonth();
         $end = \Carbon\Carbon::parse($mes)->endOfMonth();
 
-        $barbeariaId = auth()->user()->barbearia_id;
+        $barbeariaId = $user->barbearia_id;
 
         // 1. Relatório de Serviços
         $servicosPerformance = DB::table('comanda_itens')
