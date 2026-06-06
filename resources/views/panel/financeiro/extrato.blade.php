@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Extrato Financeiro')
 
 @section('content')
@@ -14,7 +14,7 @@
     <!-- Filtros de período -->
     <div class="bg-white rounded-2xl border border-gray-200 p-4 flex flex-wrap gap-3 items-center">
         <div class="flex gap-2">
-            <button class="px-3 py-1.5 text-sm rounded-lg bg-indigo-600 text-white font-medium">Hoje</button>
+            <button class="px-3 py-1.5 text-sm rounded-lg bg-green-500 text-white font-medium">Hoje</button>
             <button class="px-3 py-1.5 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium">Semana</button>
             <button class="px-3 py-1.5 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium">Mês</button>
             <button class="px-3 py-1.5 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium">Personalizado</button>

@@ -6,6 +6,7 @@ use App\Models\Produto;
 use App\Models\Barbearia;
 use App\Services\LogAtividadeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProdutoController
 {
@@ -27,6 +28,7 @@ class ProdutoController
             'unidade' => 'nullable|string|max:10',
             'codigo' => 'nullable|string|max:50',
             'descricao' => 'nullable|string',
+            'imagem' => 'nullable|image|max:5120',
         ]);
 
         $barbeariaId = auth()->user()->barbearia_id;
@@ -41,6 +43,7 @@ class ProdutoController
             'unidade' => $request->unidade ?? 'un',
             'codigo' => $request->codigo,
             'descricao' => $request->descricao,
+            'imagem' => $request->hasFile('imagem') ? $request->file('imagem')->store('produtos', 'public') : null,
             'ativo' => true,
         ]);
 
@@ -60,10 +63,21 @@ class ProdutoController
             'unidade' => 'nullable|string|max:10',
             'codigo' => 'nullable|string|max:50',
             'descricao' => 'nullable|string',
+            'imagem' => 'nullable|image|max:5120',
         ]);
 
         $dadosAntigos = $produto->toArray();
-        $produto->update($request->all());
+
+        $dados = $request->except('imagem');
+
+        if ($request->hasFile('imagem')) {
+            if ($produto->imagem && !str_starts_with($produto->imagem, 'http')) {
+                Storage::disk('public')->delete($produto->imagem);
+            }
+            $dados['imagem'] = $request->file('imagem')->store('produtos', 'public');
+        }
+
+        $produto->update($dados);
 
         LogAtividadeService::log('produto_atualizado', "Produto '{$produto->nome}' atualizado.", 'Produto', $produto->id, $dadosAntigos, $produto->toArray());
 

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Bloquear Horários')
 
 @section('content')
@@ -9,16 +9,16 @@
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Bloqueio de Agenda</h1>
             <p class="text-sm text-gray-400 font-medium">Reserve horários para pausas, reuniões ou folgas da equipe.</p>
         </div>
-        <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
+        <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-emerald-900/30">
             <i class="fa-solid fa-calendar-xmark text-xs"></i> Novo Bloqueio
         </button>
     </div>
 
     <!-- Lista de Bloqueios -->
     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm shadow-sm overflow-hidden border border-gray-800 rounded-[32px]">
-        <div class="p-8 border-b border-gray-50 bg-gray-900/30 flex justify-between items-center">
+        <div class="p-8 border-b border-gray-800/50 bg-gray-900/30 flex justify-between items-center">
             <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Bloqueios Ativos e Futuros</h3>
-            <span class="text-[9px] font-bold text-violet-600 bg-violet-900/30 px-3 py-1 rounded-full border border-violet-800 uppercase tracking-widest">Sincronizado</span>
+            <span class="text-[9px] font-bold text-green-500 bg-green-900/30 px-3 py-1 rounded-full border border-green-800 uppercase tracking-widest">Sincronizado</span>
         </div>
 
         <div class="overflow-x-auto">
@@ -31,7 +31,7 @@
                         <th class="px-8 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-gray-800/50">
                     @forelse($bloqueios as $bloqueio)
                         <tr class="hover:bg-gray-900/80 transition-colors group">
                             <td class="px-8 py-5">
@@ -39,13 +39,13 @@
                                     <div class="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center text-white text-[10px] font-bold">
                                         {{ $bloqueio->profissional->initials ?? '?' }}
                                     </div>
-                                    <span class="font-bold text-white group-hover:text-violet-600 transition-colors">{{ $bloqueio->profissional->nome ?? 'Todos' }}</span>
+                                    <span class="font-bold text-white group-hover:text-green-500 transition-colors">{{ $bloqueio->profissional->nome ?? 'Todos' }}</span>
                                 </div>
                             </td>
                             <td class="px-8 py-5">
                                 <div class="space-y-1">
                                     <div class="flex items-center gap-2 text-white font-bold text-xs uppercase tracking-tight">
-                                        <i class="fa-regular fa-calendar text-violet-500"></i>
+                                        <i class="fa-regular fa-calendar text-green-500"></i>
                                         {{ $bloqueio->data->format('d/m/Y') }}
                                     </div>
                                     <div class="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest">
@@ -96,7 +96,7 @@
                     <div class="bg-gray-900/50 px-8 pt-10 pb-8">
                         <div class="flex items-center justify-between mb-10">
                             <div class="flex items-center gap-5">
-                                <div class="w-14 h-14 bg-violet-900/30 rounded-2xl flex items-center justify-center text-violet-600 border border-violet-800 shadow-sm">
+                                <div class="w-14 h-14 bg-green-900/30 rounded-2xl flex items-center justify-center text-green-500 border border-green-800 shadow-sm">
                                     <i class="fa-solid fa-calendar-xmark text-xl"></i>
                                 </div>
                                 <div>
@@ -112,7 +112,7 @@
                         <div class="space-y-6">
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Profissional Afetado</label>
-                                <select name="profissional_id" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none appearance-none cursor-pointer">
+                                <select name="profissional_id" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none appearance-none cursor-pointer">
                                     <option value="">Toda a Equipe</option>
                                     @foreach($profissionais as $p)
                                         <option value="{{ $p->id }}">{{ $p->nome }}</option>
@@ -122,28 +122,28 @@
 
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Data do Bloqueio</label>
-                                <input type="date" name="data" required value="{{ now()->format('Y-m-d') }}" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                <input type="date" name="data" required value="{{ now()->format('Y-m-d') }}" class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                             </div>
 
                             <div class="grid grid-cols-2 gap-5">
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Hora Início</label>
-                                    <input type="time" name="hora_inicio" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <input type="time" name="hora_inicio" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Hora Fim</label>
-                                    <input type="time" name="hora_fim" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <input type="time" name="hora_fim" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
 
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Motivo / Notas</label>
-                                <textarea name="motivo" rows="2" placeholder="Ex: Horário de almoço, Reunião técnica..." class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
+                                <textarea name="motivo" rows="2" placeholder="Ex: Horário de almoço, Reunião técnica..." class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-900/80 px-8 py-8 sm:flex sm:flex-row-reverse gap-4">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic">Confirmar Bloqueio</button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-green-900/20 px-10 py-4 bg-green-500 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-green-600 transition-all sm:w-auto italic">Confirmar Bloqueio</button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-10 py-4 bg-gray-900/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Descartar</button>
                     </div>
                 </form>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Relatórios Financeiros')
 
 @section('content')
@@ -69,7 +69,7 @@
             </thead>
             <tbody>
                 @foreach(['Dinheiro', 'PIX', 'Cartão de Débito', 'Cartão de Crédito'] as $forma)
-                <tr class="border-b border-gray-50">
+                <tr class="border-b border-gray-800/50">
                     <td class="py-3 text-gray-700">{{ $forma }}</td>
                     <td class="py-3 text-right text-gray-500">0</td>
                     <td class="py-3 text-right text-gray-700 font-medium">R$ 0,00</td>

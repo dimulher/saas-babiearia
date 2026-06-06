@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Configurações de Assinaturas')
 
 @section('content')
@@ -37,14 +37,14 @@
                     <p class="text-sm font-medium text-white">Incluir produtos nas comissões</p>
                     <p class="text-xs text-gray-500">Comissão também sobre venda de produtos</p>
                 </div>
-                <button @click="v = !v" :class="v ? 'bg-indigo-600' : 'bg-gray-200'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0">
+                <button @click="v = !v" :class="v ? 'bg-green-500' : 'bg-gray-200'" class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0">
                     <span :class="v ? 'translate-x-6' : 'translate-x-1'" class="inline-block h-4 w-4 transform rounded-full bg-gray-900/50 transition-transform"></span>
                 </button>
             </label>
         </div>
 
         <div class="border-t border-gray-800 pt-4">
-            <button class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700">
+            <button class="bg-green-500 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-indigo-700">
                 Salvar configurações
             </button>
         </div>

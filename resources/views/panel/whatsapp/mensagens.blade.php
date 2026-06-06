@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'WhatsApp Business - GlowSystem')
 
 @section('content')
@@ -15,7 +15,7 @@
                 <span class="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
                 Desconectado
             </span>
-            <button class="bg-emerald-600 text-white px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-100 flex items-center gap-2">
+            <button class="bg-emerald-600 text-white px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-900/30 flex items-center gap-2">
                 <i class="fa-brands fa-whatsapp text-sm"></i> Conectar Agora
             </button>
         </div>
@@ -24,12 +24,12 @@
     <!-- Navigation Tabs -->
     <div class="flex gap-2 p-1 bg-gray-800 rounded-[20px] w-fit border border-gray-700/50">
         <button @click="tab = 'mensagens'" 
-            :class="tab === 'mensagens' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+            :class="tab === 'mensagens' ? 'bg-gray-900/50 text-green-500 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
             class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
             Fluxos Automáticos
         </button>
         <button @click="tab = 'configuracao'" 
-            :class="tab === 'configuracao' ? 'bg-gray-900/50 text-violet-600 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+            :class="tab === 'configuracao' ? 'bg-gray-900/50 text-green-500 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
             class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
             Painel de Conexão
         </button>
@@ -56,7 +56,7 @@
                 <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-6 transition-all hover:border-violet-200 group" x-data="{ ativa: {{ $msg['ativa'] ? 'true' : 'false' }}, editando: false }">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-violet-900/30 flex items-center justify-center text-violet-600 border border-violet-800 group-hover:bg-violet-600 group-hover:text-white transition-all shadow-sm">
+                            <div class="w-12 h-12 rounded-2xl bg-green-900/30 flex items-center justify-center text-green-500 border border-green-800 group-hover:bg-green-500 group-hover:text-white transition-all shadow-sm">
                                 <i class="fa-solid {{ $msg['icon'] }} text-lg"></i>
                             </div>
                             <div>
@@ -71,28 +71,28 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 flex items-center justify-between pt-6 border-t border-gray-50">
+                    <div class="mt-8 flex items-center justify-between pt-6 border-t border-gray-800/50">
                         <span class="text-[10px] font-bold uppercase tracking-widest" :class="ativa ? 'text-emerald-500' : 'text-gray-300'">
                             {{ $msg['ativa'] ? 'Fluxo Ativo' : 'Pausado' }}
                         </span>
-                        <button @click="editando = !editando" class="text-[10px] font-bold text-violet-600 hover:text-violet-800 uppercase tracking-widest flex items-center gap-2">
+                        <button @click="editando = !editando" class="text-[10px] font-bold text-green-500 hover:text-green-800 uppercase tracking-widest flex items-center gap-2">
                             <i class="fa-solid fa-pen-to-square"></i> <span x-text="editando ? 'Fechar Editor' : 'Customizar Script'"></span>
                         </button>
                     </div>
 
                     <div x-show="editando" x-collapse class="mt-6 space-y-4">
                         <div class="relative">
-                            <textarea rows="5" class="w-full bg-gray-800/50 border border-gray-800 rounded-2xl px-5 py-4 text-sm font-medium focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none leading-relaxed italic text-gray-400" placeholder="Olá {nome}, seu agendamento foi confirmado..."></textarea>
+                            <textarea rows="5" class="w-full bg-gray-800/50 border border-gray-800 rounded-2xl px-5 py-4 text-sm font-medium focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none leading-relaxed italic text-gray-400" placeholder="Olá {nome}, seu agendamento foi confirmado..."></textarea>
                             <div class="absolute bottom-4 right-4 flex gap-2">
-                                <div class="w-2 h-2 bg-violet-400 rounded-full animate-bounce"></div>
+                                <div class="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
                             </div>
                         </div>
                         
-                        <div class="bg-violet-50/50 p-4 rounded-2xl border border-violet-800">
-                            <p class="text-[9px] font-bold text-violet-400 uppercase tracking-widest mb-3">Tags Dinâmicas Disponíveis:</p>
+                        <div class="bg-violet-50/50 p-4 rounded-2xl border border-green-800">
+                            <p class="text-[9px] font-bold text-green-400 uppercase tracking-widest mb-3">Tags Dinâmicas Disponíveis:</p>
                             <div class="flex flex-wrap gap-2">
                                 @foreach(['{cliente}', '{data}', '{hora}', '{profissional}', '{servico}'] as $v)
-                                <span class="text-[9px] bg-gray-900/50 text-violet-600 px-3 py-1 rounded-lg font-bold border border-violet-800 shadow-sm cursor-copy hover:border-violet-300 transition-colors">{{ $v }}</span>
+                                <span class="text-[9px] bg-gray-900/50 text-green-500 px-3 py-1 rounded-lg font-bold border border-green-800 shadow-sm cursor-copy hover:border-green-300 transition-colors">{{ $v }}</span>
                                 @endforeach
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                     
                     <!-- Overlay de carregamento sim -->
                     <div class="absolute inset-0 flex items-center justify-center bg-gray-900/50/60 backdrop-blur-[2px] rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity">
-                         <button class="bg-emerald-600 text-white px-8 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-2xl shadow-emerald-200 hover:scale-105 active:scale-95 transition-all">
+                         <button class="bg-emerald-600 text-white px-8 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest shadow-2xl shadow-emerald-900/30 hover:scale-105 active:scale-95 transition-all">
                             Gerar Novo Token
                          </button>
                     </div>

@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Servico extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'barbearia_id', 'nome', 'descricao', 'preco', 'duracao_minutos',
+        'barbearia_id', 'nome', 'descricao', 'imagem', 'preco', 'duracao_minutos',
         'cor', 'ativo', 'disponivel_online',
     ];
 
@@ -29,5 +30,14 @@ class Servico extends Model
         $h = intdiv($this->duracao_minutos, 60);
         $m = $this->duracao_minutos % 60;
         return $h > 0 ? "{$h}h" . ($m > 0 ? "{$m}min" : '') : "{$m}min";
+    }
+
+    public function getImagemUrlAttribute(): ?string
+    {
+        if (!$this->imagem) return null;
+
+        return str_starts_with($this->imagem, 'http')
+            ? $this->imagem
+            : Storage::url($this->imagem);
     }
 }

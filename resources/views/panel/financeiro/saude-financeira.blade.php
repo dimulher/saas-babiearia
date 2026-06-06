@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Saúde Financeira')
 
 @section('content')
@@ -42,7 +42,7 @@
             <div class="flex items-center justify-between mb-3">
                 <p class="text-sm text-gray-500 font-medium">Margem de Lucro</p>
                 <span class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-percent text-purple-600 text-xs"></i>
+                    <i class="fa-solid fa-percent text-green-600 text-xs"></i>
                 </span>
             </div>
             <p class="text-2xl font-black text-gray-900">0%</p>

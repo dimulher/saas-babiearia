@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Agendamentos Recorrentes')
 
 @section('content')
@@ -12,7 +12,7 @@
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Atendimentos Recorrentes</h1>
             <p class="text-sm text-gray-400 font-medium">Gerencie clientes com horários periódicos fixos no estabelecimento.</p>
         </div>
-        <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
+        <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-xl shadow-emerald-900/30">
             <i class="fa-solid fa-calendar-plus text-xs"></i> Novo Recorrente
         </button>
     </div>
@@ -23,10 +23,10 @@
             <span class="absolute inset-y-0 left-0 pl-5 flex items-center text-gray-400">
                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
             </span>
-            <input type="text" placeholder="Pesquisar por cliente ou especialista..." class="block w-full pl-12 pr-4 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+            <input type="text" placeholder="Pesquisar por cliente ou especialista..." class="block w-full pl-12 pr-4 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
         </div>
         <div class="flex items-center gap-3 bg-gray-800/50 px-5 py-4 rounded-2xl border border-gray-800">
-            <i class="fa-solid fa-user-tie text-violet-500 text-xs"></i>
+            <i class="fa-solid fa-user-tie text-green-500 text-xs"></i>
             <select class="bg-transparent border-none p-0 text-[10px] font-bold uppercase tracking-widest focus:ring-0 text-gray-300 pr-8 cursor-pointer">
                 <option>Todos profissionais</option>
                 @foreach($profissionais as $p)
@@ -35,7 +35,7 @@
             </select>
         </div>
         <div class="flex items-center gap-3 bg-gray-800/50 px-5 py-4 rounded-2xl border border-gray-800">
-            <i class="fa-solid fa-filter text-violet-500 text-xs"></i>
+            <i class="fa-solid fa-filter text-green-500 text-xs"></i>
             <select class="bg-transparent border-none p-0 text-[10px] font-bold uppercase tracking-widest focus:ring-0 text-gray-300 pr-8 cursor-pointer">
                 <option>Todos status</option>
                 <option value="1">Ativo</option>
@@ -59,16 +59,16 @@
                         <th class="px-8 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-gray-800/50">
                     @forelse($recorrentes as $rec)
                         <tr class="hover:bg-gray-900/80 transition-colors group">
                             <td class="px-8 py-5">
-                                <div class="font-bold text-white group-hover:text-violet-600 transition-colors uppercase tracking-tight">{{ $rec->cliente->nome }}</div>
+                                <div class="font-bold text-white group-hover:text-green-500 transition-colors uppercase tracking-tight">{{ $rec->cliente->nome }}</div>
                                 <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5 opacity-60">{{ $rec->cliente->telefone }}</div>
                             </td>
                             <td class="px-8 py-5">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-violet-900/30 flex items-center justify-center text-violet-600 text-[10px] font-bold border border-violet-800">
+                                    <div class="w-9 h-9 rounded-xl bg-green-900/30 flex items-center justify-center text-green-500 text-[10px] font-bold border border-green-800">
                                         {{ $rec->profissional->initials }}
                                     </div>
                                     <span class="text-xs font-bold text-gray-300">{{ $rec->profissional->nome }}</span>
@@ -78,14 +78,14 @@
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-800/50 px-3 py-1.5 rounded-lg border border-gray-800">{{ $rec->servico->nome }}</span>
                             </td>
                             <td class="px-8 py-5 text-center">
-                                <div class="text-[10px] font-bold uppercase tracking-[0.1em] text-violet-600 flex flex-col items-center">
+                                <div class="text-[10px] font-bold uppercase tracking-[0.1em] text-green-500 flex flex-col items-center">
                                     <span class="opacity-40 text-[8px]">Toda</span>
                                     {{ $rec->dia_semana_nome }}
                                 </div>
                             </td>
                             <td class="px-8 py-5 text-center">
                                 <div class="flex items-center justify-center gap-2 text-white font-bold italic">
-                                    <i class="fa-regular fa-clock text-[10px] text-violet-400"></i>
+                                    <i class="fa-regular fa-clock text-[10px] text-green-400"></i>
                                     {{ substr($rec->hora, 0, 5) }}
                                 </div>
                             </td>
@@ -137,7 +137,7 @@
                     <div class="bg-gray-900/50 px-8 pt-10 pb-8">
                         <div class="flex items-center justify-between mb-10">
                             <div class="flex items-center gap-5">
-                                <div class="w-14 h-14 bg-violet-900/30 rounded-2xl flex items-center justify-center text-violet-600 shadow-sm border border-violet-800">
+                                <div class="w-14 h-14 bg-green-900/30 rounded-2xl flex items-center justify-center text-green-500 shadow-sm border border-green-800">
                                     <i class="fa-solid fa-calendar-check text-xl"></i>
                                 </div>
                                 <div>
@@ -153,7 +153,7 @@
                         <div class="space-y-6">
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Cliente</label>
-                                <select name="cliente_id" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
+                                <select name="cliente_id" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
                                     <option value="">Selecione o cliente</option>
                                     @foreach($clientes as $c)
                                         <option value="{{ $c->id }}">{{ $c->nome }}</option>
@@ -164,7 +164,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Especialista</label>
-                                    <select name="profissional_id" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
+                                    <select name="profissional_id" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
                                         <option value="">Selecione</option>
                                         @foreach($profissionais as $p)
                                             <option value="{{ $p->id }}">{{ $p->nome }}</option>
@@ -174,7 +174,7 @@
 
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Serviço</label>
-                                    <select name="servico_id" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
+                                    <select name="servico_id" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
                                         <option value="">Selecione</option>
                                         @foreach($servicos as $s)
                                             <option value="{{ $s->id }}">{{ $s->nome }}</option>
@@ -186,7 +186,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Dia da Semana</label>
-                                    <select name="dia_semana" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
+                                    <select name="dia_semana" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none cursor-pointer appearance-none">
                                         <template x-for="(day, index) in diasSemana" :key="index">
                                             <option :value="index" x-text="day"></option>
                                         </template>
@@ -194,13 +194,13 @@
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Horário Fixo</label>
-                                    <input type="time" name="hora" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <input type="time" name="hora" required class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-900/80 px-8 py-8 sm:flex sm:flex-row-reverse gap-4">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-violet-900/20 px-10 py-4 bg-violet-600 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto italic">Confirmar Recorrência</button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-xl shadow-green-900/20 px-10 py-4 bg-green-500 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-green-600 transition-all sm:w-auto italic">Confirmar Recorrência</button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-10 py-4 bg-gray-900/50 text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Descartar</button>
                     </div>
                 </form>

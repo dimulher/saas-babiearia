@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Detalhes do Atendimento')
 
 @section('content')
@@ -7,13 +7,13 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-4">
-            <a href="{{ route('panel.comandas') }}" class="w-10 h-10 rounded-xl bg-gray-900/50 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-violet-600 hover:border-violet-800 transition-all shadow-sm">
+            <a href="{{ route('panel.comandas') }}" class="w-10 h-10 rounded-xl bg-gray-900/50 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-green-500 hover:border-green-800 transition-all shadow-sm">
                 <i class="fa-solid fa-chevron-left"></i>
             </a>
             <div>
                 <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Comanda: {{ $comanda->cliente_nome }}</h1>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-2 mt-0.5">
-                    <i class="fa-solid fa-user-tie text-violet-500"></i>
+                    <i class="fa-solid fa-user-tie text-green-500"></i>
                     Profissional: {{ $comanda->profissional->nome ?? 'Nenhum' }}
                 </p>
             </div>
@@ -40,7 +40,7 @@
             
             <!-- Lista de Itens -->
             <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm shadow-sm overflow-hidden border border-gray-800">
-                <div class="px-6 py-5 border-b border-gray-50 bg-gray-900/80 flex justify-between items-center">
+                <div class="px-6 py-5 border-b border-gray-800/50 bg-gray-900/80 flex justify-between items-center">
                     <h2 class="text-xs font-bold text-white uppercase tracking-widest">Itens do Atendimento</h2>
                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $comanda->itens->count() }} Lançamentos</span>
                 </div>
@@ -53,11 +53,11 @@
                         <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nenhum item lançado ainda</p>
                     </div>
                 @else
-                    <ul class="divide-y divide-gray-50">
+                    <ul class="divide-y divide-gray-800/50">
                         @foreach($comanda->itens as $item)
                             <li class="px-6 py-5 flex items-center justify-between hover:bg-gray-800/50 transition-colors group">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-2xl bg-violet-900/30 flex items-center justify-center text-violet-600 border border-violet-800 group-hover:scale-110 transition-transform">
+                                    <div class="w-10 h-10 rounded-2xl bg-green-900/30 flex items-center justify-center text-green-500 border border-green-800 group-hover:scale-110 transition-transform">
                                         @if($item->servico_id)
                                             <i class="fa-solid fa-sparkles text-xs"></i>
                                         @else
@@ -93,7 +93,7 @@
                     <!-- Add Serviço -->
                     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 border border-gray-800 shadow-sm">
                         <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                            <i class="fa-solid fa-wand-magic-sparkles text-violet-500"></i>
+                            <i class="fa-solid fa-wand-magic-sparkles text-green-500"></i>
                             Adicionar Procedimento
                         </h3>
                         <form action="{{ route('panel.comandas.itens.store', $comanda->id) }}" method="POST" class="space-y-4">
@@ -101,14 +101,14 @@
                             <input type="hidden" name="tipo" value="servico">
                             <input type="hidden" name="quantidade" value="1">
                             <div>
-                                <select name="item_id" required class="block w-full px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                <select name="item_id" required class="block w-full px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                     <option value="">Selecione um serviço...</option>
                                     @foreach($servicos as $servico)
                                         <option value="{{ $servico->id }}">{{ $servico->nome }} - R$ {{ number_format($servico->preco, 2, ',', '.') }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <button type="submit" class="w-full bg-violet-900/30 text-violet-600 hover:bg-violet-600 hover:text-white font-bold text-[10px] uppercase tracking-widest py-3.5 px-4 rounded-2xl transition-all border border-violet-800 shadow-sm shadow-violet-900/20">
+                            <button type="submit" class="w-full bg-green-900/30 text-green-500 hover:bg-green-500 hover:text-white font-bold text-[10px] uppercase tracking-widest py-3.5 px-4 rounded-2xl transition-all border border-green-800 shadow-sm shadow-green-900/20">
                                 Lançar Procedimento
                             </button>
                         </form>
@@ -117,22 +117,22 @@
                     <!-- Add Produto -->
                     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm p-6 border border-gray-800 shadow-sm">
                         <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center gap-2">
-                            <i class="fa-solid fa-basket-shopping text-violet-500"></i>
+                            <i class="fa-solid fa-basket-shopping text-green-500"></i>
                             Venda de Produto
                         </h3>
                         <form action="{{ route('panel.comandas.itens.store', $comanda->id) }}" method="POST" class="space-y-4">
                             @csrf
                             <input type="hidden" name="tipo" value="produto">
                             <div class="flex gap-3">
-                                <select name="item_id" required class="flex-1 px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                <select name="item_id" required class="flex-1 px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                     <option value="">Selecione...</option>
                                     @foreach($produtos as $produto)
                                         <option value="{{ $produto->id }}">{{ $produto->nome }} - R$ {{ number_format($produto->preco_venda, 2, ',', '.') }}</option>
                                     @endforeach
                                 </select>
-                                <input type="number" name="quantidade" value="1" min="1" required class="w-20 px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none text-center">
+                                <input type="number" name="quantidade" value="1" min="1" required class="w-20 px-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none text-center">
                             </div>
-                            <button type="submit" class="w-full bg-violet-900/30 text-violet-600 hover:bg-violet-600 hover:text-white font-bold text-[10px] uppercase tracking-widest py-3.5 px-4 rounded-2xl transition-all border border-violet-800 shadow-sm shadow-violet-900/20">
+                            <button type="submit" class="w-full bg-green-900/30 text-green-500 hover:bg-green-500 hover:text-white font-bold text-[10px] uppercase tracking-widest py-3.5 px-4 rounded-2xl transition-all border border-green-800 shadow-sm shadow-green-900/20">
                                 Lançar Produto
                             </button>
                         </form>
@@ -145,10 +145,10 @@
         <!-- Coluna Direita: Resumo e Pagamento -->
         <div class="space-y-6">
             <div class="bg-gray-900 rounded-[32px] p-8 text-white shadow-2xl relative overflow-hidden border border-gray-800">
-                <div class="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 rounded-full bg-violet-600 opacity-20 blur-3xl"></div>
+                <div class="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 rounded-full bg-green-500 opacity-20 blur-3xl"></div>
                 
                 <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8 flex items-center gap-2 relative">
-                    <i class="fa-solid fa-wallet text-violet-400"></i> Resumo Financeiro
+                    <i class="fa-solid fa-wallet text-green-400"></i> Resumo Financeiro
                 </h3>
                 
                 <div class="space-y-4 mb-10 relative">
@@ -162,13 +162,13 @@
                     </div>
                     <div class="h-px bg-gray-800 my-6"></div>
                     <div class="flex justify-between items-end">
-                        <span class="text-[10px] font-bold text-violet-400 uppercase tracking-widest">Total Líquido</span>
+                        <span class="text-[10px] font-bold text-green-400 uppercase tracking-widest">Total Líquido</span>
                         <span class="text-4xl font-bold text-white tracking-tighter">R$ {{ number_format($comanda->total, 2, ',', '.') }}</span>
                     </div>
                 </div>
 
                 @if($comanda->status === 'aberta')
-                    <button @click="showCloseModal = true" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold text-[11px] uppercase tracking-widest py-4 px-6 rounded-2xl transition-all shadow-xl shadow-violet-900/50 flex items-center justify-center gap-3 active:scale-95 border border-violet-500 relative">
+                    <button @click="showCloseModal = true" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold text-[11px] uppercase tracking-widest py-4 px-6 rounded-2xl transition-all shadow-xl shadow-green-900/50 flex items-center justify-center gap-3 active:scale-95 border border-green-500 relative">
                         <i class="fa-solid fa-check-double text-xs"></i>
                         Receber Pagamento
                     </button>
@@ -177,7 +177,7 @@
                         <p class="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2">Histórico de Transação</p>
                         <div class="flex items-center justify-between">
                             <span class="text-sm font-bold text-gray-200 capitalize">{{ str_replace('_', ' ', $comanda->forma_pagamento) }}</span>
-                            <i class="fa-solid fa-credit-card text-violet-500"></i>
+                            <i class="fa-solid fa-credit-card text-green-500"></i>
                         </div>
                         <p class="text-[9px] text-gray-500 mt-4 uppercase font-bold tracking-widest">Finalizada em {{ $comanda->fechada_em->format('d/m/Y H:i') }}</p>
                     </div>
@@ -185,8 +185,8 @@
             </div>
             
             @if($comanda->observacoes)
-                <div class="bg-violet-50/50 rounded-2xl p-6 border border-violet-800 shadow-sm">
-                    <h4 class="text-[10px] font-bold text-violet-600 uppercase tracking-widest flex items-center gap-2 mb-3">
+                <div class="bg-violet-50/50 rounded-2xl p-6 border border-green-800 shadow-sm">
+                    <h4 class="text-[10px] font-bold text-green-500 uppercase tracking-widest flex items-center gap-2 mb-3">
                         <i class="fa-solid fa-circle-info"></i> Notas do Cliente
                     </h4>
                     <p class="text-gray-400 text-sm font-medium leading-relaxed italic">"{{ $comanda->observacoes }}"</p>
@@ -227,35 +227,35 @@
                             <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 block mb-4">Escolha o Método</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <!-- Dinheiro -->
-                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'dinheiro' ? 'border-violet-600 bg-violet-900/30 ring-1 ring-violet-600' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
+                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'dinheiro' ? 'border-green-500 bg-green-900/30 ring-1 ring-green-500' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
                                     <input type="radio" name="forma_pagamento" value="dinheiro" x-model="formaPagamento" class="sr-only">
                                     <div class="flex flex-col items-center justify-center w-full gap-2">
-                                        <i class="fa-solid fa-money-bill-wave" :class="formaPagamento === 'dinheiro' ? 'text-violet-600' : 'text-gray-400'"></i>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'dinheiro' ? 'text-violet-900' : 'text-gray-500'">Dinheiro</span>
+                                        <i class="fa-solid fa-money-bill-wave" :class="formaPagamento === 'dinheiro' ? 'text-green-500' : 'text-gray-400'"></i>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'dinheiro' ? 'text-green-900' : 'text-gray-500'">Dinheiro</span>
                                     </div>
                                 </label>
                                 <!-- PIX -->
-                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'pix' ? 'border-violet-600 bg-violet-900/30 ring-1 ring-violet-600' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
+                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'pix' ? 'border-green-500 bg-green-900/30 ring-1 ring-green-500' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
                                     <input type="radio" name="forma_pagamento" value="pix" x-model="formaPagamento" class="sr-only">
                                     <div class="flex flex-col items-center justify-center w-full gap-2">
-                                        <i class="fa-solid fa-pix" :class="formaPagamento === 'pix' ? 'text-violet-600' : 'text-gray-400'"></i>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'pix' ? 'text-violet-900' : 'text-gray-500'">PIX</span>
+                                        <i class="fa-solid fa-pix" :class="formaPagamento === 'pix' ? 'text-green-500' : 'text-gray-400'"></i>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'pix' ? 'text-green-900' : 'text-gray-500'">PIX</span>
                                     </div>
                                 </label>
                                 <!-- Cartão de Crédito -->
-                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'cartao_credito' ? 'border-violet-600 bg-violet-900/30 ring-1 ring-violet-600' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
+                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'cartao_credito' ? 'border-green-500 bg-green-900/30 ring-1 ring-green-500' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
                                     <input type="radio" name="forma_pagamento" value="cartao_credito" x-model="formaPagamento" class="sr-only">
                                     <div class="flex flex-col items-center justify-center w-full gap-2">
-                                        <i class="fa-solid fa-credit-card" :class="formaPagamento === 'cartao_credito' ? 'text-violet-600' : 'text-gray-400'"></i>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_credito' ? 'text-violet-900' : 'text-gray-500'">Crédito</span>
+                                        <i class="fa-solid fa-credit-card" :class="formaPagamento === 'cartao_credito' ? 'text-green-500' : 'text-gray-400'"></i>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_credito' ? 'text-green-900' : 'text-gray-500'">Crédito</span>
                                     </div>
                                 </label>
                                 <!-- Cartão de Débito -->
-                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'cartao_debito' ? 'border-violet-600 bg-violet-900/30 ring-1 ring-violet-600' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
+                                <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-sm transition-all" :class="formaPagamento === 'cartao_debito' ? 'border-green-500 bg-green-900/30 ring-1 ring-green-500' : 'border-gray-800 bg-gray-800/50 hover:bg-gray-900/50'">
                                     <input type="radio" name="forma_pagamento" value="cartao_debito" x-model="formaPagamento" class="sr-only">
                                     <div class="flex flex-col items-center justify-center w-full gap-2">
-                                        <i class="fa-solid fa-card-credit-stack" :class="formaPagamento === 'cartao_debito' ? 'text-violet-600' : 'text-gray-400'"></i>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_debito' ? 'text-violet-900' : 'text-gray-500'">Débito</span>
+                                        <i class="fa-solid fa-card-credit-stack" :class="formaPagamento === 'cartao_debito' ? 'text-green-500' : 'text-gray-400'"></i>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest" :class="formaPagamento === 'cartao_debito' ? 'text-green-900' : 'text-gray-500'">Débito</span>
                                     </div>
                                 </label>
                             </div>
@@ -263,7 +263,7 @@
 
                     </div>
                     <div class="bg-gray-800/50 px-6 py-6 sm:px-8 sm:flex sm:flex-row-reverse gap-3">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-lg shadow-emerald-100 px-8 py-3.5 bg-emerald-600 text-[11px] font-bold text-white uppercase tracking-widest hover:bg-emerald-700 transition-all sm:w-auto">
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-lg shadow-emerald-900/30 px-8 py-3.5 bg-emerald-600 text-[11px] font-bold text-white uppercase tracking-widest hover:bg-emerald-700 transition-all sm:w-auto">
                             Baixar Comanda
                         </button>
                         <button type="button" @click="showCloseModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-8 py-3.5 bg-gray-900/50 text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 transition-all sm:mt-0 sm:w-auto">

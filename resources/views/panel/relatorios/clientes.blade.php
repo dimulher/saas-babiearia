@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Relatório de Clientes')
 
 @section('content')
@@ -57,7 +57,7 @@
         </div>
         <div class="bg-purple-50 border border-purple-100 rounded-xl p-5">
             <div class="flex items-center justify-between mb-2">
-                <p class="text-xs text-purple-600 font-medium uppercase">Retorno</p>
+                <p class="text-xs text-green-600 font-medium uppercase">Retorno</p>
                 <i class="fa-solid fa-chart-pie text-purple-400 text-sm"></i>
             </div>
             <p class="text-3xl font-black text-purple-700">{{ $taxaRetorno }}%</p>

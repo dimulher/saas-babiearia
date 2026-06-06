@@ -25,6 +25,8 @@ database/database.sqlite
 
 scratch/
 
+.obsidian/
+
 /vendor
 /bootstrap/cache/*.php
 !bootstrap/cache/.gitignore

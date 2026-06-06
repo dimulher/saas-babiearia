@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+    <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#052e16" />
+            <stop offset="45%" stop-color="#16a34a" />
+            <stop offset="100%" stop-color="#86efac" />
+        </linearGradient>
+        <radialGradient id="glow" cx="30%" cy="28%" r="60%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.35)" />
+            <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+        </radialGradient>
+    </defs>
+
+    <rect width="512" height="512" rx="120" fill="url(#bg)" />
+    <rect width="512" height="512" rx="120" fill="url(#glow)" />
+    <rect x="14" y="14" width="484" height="484" rx="108" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="6" />
+
+    <!-- Tesoura estilizada -->
+    <g transform="translate(256 250) rotate(-40)" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="-58" cy="56" r="26" fill="#ffffff" stroke="none" />
+        <circle cx="58" cy="56" r="26" fill="#ffffff" stroke="none" />
+        <line x1="-58" y1="56" x2="40" y2="-78" />
+        <line x1="58" y1="56" x2="-40" y2="-78" />
+        <circle cx="0" cy="-22" r="9" fill="#ffffff" stroke="none" />
+    </g>
+
+    <!-- Pente -->
+    <g transform="translate(256 256)" opacity="0.0"></g>
+
+    <text x="256" y="430" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="4">BARBEARIA</text>
+    <text x="256" y="468" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="rgba(255,255,255,0.85)" text-anchor="middle" letter-spacing="8">T E S T E</text>
+</svg>

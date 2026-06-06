@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Perfil de Usuário - GlowSystem')
 
 @section('content')
@@ -12,41 +12,41 @@
     <!-- Informações Pessoais -->
     <div class="bg-gray-900/50 bg-[#111827] border border-gray-800/50 rounded-3xl shadow-sm border border-gray-800 p-8 space-y-8 shadow-sm">
         <div class="flex flex-col sm:flex-row items-center gap-6">
-            <div class="w-20 h-20 bg-violet-900/30 rounded-[28px] flex items-center justify-center text-2xl font-bold text-violet-600 border-2 border-violet-800 italic">
+            <div class="w-20 h-20 bg-green-900/30 rounded-[28px] flex items-center justify-center text-2xl font-bold text-green-500 border-2 border-green-800 italic">
                 {{ substr(auth()->user()->name ?? 'G', 0, 1) }}
             </div>
             <div class="text-center sm:text-left">
                 <h3 class="text-xs font-bold text-white uppercase tracking-widest">Identidade Visual</h3>
                 <p class="text-[10px] text-gray-400 font-medium mt-1">Sua imagem será exibida nos logs e relatórios.</p>
-                <button class="mt-3 text-[10px] font-bold text-violet-600 uppercase tracking-widest hover:text-violet-800 flex items-center gap-2">
+                <button class="mt-3 text-[10px] font-bold text-green-500 uppercase tracking-widest hover:text-green-800 flex items-center gap-2">
                     <i class="fa-solid fa-camera-retro"></i> Mudar Avatar
                 </button>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 pt-4 border-t border-gray-50">
+        <div class="grid grid-cols-1 gap-6 pt-4 border-t border-gray-800/50">
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nome Completo</label>
                 <input type="text" value="{{ auth()->user()->name ?? 'Usuário' }}"
-                    class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                    class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">E-mail Corporativo</label>
                     <input type="email" value="{{ auth()->user()->email ?? '' }}"
-                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Telefone Contato</label>
                     <input type="text" placeholder="(00) 00000-0000"
-                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                 </div>
             </div>
         </div>
 
-        <div class="pt-6 border-t border-gray-50">
-            <button class="w-full sm:w-auto bg-violet-600 text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-violet-700 transition-all shadow-xl shadow-violet-900/20 active:scale-95 italic">
+        <div class="pt-6 border-t border-gray-800/50">
+            <button class="w-full sm:w-auto bg-green-500 text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-green-600 transition-all shadow-xl shadow-green-900/20 active:scale-95 italic">
                 Atualizar Cadastro <i class="fa-solid fa-user-check ml-2"></i>
             </button>
         </div>
@@ -63,25 +63,25 @@
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Senha Atual</label>
                 <input type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
-                    class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                    class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Nova Senha</label>
                     <input type="password" placeholder="Nova senha"
-                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Confirmar Nova Senha</label>
                     <input type="password" placeholder="Repetir senha"
-                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                        class="block w-full px-5 py-4 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                 </div>
             </div>
         </div>
 
-        <div class="pt-6 border-t border-gray-50">
-            <button class="w-full sm:w-auto bg-gray-900 text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-violet-600 transition-all shadow-xl active:scale-95 italic">
+        <div class="pt-6 border-t border-gray-800/50">
+            <button class="w-full sm:w-auto bg-gray-900 text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-green-500 transition-all shadow-xl active:scale-95 italic">
                 Redefinir Acesso <i class="fa-solid fa-lock ml-2"></i>
             </button>
         </div>

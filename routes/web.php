@@ -11,7 +11,6 @@ use App\Http\Controllers\ContaController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ComandaController;
-use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\FuncionarioController;

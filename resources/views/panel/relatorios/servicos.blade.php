@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Relatório de Serviços')
 
 @section('content')
@@ -55,7 +55,7 @@
             <div class="flex items-center justify-between mb-2">
                 <p class="text-xs text-gray-500 font-medium uppercase">Ticket Médio</p>
                 <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-chart-line text-purple-600 text-xs"></i>
+                    <i class="fa-solid fa-chart-line text-green-600 text-xs"></i>
                 </div>
             </div>
             <p class="text-3xl font-black text-gray-900">R$ {{ number_format($ticketMedio, 2, ',', '.') }}</p>

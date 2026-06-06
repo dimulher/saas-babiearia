@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,7 @@
         body { font-family: 'Outfit', sans-serif; }
 
         .hero-cover {
-            background: linear-gradient(135deg, #1e0a3c 0%, #2d1060 40%, #4c1d95 70%, #1a0533 100%);
+            background: linear-gradient(135deg, #052e16 0%, #14532d 40%, #166534 70%, #064e3b 100%);
             position: relative;
             overflow: hidden;
         }
@@ -21,7 +21,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 30% 50%, rgba(139,92,246,0.25) 0%, transparent 60%),
+            background: radial-gradient(ellipse at 30% 50%, rgba(34,197,94,0.25) 0%, transparent 60%),
                         radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.15) 0%, transparent 50%);
         }
         .hero-cover::after {
@@ -31,16 +31,16 @@
             left: 0;
             right: 0;
             height: 80px;
-            background: linear-gradient(to bottom, transparent, #030712);
+            background: linear-gradient(to bottom, transparent, #0B0F19);
         }
 
         .profile-avatar-ring {
-            background: linear-gradient(135deg, #7c3aed, #a78bfa, #7c3aed);
+            background: linear-gradient(135deg, #16a34a, #86efac, #16a34a);
             padding: 3px;
             border-radius: 28px;
         }
         .profile-avatar-inner {
-            background: #030712;
+            background: #0B0F19;
             border-radius: 25px;
             overflow: hidden;
         }
@@ -51,17 +51,17 @@
             overflow: hidden;
         }
         .step-bar-fill {
-            background: linear-gradient(90deg, #7c3aed, #a78bfa);
+            background: linear-gradient(90deg, #16a34a, #86efac);
             border-radius: 99px;
             transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-            box-shadow: 0 0 12px rgba(139,92,246,0.5);
+            box-shadow: 0 0 12px rgba(34,197,94,0.5);
         }
 
         .step-dot {
             transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
         }
         .step-dot.active {
-            box-shadow: 0 0 0 4px rgba(139,92,246,0.25), 0 0 16px rgba(139,92,246,0.5);
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.25), 0 0 16px rgba(34,197,94,0.5);
         }
 
         .card-service {
@@ -70,10 +70,10 @@
             transition: all 0.25s ease;
         }
         .card-service:hover {
-            border-color: rgba(139,92,246,0.6);
-            background: rgba(139,92,246,0.06);
+            border-color: rgba(34,197,94,0.6);
+            background: rgba(34,197,94,0.06);
             transform: translateY(-1px);
-            box-shadow: 0 8px 32px rgba(139,92,246,0.12);
+            box-shadow: 0 8px 32px rgba(34,197,94,0.12);
         }
 
         .sticky-nav {
@@ -83,12 +83,12 @@
         }
     </style>
 </head>
-<body class="bg-[#030712] min-h-screen text-white" x-data="booking()">
+<body class="bg-[#0B0F19] min-h-screen text-white" x-data="booking()">
 
     <!-- ═══════════════ HERO HEADER ═══════════════ -->
     <div class="hero-cover h-44 relative">
         <!-- Decorative orbs -->
-        <div class="absolute top-4 left-8 w-32 h-32 rounded-full bg-violet-600/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute top-4 left-8 w-32 h-32 rounded-full bg-green-500/10 blur-3xl pointer-events-none"></div>
         <div class="absolute bottom-8 right-12 w-24 h-24 rounded-full bg-purple-400/10 blur-2xl pointer-events-none"></div>
     </div>
 
@@ -104,7 +104,7 @@
                              alt="{{ $barbearia->nome }}"
                              class="w-full h-full object-cover">
                     @else
-                        <div class="w-full h-full bg-gradient-to-br from-violet-700 to-purple-900 flex items-center justify-center">
+                        <div class="w-full h-full bg-gradient-to-br from-green-600 to-purple-900 flex items-center justify-center">
                             <span class="text-3xl font-black text-white select-none">
                                 {{ strtoupper(substr($barbearia?->nome ?? 'G', 0, 1)) }}
                             </span>
@@ -114,7 +114,7 @@
             </div>
 
             <!-- Nome e status -->
-            <h1 class="text-2xl font-black tracking-tight text-white uppercase leading-none">
+            <h1 class="text-2xl font-bold tracking-tight text-white leading-none">
                 {{ $barbearia?->nome ?? 'GlowSystem' }}
             </h1>
             @if(!empty($barbearia?->descricao))
@@ -137,8 +137,8 @@
                 <div class="flex items-center gap-2">
                     <template x-for="i in 5" :key="i">
                         <div class="step-dot rounded-full transition-all"
-                             :class="i < etapa ? 'w-2 h-2 bg-violet-500' :
-                                     i === etapa ? 'w-6 h-2 bg-violet-500 active' :
+                             :class="i < etapa ? 'w-2 h-2 bg-green-500' :
+                                     i === etapa ? 'w-6 h-2 bg-green-500 active' :
                                      'w-2 h-2 bg-gray-700'">
                         </div>
                     </template>
@@ -148,7 +148,7 @@
                     '', 'Escolha o serviço', 'Profissional', 'Data & Hora', 'Adicionais', 'Confirmar'
                 ][etapa]"></span>
                 <!-- Passo X/5 -->
-                <span class="ml-auto text-xs font-black text-violet-400" x-text="etapa + '/5'"></span>
+                <span class="ml-auto text-xs font-black text-green-400" x-text="etapa + '/5'"></span>
             </div>
             <!-- Barra de progresso -->
             <div class="step-bar-track h-0.5 mt-2">
@@ -163,34 +163,43 @@
         <!-- Etapa 1: Selecionar serviço -->
         <div x-show="etapa === 1" x-transition.opacity class="space-y-3">
             <div class="mb-6">
-                <p class="text-xs font-bold text-violet-400 uppercase tracking-widest mb-1">Passo 1 de 5</p>
-                <h2 class="text-2xl font-black text-white uppercase tracking-tight">Escolha o serviço</h2>
+                <p class="text-xs font-bold text-green-400 uppercase tracking-widest mb-1">Passo 1 de 5</p>
+                <h2 class="text-2xl font-bold text-white tracking-tight">Escolha o serviço</h2>
             </div>
 
+            <div class="grid grid-cols-2 gap-3">
             @forelse($servicos as $s)
             <button @click="servico_id = {{ $s->id }}; servico_nome = '{{ $s->nome }}'; avancarDeServico()"
-                class="card-service w-full flex items-center gap-4 p-5 rounded-[24px] group">
-                <!-- Ícone do serviço -->
-                <div class="w-12 h-12 rounded-2xl bg-violet-900/40 border border-violet-700/40 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-600/30 transition-colors">
-                    <i class="fa-solid fa-scissors text-violet-400 text-sm"></i>
-                </div>
-                <div class="text-left flex-1">
-                    <p class="font-bold text-white text-base group-hover:text-violet-300 transition-colors">{{ $s->nome }}</p>
-                    <p class="text-xs text-gray-500 mt-0.5 font-medium"><i class="fa-regular fa-clock mr-1"></i>{{ $s->duracao_minutos }} min</p>
-                </div>
-                <div class="text-right flex-shrink-0">
-                    <p class="font-black text-white text-lg">R$ {{ number_format($s->preco, 2, ',', '.') }}</p>
-                    <div class="w-7 h-7 rounded-full bg-white/5 group-hover:bg-violet-600 flex items-center justify-center ml-auto mt-1.5 transition-colors">
-                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white"></i>
+                class="card-service relative flex flex-col text-left bg-gray-900 border-2 border-gray-800 rounded-2xl overflow-hidden group hover:border-green-500/60 transition-all">
+
+                <!-- Foto do serviço -->
+                <div class="aspect-square w-full bg-gray-800 overflow-hidden">
+                    @if($s->imagem_url)
+                        <img src="{{ $s->imagem_url }}" alt="{{ $s->nome }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    @else
+                        <div class="w-full h-full flex items-center justify-center text-green-700/60">
+                            <i class="fa-solid fa-scissors text-3xl"></i>
+                        </div>
+                    @endif
+                    <div class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm border border-white/30 flex items-center justify-center group-hover:bg-green-500 group-hover:border-green-500 transition-colors">
+                        <i class="fa-solid fa-chevron-right text-[10px] text-white"></i>
                     </div>
+                </div>
+
+                <!-- Informações -->
+                <div class="p-3.5 flex-1 flex flex-col">
+                    <p class="font-bold text-white text-sm leading-snug line-clamp-2 group-hover:text-green-300 transition-colors">{{ $s->nome }}</p>
+                    <p class="text-xs text-gray-500 mt-1 font-medium"><i class="fa-regular fa-clock mr-1"></i>{{ $s->duracao_minutos }} min</p>
+                    <p class="font-black text-green-400 text-base mt-auto pt-2">R$ {{ number_format($s->preco, 2, ',', '.') }}</p>
                 </div>
             </button>
             @empty
-            <div class="text-center py-12 rounded-[24px] border border-dashed border-gray-800">
+            <div class="col-span-2 text-center py-12 rounded-2xl border border-dashed border-gray-800">
                 <i class="fa-solid fa-calendar-xmark text-gray-700 text-3xl mb-3"></i>
                 <p class="text-gray-500 font-medium">Nenhum serviço disponível no momento.</p>
             </div>
             @endforelse
+            </div>
         </div>
 
         <!-- Etapa 2: Selecionar profissional -->
@@ -201,22 +210,22 @@
                     <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-violet-400 uppercase tracking-widest">Passo 2 de 5</p>
-                    <h2 class="text-2xl font-black text-white uppercase tracking-tight leading-none">Profissional</h2>
+                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest">Passo 2 de 5</p>
+                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Profissional</h2>
                 </div>
             </div>
 
             @if(!$preselected)
             <button @click="profissional_id = ''; profissional_nome = 'Qualquer profissional'; proximaEtapa(3)"
-                class="card-service w-full flex items-center gap-4 p-5 rounded-[24px] group">
-                <div class="w-12 h-12 rounded-2xl bg-gray-800/80 border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-600/20 transition-colors">
-                    <i class="fa-solid fa-shuffle text-gray-400 group-hover:text-violet-400"></i>
+                class="card-service w-full flex items-center gap-4 p-5 rounded-2xl group">
+                <div class="w-12 h-12 rounded-2xl bg-gray-800/80 border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/20 transition-colors">
+                    <i class="fa-solid fa-shuffle text-gray-400 group-hover:text-green-400"></i>
                 </div>
                 <div class="text-left flex-1">
-                    <p class="font-bold text-white text-base group-hover:text-violet-300 transition-colors">Qualquer profissional</p>
+                    <p class="font-bold text-white text-base group-hover:text-green-300 transition-colors">Qualquer profissional</p>
                     <p class="text-xs text-gray-500 mt-0.5 font-medium">Primeiro disponível</p>
                 </div>
-                <div class="w-7 h-7 rounded-full bg-white/5 group-hover:bg-violet-600 flex items-center justify-center transition-colors">
+                <div class="w-7 h-7 rounded-full bg-white/5 group-hover:bg-green-500 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white"></i>
                 </div>
             </button>
@@ -224,20 +233,20 @@
 
             @foreach($profissionais as $p)
             <button @click="profissional_id = {{ $p->id }}; profissional_nome = '{{ $p->nome }}'; proximaEtapa(3)"
-                class="card-service w-full flex items-center gap-4 p-5 rounded-[24px] group">
-                <div class="w-12 h-12 rounded-2xl bg-violet-900/40 border border-violet-700/40 flex items-center justify-center font-black text-violet-400 text-lg flex-shrink-0 group-hover:bg-violet-600/30 transition-colors">
+                class="card-service w-full flex items-center gap-4 p-5 rounded-2xl group">
+                <div class="w-12 h-12 rounded-2xl bg-green-900/40 border border-green-600/40 flex items-center justify-center font-black text-green-400 text-lg flex-shrink-0 group-hover:bg-green-500/30 transition-colors">
                     {{ $p->initials }}
                 </div>
                 <div class="text-left flex-1">
-                    <p class="font-bold text-white text-base group-hover:text-violet-300 transition-colors">
+                    <p class="font-bold text-white text-base group-hover:text-green-300 transition-colors">
                         {{ $p->nome }}
                         @if($preselected && $preselected->id === $p->id)
-                            <span class="ml-2 px-2 py-0.5 bg-violet-600 text-white text-[10px] uppercase font-black rounded-md">Sugerido</span>
+                            <span class="ml-2 px-2 py-0.5 bg-green-500 text-white text-[10px] uppercase font-black rounded-md">Sugerido</span>
                         @endif
                     </p>
                     <p class="text-xs text-gray-500 mt-0.5 font-medium">Especialista</p>
                 </div>
-                <div class="w-7 h-7 rounded-full bg-white/5 group-hover:bg-violet-600 flex items-center justify-center transition-colors">
+                <div class="w-7 h-7 rounded-full bg-white/5 group-hover:bg-green-500 flex items-center justify-center transition-colors">
                     <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white"></i>
                 </div>
             </button>
@@ -252,15 +261,15 @@
                     <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-violet-400 uppercase tracking-widest" x-text="exclusivo ? 'Passo 2 de 4' : 'Passo 3 de 5'"></p>
-                    <h2 class="text-2xl font-black text-white uppercase tracking-tight leading-none">Data &amp; Hora</h2>
+                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest" x-text="exclusivo ? 'Passo 2 de 4' : 'Passo 3 de 5'"></p>
+                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Data &amp; Hora</h2>
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Selecione a data</label>
                 <input type="date" x-model="data" min="{{ now()->format('Y-m-d') }}"
-                    class="w-full bg-gray-900 border border-gray-800 rounded-[20px] px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all">
+                    class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
             </div>
 
             <div>
@@ -268,16 +277,16 @@
                 <div class="grid grid-cols-4 gap-3">
                     @foreach(['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30', '17:00', '17:30', '18:00', '18:30', '19:00'] as $h)
                     <button @click="hora = '{{ $h }}'"
-                        :class="hora === '{{ $h }}' ? 'bg-violet-600 border-violet-500 text-white shadow-[0_0_15px_rgba(139,92,246,0.4)]' : 'bg-gray-900 border-gray-800 text-gray-300 hover:border-violet-500 hover:text-white'"
-                        class="border rounded-[16px] py-3 text-sm font-black transition-all">
+                        :class="hora === '{{ $h }}' ? 'bg-green-500 border-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.4)]' : 'bg-gray-900 border-gray-800 text-gray-300 hover:border-green-500 hover:text-white'"
+                        class="border rounded-xl py-3 text-sm font-black transition-all">
                         {{ $h }}
                     </button>
                     @endforeach
                 </div>
             </div>
 
-            <button @click="if(hora) proximaEtapa({{ $produtos->count() > 0 ? 4 : 5 }})" :class="hora ? 'bg-white text-gray-950 hover:bg-gray-100' : 'bg-gray-800 text-gray-500 cursor-not-allowed'"
-                class="w-full py-4 rounded-[20px] text-sm font-black uppercase tracking-widest transition-colors mt-4">
+            <button @click="if(hora) proximaEtapa({{ $produtos->count() > 0 ? 4 : 5 }})" :class="hora ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-gray-800 text-gray-500 cursor-not-allowed'"
+                class="w-full py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-colors mt-4">
                 Continuar
             </button>
         </div>
@@ -291,35 +300,49 @@
                     <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-violet-400 uppercase tracking-widest">Passo 4 de 5</p>
-                    <h2 class="text-2xl font-black text-white uppercase tracking-tight leading-none">Adicionais</h2>
+                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest">Passo 4 de 5</p>
+                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Adicionais</h2>
                 </div>
             </div>
 
             <div>
                 <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Catálogo de Produtos</label>
                 <p class="text-sm text-gray-500 font-medium mb-4 ml-1">Deseja garantir algum produto? Ele estará separado para você após o serviço.</p>
-                
-                <div class="space-y-3">
+
+                <div class="grid grid-cols-2 gap-3">
                     @foreach($produtos as $p)
-                    <label class="flex items-center justify-between p-4 bg-gray-900 border border-gray-800 rounded-[20px] cursor-pointer hover:border-violet-500 transition-all"
-                           :class="produtos_ids.includes({{ $p->id }}) ? 'border-violet-500 bg-violet-900/10' : ''">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700">
-                                <i class="fa-solid fa-box text-gray-400"></i>
-                            </div>
-                            <div>
-                                <p class="font-bold text-white text-base">{{ $p->nome }}</p>
-                                <p class="font-black text-violet-400 mt-0.5">R$ {{ number_format($p->preco, 2, ',', '.') }}</p>
-                            </div>
+                    <label class="relative flex flex-col bg-gray-900 border-2 border-gray-800 rounded-2xl overflow-hidden cursor-pointer hover:border-green-500/60 transition-all group"
+                           :class="produtos_ids.includes('{{ $p->id }}') ? 'border-green-500 ring-2 ring-green-500/30' : ''">
+                        <input type="checkbox" value="{{ $p->id }}" x-model="produtos_ids" class="sr-only">
+
+                        <!-- Selo de selecionado -->
+                        <div class="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full flex items-center justify-center border-2 transition-all"
+                             :class="produtos_ids.includes('{{ $p->id }}') ? 'bg-green-500 border-green-500' : 'bg-black/40 border-white/30 backdrop-blur-sm'">
+                            <i class="fa-solid fa-check text-[11px] transition-opacity" :class="produtos_ids.includes('{{ $p->id }}') ? 'text-white opacity-100' : 'opacity-0'"></i>
                         </div>
-                        <input type="checkbox" value="{{ $p->id }}" x-model="produtos_ids" class="w-5 h-5 rounded border-gray-700 text-violet-600 focus:ring-violet-600 bg-gray-800">
+
+                        <!-- Foto do produto -->
+                        <div class="aspect-square w-full bg-gray-800 overflow-hidden">
+                            @if($p->imagem_url)
+                                <img src="{{ $p->imagem_url }}" alt="{{ $p->nome }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-gray-600">
+                                    <i class="fa-solid fa-box text-3xl"></i>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Informações -->
+                        <div class="p-3.5 flex-1 flex flex-col">
+                            <p class="font-bold text-white text-sm leading-snug line-clamp-2">{{ $p->nome }}</p>
+                            <p class="font-black text-green-400 text-base mt-auto pt-2">R$ {{ number_format($p->preco_venda, 2, ',', '.') }}</p>
+                        </div>
                     </label>
                     @endforeach
                 </div>
             </div>
 
-            <button @click="proximaEtapa(5)" class="w-full py-4 bg-white text-gray-950 hover:bg-gray-100 rounded-[20px] text-sm font-black uppercase tracking-widest transition-colors mt-4">
+            <button @click="proximaEtapa(5)" class="w-full py-4 bg-green-500 text-white hover:bg-green-600 rounded-2xl text-sm font-black uppercase tracking-widest transition-colors mt-4">
                 Ir para Confirmação
             </button>
         </div>
@@ -333,13 +356,13 @@
                     <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-violet-400 uppercase tracking-widest">Passo 5 de 5</p>
-                    <h2 class="text-2xl font-black text-white uppercase tracking-tight leading-none">Confirmar Reserva</h2>
+                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest">Passo 5 de 5</p>
+                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Confirmar Reserva</h2>
                 </div>
             </div>
 
             <!-- Resumo -->
-            <div class="bg-gray-900 border border-gray-800 rounded-[24px] p-6 space-y-4">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6 space-y-4">
                 <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-3 mb-4">Resumo do Pedido</h3>
                 
                 <div class="flex justify-between items-center">
@@ -362,7 +385,7 @@
                 <div x-show="produtos_ids.length > 0" class="pt-3 border-t border-gray-800 mt-3">
                     <div class="flex justify-between items-start">
                         <span class="text-sm text-gray-400 font-medium">Produtos</span>
-                        <span class="text-sm font-bold text-violet-400 text-right" x-text="produtos_ids.length + ' item(ns)'"></span>
+                        <span class="text-sm font-bold text-green-400 text-right" x-text="produtos_ids.length + ' item(ns)'"></span>
                     </div>
                 </div>
             </div>
@@ -373,32 +396,32 @@
                 
                 <div>
                     <input type="text" x-model="nomeCliente"
-                        class="w-full bg-gray-900 border border-gray-800 rounded-[20px] px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all placeholder-gray-600"
+                        class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-green-500 transition-all placeholder-gray-600"
                         placeholder="Nome completo">
                 </div>
                 <div>
                     <input type="tel" x-model="telefone" @input="checkVipStatus"
-                        class="w-full bg-gray-900 border border-gray-800 rounded-[20px] px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all placeholder-gray-600"
+                        class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-green-500 transition-all placeholder-gray-600"
                         placeholder="WhatsApp (com DDD)">
                 </div>
 
                 <!-- Toggle Sou VIP -->
-                <div class="flex items-center gap-3 bg-gray-900/50 border border-gray-800 rounded-[20px] p-4">
-                    <input type="checkbox" id="is_vip_checkbox" x-model="isVipChecked" @change="checkVipStatus" class="w-5 h-5 rounded border-gray-700 text-violet-600 focus:ring-violet-600 bg-gray-900 cursor-pointer">
+                <div class="flex items-center gap-3 bg-gray-900/50 border border-gray-800 rounded-2xl p-4">
+                    <input type="checkbox" id="is_vip_checkbox" x-model="isVipChecked" @change="checkVipStatus" class="w-5 h-5 rounded border-gray-700 text-green-500 focus:ring-green-500 bg-gray-900 cursor-pointer">
                     <label for="is_vip_checkbox" class="text-sm font-bold text-gray-300 cursor-pointer flex-1">Sou Cliente VIP</label>
                 </div>
 
                 <!-- Feedback VIP -->
-                <div x-show="isVipChecked && isVipVerificado" x-transition class="bg-violet-900/20 border border-violet-500/30 rounded-[20px] p-4 flex items-start gap-3">
-                    <i class="fa-solid fa-crown text-violet-400 mt-1"></i>
+                <div x-show="isVipChecked && isVipVerificado" x-transition class="bg-green-900/20 border border-green-500/30 rounded-2xl p-4 flex items-start gap-3">
+                    <i class="fa-solid fa-crown text-green-400 mt-1"></i>
                     <div>
-                        <p class="text-sm font-bold text-violet-400 uppercase tracking-widest" x-text="'Plano ' + vipPlan + ' Ativado!'"></p>
+                        <p class="text-sm font-bold text-green-400 uppercase tracking-widest" x-text="'Plano ' + vipPlan + ' Ativado!'"></p>
                         <p class="text-[10px] font-medium text-gray-400 mt-0.5">Seus benefícios VIP serão aplicados automaticamente nesta reserva.</p>
                     </div>
                 </div>
 
                 <!-- Aviso VIP Inválido -->
-                <div x-show="isVipChecked && !isVipVerificado && telefone.length >= 14" x-transition class="bg-red-900/10 border border-red-500/20 rounded-[20px] p-4 flex items-start gap-3">
+                <div x-show="isVipChecked && !isVipVerificado && telefone.length >= 14" x-transition class="bg-red-900/10 border border-red-500/20 rounded-2xl p-4 flex items-start gap-3">
                     <i class="fa-solid fa-triangle-exclamation text-red-400 mt-1"></i>
                     <div>
                         <p class="text-xs font-bold text-red-400">Assinatura não encontrada</p>
@@ -408,12 +431,12 @@
 
                 <div>
                     <textarea x-model="descricao" rows="2" placeholder="Deixe uma observação para o profissional (opcional)"
-                        class="w-full bg-gray-900 border border-gray-800 rounded-[20px] px-5 py-4 text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all resize-none placeholder-gray-600"></textarea>
+                        class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-green-500 transition-all resize-none placeholder-gray-600"></textarea>
                 </div>
             </div>
 
             <button @click="confirmar()" :disabled="isLoading || !nomeCliente || !telefone"
-                class="w-full bg-violet-600 hover:bg-violet-700 py-5 rounded-[20px] text-sm font-black uppercase tracking-widest text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(139,92,246,0.3)] mt-6">
+                class="w-full bg-green-500 hover:bg-green-600 py-5 rounded-2xl text-sm font-black uppercase tracking-widest text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(34,197,94,0.3)] mt-6">
                 <i class="fa-solid fa-check mr-2" x-show="!isLoading"></i>
                 <i class="fa-solid fa-spinner fa-spin mr-2" x-show="isLoading" style="display: none;"></i>
                 <span x-text="isLoading ? 'Processando...' : 'Confirmar Reserva'"></span>
@@ -432,20 +455,20 @@
 
             <div>
                 <p class="text-xs font-bold text-green-400 uppercase tracking-widest mb-2">Tudo certo!</p>
-                <h2 class="text-3xl font-black text-white uppercase tracking-tight">Reserva Confirmada!</h2>
+                <h2 class="text-3xl font-bold text-white tracking-tight">Reserva Confirmada!</h2>
                 <p class="text-gray-400 font-medium mt-2">Você receberá os detalhes no seu WhatsApp.</p>
             </div>
 
-            <div class="bg-white/[0.03] border border-white/10 rounded-[24px] p-6 text-left space-y-3 mx-auto">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6 text-left space-y-3 mx-auto">
                 <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest border-b border-white/10 pb-3 mb-3">Resumo</h3>
                 <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Serviço</span><span class="text-sm font-bold text-white" x-text="servico_nome"></span></div>
                 <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Profissional</span><span class="text-sm font-bold text-white" x-text="profissional_nome"></span></div>
                 <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Data</span><span class="text-sm font-bold text-white" x-text="data.split('-').reverse().join('/')"></span></div>
-                <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Horário</span><span class="text-sm font-bold text-violet-400" x-text="hora"></span></div>
+                <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Horário</span><span class="text-sm font-bold text-green-400" x-text="hora"></span></div>
             </div>
 
             <button @click="window.location.reload()"
-                class="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-violet-600/10 border border-violet-500/30 hover:bg-violet-600/20 rounded-full text-xs font-black text-violet-400 uppercase tracking-widest transition-all">
+                class="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-green-500/10 border border-green-500/30 hover:bg-green-500/20 rounded-full text-xs font-black text-green-400 uppercase tracking-widest transition-all">
                 Fazer nova reserva <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>

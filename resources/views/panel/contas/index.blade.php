@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Contas & Fluxo')
 
 @section('content')
@@ -11,7 +11,7 @@
             <h1 class="text-2xl font-bold text-white uppercase tracking-tight">Contas & Fluxo</h1>
             <p class="text-sm text-gray-400 font-medium">Gerencie suas receitas e despesas de forma estratégica.</p>
         </div>
-        <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3 rounded-2xl text-sm font-bold uppercase tracking-widest shadow-xl shadow-violet-200">
+        <button @click="showModal = true" class="btn-premium flex items-center justify-center gap-2 text-white px-6 py-3 rounded-2xl text-sm font-bold uppercase tracking-widest shadow-xl shadow-emerald-900/30">
             <i class="fa-solid fa-plus text-xs"></i> Nova Conta
         </button>
     </div>
@@ -22,10 +22,10 @@
             <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
             </span>
-            <input type="text" placeholder="Pesquisar conta..." class="block w-full pl-10 pr-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+            <input type="text" placeholder="Pesquisar conta..." class="block w-full pl-10 pr-4 py-3 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
         </div>
         <div class="flex items-center gap-2 bg-gray-800/50 px-4 py-2 rounded-xl border border-gray-800">
-            <i class="fa-solid fa-filter text-violet-500 text-xs"></i>
+            <i class="fa-solid fa-filter text-green-500 text-xs"></i>
             <select class="bg-transparent border-none p-0 text-[10px] font-bold uppercase tracking-widest focus:ring-0 text-gray-300 pr-8">
                 <option>Todos os status</option>
                 <option>Pendente</option>
@@ -33,7 +33,7 @@
             </select>
         </div>
         <div class="flex items-center gap-2 bg-gray-800/50 px-4 py-2 rounded-xl border border-gray-800">
-            <i class="fa-solid fa-layer-group text-violet-500 text-xs"></i>
+            <i class="fa-solid fa-layer-group text-green-500 text-xs"></i>
             <select class="bg-transparent border-none p-0 text-[10px] font-bold uppercase tracking-widest focus:ring-0 text-gray-300 pr-8">
                 <option>Todas as categorias</option>
                 <option>Aluguel</option>
@@ -57,11 +57,11 @@
                         <th class="px-6 py-5 text-right">Ações</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-gray-800/50">
                     @forelse($contas as $conta)
                         <tr class="hover:bg-gray-900/80 transition-colors group">
                             <td class="px-6 py-4">
-                                <div class="font-bold text-white group-hover:text-violet-600 transition-colors">{{ $conta->descricao }}</div>
+                                <div class="font-bold text-white group-hover:text-green-500 transition-colors">{{ $conta->descricao }}</div>
                                 <div class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">{{ $conta->tipo }}</div>
                             </td>
                             <td class="px-6 py-4">
@@ -132,7 +132,7 @@
                     <div class="bg-gray-900/50 px-6 pt-8 pb-6 sm:p-8">
                         <div class="flex items-center justify-between mb-8">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-violet-900/30 rounded-2xl flex items-center justify-center text-violet-600 shadow-sm border border-violet-800">
+                                <div class="w-12 h-12 bg-green-900/30 rounded-2xl flex items-center justify-center text-green-500 shadow-sm border border-green-800">
                                     <i class="fa-solid fa-receipt text-xl"></i>
                                 </div>
                                 <div>
@@ -148,17 +148,17 @@
                         <div class="space-y-6">
                             <div class="space-y-2">
                                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Descrição</label>
-                                <input type="text" name="descricao" required placeholder="Ex: Aluguel, Compra de Shampoos" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                <input type="text" name="descricao" required placeholder="Ex: Aluguel, Compra de Shampoos" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Valor (R$)</label>
-                                    <input type="number" step="0.01" name="valor" required placeholder="0,00" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <input type="number" step="0.01" name="valor" required placeholder="0,00" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Tipo de Lançamento</label>
-                                    <select name="tipo" required class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <select name="tipo" required class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                         <option value="despesa">Despesa (Saída)</option>
                                         <option value="receita">Receita (Entrada)</option>
                                     </select>
@@ -168,11 +168,11 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Data de Vencimento</label>
-                                    <input type="date" name="vencimento" value="{{ date('Y-m-d') }}" required class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <input type="date" name="vencimento" value="{{ date('Y-m-d') }}" required class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Categoria</label>
-                                    <select name="categoria" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <select name="categoria" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                         <option value="">Selecione...</option>
                                         <option value="Aluguel">Aluguel</option>
                                         <option value="Salários">Salários</option>
@@ -186,7 +186,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Recorrência</label>
-                                    <select name="recorrencia" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <select name="recorrencia" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                         <option value="nenhuma">Nenhuma</option>
                                         <option value="semanal">Semanal</option>
                                         <option value="mensal">Mensal</option>
@@ -195,13 +195,13 @@
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Qtd. Parcelas</label>
-                                    <input type="number" name="total_parcelas" min="1" value="1" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-violet-500 focus:bg-gray-900/50 transition-all outline-none">
+                                    <input type="number" name="total_parcelas" min="1" value="1" class="block w-full px-4 py-3.5 bg-gray-800/50 border-gray-800 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-green-500 focus:bg-gray-900/50 transition-all outline-none">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="bg-gray-800/50 px-6 py-6 sm:px-8 sm:flex sm:flex-row-reverse gap-3">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-lg shadow-violet-900/20 px-6 py-3 bg-violet-600 text-xs font-bold text-white uppercase tracking-widest hover:bg-violet-700 transition-all sm:w-auto">Lançar Conta</button>
+                        <button type="submit" class="w-full inline-flex justify-center rounded-2xl border border-transparent shadow-lg shadow-green-900/20 px-6 py-3 bg-green-500 text-xs font-bold text-white uppercase tracking-widest hover:bg-green-600 transition-all sm:w-auto">Lançar Conta</button>
                         <button type="button" @click="showModal = false" class="mt-3 w-full inline-flex justify-center rounded-2xl border border-gray-700 px-6 py-3 bg-gray-900/50 text-xs font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-800/50 hover:text-gray-400 transition-all sm:mt-0 sm:w-auto">Cancelar</button>
                     </div>
                 </form>

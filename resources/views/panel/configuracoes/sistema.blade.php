@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Configurações do Sistema')
 
 @section('content')
@@ -26,8 +26,8 @@
     {{-- Seção: Agendamentos Online --}}
     <div class="bg-[#111827] border border-gray-800/50 rounded-3xl p-8 space-y-6 shadow-sm">
         <div class="flex items-center gap-3 pb-5 border-b border-gray-800/50">
-            <div class="w-9 h-9 rounded-xl bg-violet-900/40 flex items-center justify-center border border-violet-800/40">
-                <i class="fa-solid fa-calendar-check text-violet-400 text-sm"></i>
+            <div class="w-9 h-9 rounded-xl bg-green-900/40 flex items-center justify-center border border-green-800/40">
+                <i class="fa-solid fa-calendar-check text-green-400 text-sm"></i>
             </div>
             <div>
                 <h2 class="text-xs font-bold text-white uppercase tracking-widest">Agendamentos Online</h2>
@@ -36,7 +36,7 @@
         </div>
 
         {{-- Toggle: Agendamento Online Ativo --}}
-        <label class="flex items-center justify-between p-4 bg-[#0B0F19] rounded-2xl border border-gray-800 cursor-pointer hover:border-violet-800/50 transition-all group">
+        <label class="flex items-center justify-between p-4 bg-[#0B0F19] rounded-2xl border border-gray-800 cursor-pointer hover:border-green-800/50 transition-all group">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-xl bg-emerald-900/30 border border-emerald-800/40 flex items-center justify-center text-emerald-400">
                     <i class="fa-solid fa-globe text-sm"></i>
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <button type="button" @click="agendamentoOnline = !agendamentoOnline"
-                :class="agendamentoOnline ? 'bg-violet-600' : 'bg-gray-700'"
+                :class="agendamentoOnline ? 'bg-green-500' : 'bg-gray-700'"
                 class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-all shadow-inner">
                 <span :class="agendamentoOnline ? 'translate-x-6' : 'translate-x-1'"
                     class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm"></span>
@@ -55,7 +55,7 @@
         </label>
 
         {{-- Toggle: Confirmação Automática --}}
-        <label class="flex items-center justify-between p-4 bg-[#0B0F19] rounded-2xl border border-gray-800 cursor-pointer hover:border-violet-800/50 transition-all group">
+        <label class="flex items-center justify-between p-4 bg-[#0B0F19] rounded-2xl border border-gray-800 cursor-pointer hover:border-green-800/50 transition-all group">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-xl bg-blue-900/30 border border-blue-800/40 flex items-center justify-center text-blue-400">
                     <i class="fa-solid fa-circle-check text-sm"></i>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <button type="button" @click="confirmacaoAutomatica = !confirmacaoAutomatica"
-                :class="confirmacaoAutomatica ? 'bg-violet-600' : 'bg-gray-700'"
+                :class="confirmacaoAutomatica ? 'bg-green-500' : 'bg-gray-700'"
                 class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-all shadow-inner">
                 <span :class="confirmacaoAutomatica ? 'translate-x-6' : 'translate-x-1'"
                     class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm"></span>
@@ -77,7 +77,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Intervalo Entre Atendimentos</label>
-                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-violet-500 outline-none appearance-none cursor-pointer transition-all">
+                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-green-500 outline-none appearance-none cursor-pointer transition-all">
                     <option>Sem intervalo</option>
                     <option selected>10 minutos</option>
                     <option>15 minutos</option>
@@ -87,7 +87,7 @@
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Antecedência Mínima para Agendamento</label>
-                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-violet-500 outline-none appearance-none cursor-pointer transition-all">
+                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-green-500 outline-none appearance-none cursor-pointer transition-all">
                     <option>Sem restrição</option>
                     <option>1 hora antes</option>
                     <option selected>2 horas antes</option>
@@ -97,7 +97,7 @@
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Prazo Máximo de Agendamento</label>
-                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-violet-500 outline-none appearance-none cursor-pointer transition-all">
+                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-green-500 outline-none appearance-none cursor-pointer transition-all">
                     <option>7 dias</option>
                     <option selected>30 dias</option>
                     <option>60 dias</option>
@@ -106,7 +106,7 @@
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Cancelamento Pelo Cliente até</label>
-                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-violet-500 outline-none appearance-none cursor-pointer transition-all">
+                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-green-500 outline-none appearance-none cursor-pointer transition-all">
                     <option>Não permitido</option>
                     <option>1 hora antes</option>
                     <option selected>2 horas antes</option>
@@ -120,8 +120,8 @@
     {{-- Seção: Notificações --}}
     <div class="bg-[#111827] border border-gray-800/50 rounded-3xl p-8 space-y-4 shadow-sm">
         <div class="flex items-center gap-3 pb-5 border-b border-gray-800/50">
-            <div class="w-9 h-9 rounded-xl bg-violet-900/40 flex items-center justify-center border border-violet-800/40">
-                <i class="fa-solid fa-bell text-violet-400 text-sm"></i>
+            <div class="w-9 h-9 rounded-xl bg-green-900/40 flex items-center justify-center border border-green-800/40">
+                <i class="fa-solid fa-bell text-green-400 text-sm"></i>
             </div>
             <div>
                 <h2 class="text-xs font-bold text-white uppercase tracking-widest">Notificações</h2>
@@ -139,7 +139,7 @@
         @endphp
 
         @foreach($toggles as $t)
-        <label class="flex items-center justify-between p-4 bg-[#0B0F19] rounded-2xl border border-gray-800 cursor-pointer hover:border-violet-800/50 transition-all group">
+        <label class="flex items-center justify-between p-4 bg-[#0B0F19] rounded-2xl border border-gray-800 cursor-pointer hover:border-green-800/50 transition-all group">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 rounded-xl bg-{{ $t['color'] }}-900/30 border border-{{ $t['color'] }}-800/40 flex items-center justify-center text-{{ $t['color'] }}-400">
                     <i class="fa-solid {{ $t['icon'] }} text-sm"></i>
@@ -150,7 +150,7 @@
                 </div>
             </div>
             <button type="button" @click="{{ $t['key'] }} = !{{ $t['key'] }}"
-                :class="{{ $t['key'] }} ? 'bg-violet-600' : 'bg-gray-700'"
+                :class="{{ $t['key'] }} ? 'bg-green-500' : 'bg-gray-700'"
                 class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-all shadow-inner">
                 <span :class="{{ $t['key'] }} ? 'translate-x-6' : 'translate-x-1'"
                     class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm"></span>
@@ -162,8 +162,8 @@
     {{-- Seção: Regional --}}
     <div class="bg-[#111827] border border-gray-800/50 rounded-3xl p-8 space-y-5 shadow-sm">
         <div class="flex items-center gap-3 pb-5 border-b border-gray-800/50">
-            <div class="w-9 h-9 rounded-xl bg-violet-900/40 flex items-center justify-center border border-violet-800/40">
-                <i class="fa-solid fa-earth-americas text-violet-400 text-sm"></i>
+            <div class="w-9 h-9 rounded-xl bg-green-900/40 flex items-center justify-center border border-green-800/40">
+                <i class="fa-solid fa-earth-americas text-green-400 text-sm"></i>
             </div>
             <div>
                 <h2 class="text-xs font-bold text-white uppercase tracking-widest">Configurações Regionais</h2>
@@ -174,7 +174,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Fuso Horário</label>
-                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-violet-500 outline-none appearance-none cursor-pointer transition-all">
+                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-green-500 outline-none appearance-none cursor-pointer transition-all">
                     <option selected>América/São_Paulo (UTC-3)</option>
                     <option>América/Manaus (UTC-4)</option>
                     <option>América/Belém (UTC-3)</option>
@@ -183,7 +183,7 @@
             </div>
             <div class="space-y-2">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Moeda Padrão</label>
-                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-violet-500 outline-none appearance-none cursor-pointer transition-all">
+                <select class="block w-full px-5 py-3.5 bg-[#0B0F19] border border-gray-800 rounded-2xl text-sm font-semibold text-gray-300 focus:ring-2 focus:ring-green-500 outline-none appearance-none cursor-pointer transition-all">
                     <option selected>BRL — Real (R$)</option>
                     <option>USD — Dólar ($)</option>
                     <option>EUR — Euro (€)</option>
@@ -226,7 +226,7 @@
     {{-- Botão Salvar --}}
     <div class="flex items-center gap-4 pb-6">
         <button @click="save()"
-            class="btn-premium text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-xl shadow-violet-900/30 active:scale-95 flex items-center gap-2">
+            class="btn-premium text-white px-10 py-4 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-xl shadow-green-900/30 active:scale-95 flex items-center gap-2">
             <i class="fa-solid fa-floppy-disk"></i>
             Salvar Configurações
         </button>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'Gerenciar Assinatura')
 
 @section('content')
@@ -17,7 +17,7 @@
             <span class="text-2xl font-bold text-white">R$ 0<span class="text-sm font-normal text-gray-500">/mês</span></span>
         </div>
         <div class="flex gap-3 pt-2">
-            <a href="/panel/assinaturas/planos" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl text-sm font-semibold text-center hover:bg-indigo-700">
+            <a href="/panel/assinaturas/planos" class="flex-1 bg-green-500 text-white py-2.5 rounded-xl text-sm font-semibold text-center hover:bg-indigo-700">
                 Fazer Upgrade
             </a>
         </div>
@@ -38,7 +38,7 @@
                 <p class="text-sm font-medium text-gray-300">Nenhum cartão cadastrado</p>
                 <p class="text-xs text-gray-500">Adicione um cartão para assinar um plano pago</p>
             </div>
-            <button class="ml-auto text-sm text-indigo-600 font-medium hover:text-indigo-800">Adicionar</button>
+            <button class="ml-auto text-sm text-green-500 font-medium hover:text-green-700">Adicionar</button>
         </div>
     </div>
 
