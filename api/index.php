@@ -58,6 +58,7 @@ $app = require_once $basePath . '/bootstrap/app.php';
 if (!file_exists('/tmp/routes.php') || !file_exists('/tmp/config.php')) {
     try {
         $console = $app->make(Illuminate\Contracts\Console\Kernel::class);
+        $console->call('migrate', ['--force' => true]);
         $console->call('config:cache');
         $console->call('route:cache');
         $console->call('view:cache');
