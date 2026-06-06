@@ -15,7 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Endpoint chamado pelo Make.com (sem sessão/CSRF) — autenticado por token compartilhado
         $middleware->validateCsrfTokens(except: [
-            'api/google-calendar/sync',
+            'webhooks/google-calendar/sync',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

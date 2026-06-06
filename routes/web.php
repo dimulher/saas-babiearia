@@ -125,11 +125,9 @@ Route::get('/b/{slug}', function ($slug) {
     return redirect()->route('booking', ['slug' => $slug]);
 });
 
-// API para verificação de VIP no agendamento
-Route::get('/api/check-vip', [AgendamentoController::class, 'checkVip'])->name('api.check-vip');
-
-// Recebe eventos do Google Calendar enviados pelo cenário de leitura do Make.com (autenticado por token compartilhado)
-Route::post('/api/google-calendar/sync', [GoogleCalendarSyncController::class, 'store'])->name('api.google-calendar.sync');
+// Webhooks e endpoints chamados externamente (fora de /api/ para evitar conflito com o runtime do Vercel)
+Route::get('/webhooks/check-vip', [AgendamentoController::class, 'checkVip'])->name('api.check-vip');
+Route::post('/webhooks/google-calendar/sync', [GoogleCalendarSyncController::class, 'store'])->name('api.google-calendar.sync');
 
 
 
