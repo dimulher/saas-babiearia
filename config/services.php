@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'make' => [
+        'agendamento_webhook' => env('MAKE_AGENDAMENTO_WEBHOOK_URL'),
+        'calendar_sync_token' => env('MAKE_CALENDAR_SYNC_TOKEN'),
+    ],
+
 ];

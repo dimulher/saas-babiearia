@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->trustProxies(at: '*');
+
+        // Endpoint chamado pelo Make.com (sem sessão/CSRF) — autenticado por token compartilhado
+        $middleware->validateCsrfTokens(except: [
+            'api/google-calendar/sync',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Redireciona para login em vez de mostrar erro JSON

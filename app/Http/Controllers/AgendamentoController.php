@@ -11,6 +11,7 @@ use App\Models\Cliente;
 use App\Models\Assinatura;
 use Carbon\Carbon;
 use App\Models\Notificacao;
+use App\Jobs\SyncAgendamentoToGoogleCalendar;
 
 class AgendamentoController
 {
@@ -131,6 +132,8 @@ class AgendamentoController
             'mensagem' => $request->nomeCliente . " agendou " . ($servico ? $servico->nome : 'Serviço') . " com " . $profissional->nome . " para " . $dataInicio->format('d/m \à\s H:i'),
             'lida' => false
         ]);
+
+        SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, 'created');
 
         return response()->json(['success' => true]);
     }

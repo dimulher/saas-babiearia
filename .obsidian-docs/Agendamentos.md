@@ -135,6 +135,42 @@ Cliente acessa /agendar/{slug}
 
 ---
 
+## Integração com Google Calendar (via Make.com)
+
+> Sincroniza automaticamente cada novo agendamento online com o Google Calendar do profissional, sem que ele precise abrir o Calendar manualmente.
+
+**Como funciona:**
+
+```
+AgendamentoController@store cria o Agendamento
+    └─► Dispara App\Jobs\SyncAgendamentoToGoogleCalendar (fila, ShouldQueue)
+            └─► POST para webhook do Make.com (config services.make.agendamento_webhook)
+                    └─► Cenário Make "Agendamento → Google Calendar (Barbearia)"
+                            ├─ Módulo 1: Custom Webhook (gateway:CustomWebHook, hook 2738899)
+                            └─ Módulo 2: google-calendar:createAnEvent (conexão vitorjpereira.12@gmail.com)
+                                    └─► Evento criado no Google Calendar do profissional
+```
+
+- **Job:** `app/Jobs/SyncAgendamentoToGoogleCalendar.php` — envia `cliente_nome`, `cliente_telefone`, `servico_nome`, `profissional_nome`, `data_inicio`, `data_fim`, `observacoes`, `status` e `action` (`created`) para o webhook via `Http::post()`.
+- **Disparo:** chamado em `AgendamentoController@store` logo após criar a `Notificacao` do painel — `SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, 'created')`.
+- **Config:** URL do webhook fica em `MAKE_AGENDAMENTO_WEBHOOK_URL` (`.env` / `config/services.php` → `services.make.agendamento_webhook`).
+- **Make.com:** organização 462751, time 181064, pasta 320545, cenário 4771510, hook 2738899 (conta `jorgemurilho@gmail.com`). Conexão Google usa `vitorjpereira.12@gmail.com` (mais próxima da conta solicitada `vitorj.teste2@gmail.com`, que não existia entre as conexões já autorizadas).
+
+**⚠️ Detalhe importante de configuração — gatilho não é "instant" de fato:**
+
+O cenário foi criado com `metadata.instant: true` e `scheduling: on-demand` (configuração padrão para webhooks instantâneos), mas na prática o listener instantâneo **não disparava sozinho** — as requisições só ficavam acumuladas na fila do hook (`queueCount` crescendo) até serem processadas manualmente. Para resolver isso e garantir automação 100% sem intervenção humana, o agendamento foi trocado para *polling* (`scheduling: {"type": "indefinitely", "interval": 60}`). O Make ajustou sozinho para um ciclo mínimo de ~3 minutos (`nextExec` sempre 180s à frente, mesmo pedindo 60s — provável limite do plano da conta). **Resultado:** o evento aparece no Google Calendar automaticamente em até ~3 minutos após o agendamento — não é instantâneo, mas totalmente automático (testado e confirmado: execuções com `authorId: null` rodando sozinhas a cada ciclo, sem nenhum clique manual).
+
+**Escopo atual — só cobre criação:**
+
+Por enquanto o job só é disparado na **criação** (`action: 'created'`). Atualizações e cancelamentos de agendamento **ainda não disparam sync** — o cenário Make só sabe *criar* eventos, não buscar/atualizar/excluir. Disparar `'updated'`/`'cancelled'` agora geraria eventos duplicados no Calendar. Isso requer trabalho futuro: armazenar o `google_event_id` retornado pela criação e construir lógica de busca+atualização no Make antes de habilitar sync em updates/cancelamentos.
+
+**Pendências para visão unificada (cliente nunca precisa abrir o Google Calendar):**
+- [ ] Cenário de leitura no Make: buscar eventos do Calendar e enviar de volta para a plataforma
+- [ ] Endpoint/tela no painel Laravel para exibir os eventos do Calendar dentro da própria plataforma
+- [ ] Suporte a updates/cancelamentos (depende de guardar `google_event_id` e lógica de find-and-update no Make)
+
+---
+
 ## Status do Agendamento
 
 ```
@@ -157,6 +193,7 @@ pendente → confirmado → concluido
 - [[Autenticação e Perfis]] — `auth()` middleware protege rotas do painel; `barbearia_id` no user define o tenant
 - [[Painel do Funcionário]] — `FuncionarioController@finalizar` conclui agendamentos
 - [[Clube de Assinatura]] — `Assinatura` e `Plano` são consultados para validar benefício VIP
+- **Make.com / Google Calendar** — `App\Jobs\SyncAgendamentoToGoogleCalendar` sincroniza criação de agendamento com o Calendar do profissional (ver seção "Integração com Google Calendar" acima)
 
 ---
 
@@ -166,7 +203,9 @@ pendente → confirmado → concluido
 - [ ] Implementar geração automática de `agendamentos` a partir dos recorrentes (command/scheduler)
 - [ ] Adicionar envio de lembrete (campo `lembrete_enviado` já existe na tabela)
 - [ ] Soft-delete: criar rota de restauração de agendamentos cancelados
+- [ ] Sincronizar updates/cancelamentos com o Google Calendar (guardar `google_event_id`, lógica de find-and-update no Make)
+- [ ] Cenário Make de leitura do Calendar + tela no painel para visão unificada (sem precisar abrir o Google Calendar)
 
 ---
 
-*Última atualização: 2026-06-06*
+*Última atualização: 2026-06-06 — adicionada integração Make.com → Google Calendar*

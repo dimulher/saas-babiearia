@@ -14,6 +14,7 @@ use App\Http\Controllers\ComandaController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\FuncionarioController;
+use App\Http\Controllers\GoogleCalendarSyncController;
 use App\Models\Agendamento;
 use App\Models\Cliente;
 use App\Models\Profissional;
@@ -126,6 +127,9 @@ Route::get('/b/{slug}', function ($slug) {
 
 // API para verificação de VIP no agendamento
 Route::get('/api/check-vip', [AgendamentoController::class, 'checkVip'])->name('api.check-vip');
+
+// Recebe eventos do Google Calendar enviados pelo cenário de leitura do Make.com (autenticado por token compartilhado)
+Route::post('/api/google-calendar/sync', [GoogleCalendarSyncController::class, 'store'])->name('api.google-calendar.sync');
 
 
 
