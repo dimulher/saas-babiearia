@@ -129,6 +129,18 @@ Route::get('/b/{slug}', function ($slug) {
 Route::get('/webhooks/check-vip', [AgendamentoController::class, 'checkVip'])->name('api.check-vip');
 Route::post('/webhooks/google-calendar/sync', [GoogleCalendarSyncController::class, 'store'])->name('api.google-calendar.sync');
 
+// Lê o último request capturado pelo controller (diagnóstico Make)
+Route::get('/webhooks/debug-last-request', function (\Illuminate\Http\Request $request) {
+    if ($request->get('key') !== 'barbearia-debug-2026') {
+        return response()->json(['error' => 'unauthorized'], 403);
+    }
+    $file = '/tmp/last_make_request.json';
+    if (!file_exists($file)) {
+        return response()->json(['error' => 'Nenhum request capturado ainda']);
+    }
+    return response(file_get_contents($file), 200)->header('Content-Type', 'application/json');
+});
+
 // Diagnóstico temporário — remover após resolver o 500
 Route::get('/webhooks/debug-db', function (\Illuminate\Http\Request $request) {
     if ($request->get('key') !== 'barbearia-debug-2026') {

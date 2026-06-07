@@ -10,6 +10,14 @@ class GoogleCalendarSyncController
 {
     public function store(Request $request)
     {
+        // Log temporário para diagnóstico — remover após resolver o 500 do Make
+        @file_put_contents('/tmp/last_make_request.json', json_encode([
+            'raw_body'     => $request->getContent(),
+            'content_type' => $request->header('Content-Type'),
+            'all_input'    => $request->all(),
+            'method'       => $request->method(),
+        ], JSON_PRETTY_PRINT));
+
         $token = config('services.make.calendar_sync_token');
 
         if (!$token || $request->header('X-Calendar-Sync-Token') !== $token) {
