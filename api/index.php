@@ -15,6 +15,23 @@ if ($dbConnection === 'sqlite' && !getenv('DB_DATABASE')) {
     putenv('DB_DATABASE=' . $dbPath);
 }
 
+// Supabase shared pooler: exige username no formato postgres.[project-ref] e SSL
+if ($dbConnection === 'pgsql') {
+    $dbUser = getenv('DB_USERNAME') ?: 'postgres';
+    if (!str_contains((string) $dbUser, '.')) {
+        $fixed = 'postgres.hywqwshhfwwqqpogknoi';
+        putenv('DB_USERNAME=' . $fixed);
+        $_ENV['DB_USERNAME']    = $fixed;
+        $_SERVER['DB_USERNAME'] = $fixed;
+    }
+    if (!getenv('DB_SSLMODE')) {
+        putenv('DB_SSLMODE=require');
+        $_ENV['DB_SSLMODE']    = 'require';
+        $_SERVER['DB_SSLMODE'] = 'require';
+    }
+    @unlink('/tmp/config.php'); // regenera config com credenciais corretas
+}
+
 
 // Variáveis essenciais
 if (!getenv('APP_ENV'))          putenv('APP_ENV=production');
