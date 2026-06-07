@@ -20,8 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Redireciona para login em vez de mostrar erro JSON
+        // Usa redirect('/login') e não route('login') para evitar problemas com APP_URL mal configurado
         $exceptions->render(function (Illuminate\Auth\AuthenticationException $e, Illuminate\Http\Request $request) {
-            return redirect()->route('login');
+            return redirect('/login');
         });
 
         // Mostra o erro real para diagnóstico
