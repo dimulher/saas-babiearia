@@ -3,21 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventoGoogleCalendar;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class GoogleCalendarSyncController
 {
-    /**
-     * Recebe um evento do Google Calendar enviado pelo cenário de leitura do Make.com
-     * (um POST por evento, padrão natural do módulo "Search Events") e o grava
-     * localmente para exibição na visão unificada do painel.
-     */
     public function store(Request $request)
     {
         $token = config('services.make.calendar_sync_token');
 
         if (!$token || $request->header('X-Calendar-Sync-Token') !== $token) {
             return response()->json(['error' => 'Não autorizado'], 401);
+        }
+
+        // Normaliza datas antes de validar — aceita ISO 8601, Unix timestamp ou date-only
+        foreach (['inicio', 'fim'] as $campo) {
+            $valor = $request->input($campo);
+            if ($valor !== null && $valor !== '') {
+                try {
+                    $dt = is_numeric($valor)
+                        ? Carbon::createFromTimestamp((int) $valor)
+                        : Carbon::parse($valor);
+                    $request->merge([$campo => $dt->format('Y-m-d H:i:s')]);
+                } catch (\Throwable $e) {
+                    $request->merge([$campo => null]);
+                }
+            }
         }
 
         $request->validate([
