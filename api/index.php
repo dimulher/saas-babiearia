@@ -15,6 +15,19 @@ if ($dbConnection === 'sqlite' && !getenv('DB_DATABASE')) {
     putenv('DB_DATABASE=' . $dbPath);
 }
 
+// Supabase Transaction Pooler (porta 6543) exige username no formato postgres.[project-ref]
+// O putenv sozinho não atualiza $_ENV (populado no início do script), então setamos os três.
+if ($dbConnection === 'pgsql') {
+    $dbUser = getenv('DB_USERNAME') ?: 'postgres';
+    if (!str_contains((string) $dbUser, '.')) {
+        $fixedUser = $dbUser . '.hywqwshhfwwqqpogknoi';
+        putenv('DB_USERNAME=' . $fixedUser);
+        $_ENV['DB_USERNAME']    = $fixedUser;
+        $_SERVER['DB_USERNAME'] = $fixedUser;
+        @unlink('/tmp/config.php'); // invalida cache para regenerar com username correto
+    }
+}
+
 // Variáveis essenciais
 if (!getenv('APP_ENV'))          putenv('APP_ENV=production');
 if (!getenv('APP_DEBUG'))        putenv('APP_DEBUG=false');
