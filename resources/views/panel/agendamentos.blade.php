@@ -70,7 +70,18 @@
             </a>
         </div>
 
-        @if($agendamentos->isEmpty())
+        @php
+            $itens = collect();
+            foreach ($agendamentos as $a) {
+                $itens->push(['tipo' => 'agendamento', 'hora' => $a->data_inicio, 'item' => $a]);
+            }
+            foreach ($eventosCalendar as $e) {
+                $itens->push(['tipo' => 'calendar', 'hora' => $e->inicio, 'item' => $e]);
+            }
+            $itens = $itens->sortBy('hora')->values();
+        @endphp
+
+        @if($itens->isEmpty())
         <div class="flex flex-col items-center justify-center py-20 text-gray-400 bg-gray-900/50 rounded-2xl border border-dashed border-gray-800">
             <i class="fa-regular fa-calendar-xmark text-5xl mb-4 text-gray-700"></i>
             <h3 class="text-base font-bold text-white uppercase tracking-tight">Sem agendamentos registrados</h3>
@@ -78,38 +89,66 @@
         </div>
         @else
         <div class="space-y-3">
-            @foreach($agendamentos as $agendamento)
-            <div class="bg-[#0B0F19] border border-gray-800 hover:border-green-800/40 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all group">
-                <div class="flex items-center gap-5">
-                    <div class="text-center w-14">
-                        <div class="text-lg font-bold text-white tracking-tight">{{ \Carbon\Carbon::parse($agendamento->data_inicio)->format('H:i') }}</div>
-                        <div class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">{{ \Carbon\Carbon::parse($agendamento->data_fim)->format('H:i') }}</div>
-                    </div>
-                    <div class="h-10 w-px bg-gray-800"></div>
-                    <div>
-                        <h3 class="text-sm font-bold text-white uppercase tracking-tight group-hover:text-green-400 transition-colors">{{ $agendamento->cliente_nome ?? 'Cliente Não Informado' }}</h3>
-                        <p class="text-xs text-gray-400 mt-0.5">{{ $agendamento->servico->nome ?? 'Serviço Excluído' }} - R$ {{ number_format($agendamento->preco, 2, ',', '.') }}</p>
-                        <div class="flex items-center gap-2 mt-2">
-                            <div class="w-5 h-5 bg-green-900/30 rounded-full flex items-center justify-center text-green-400 text-[8px] font-bold uppercase border border-green-800/50">
-                                {{ $agendamento->profissional->initials ?? '?' }}
+            @foreach($itens as $entrada)
+                @if($entrada['tipo'] === 'agendamento')
+                    @php $agendamento = $entrada['item']; @endphp
+                    <div class="bg-[#0B0F19] border border-gray-800 hover:border-green-800/40 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all group">
+                        <div class="flex items-center gap-5">
+                            <div class="text-center w-14">
+                                <div class="text-lg font-bold text-white tracking-tight">{{ \Carbon\Carbon::parse($agendamento->data_inicio)->format('H:i') }}</div>
+                                <div class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">{{ \Carbon\Carbon::parse($agendamento->data_fim)->format('H:i') }}</div>
                             </div>
-                            <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase">{{ $agendamento->profissional->nome ?? 'Profissional Excluído' }}</span>
+                            <div class="h-10 w-px bg-gray-800"></div>
+                            <div>
+                                <h3 class="text-sm font-bold text-white uppercase tracking-tight group-hover:text-green-400 transition-colors">{{ $agendamento->cliente_nome ?? 'Cliente Não Informado' }}</h3>
+                                <p class="text-xs text-gray-400 mt-0.5">{{ $agendamento->servico->nome ?? 'Serviço Excluído' }} - R$ {{ number_format($agendamento->preco, 2, ',', '.') }}</p>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <div class="w-5 h-5 bg-green-900/30 rounded-full flex items-center justify-center text-green-400 text-[8px] font-bold uppercase border border-green-800/50">
+                                        {{ $agendamento->profissional->initials ?? '?' }}
+                                    </div>
+                                    <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase">{{ $agendamento->profissional->nome ?? 'Profissional Excluído' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            @if($agendamento->status == 'pendente')
+                                <span class="px-3 py-1 bg-amber-900/30 text-amber-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-amber-800/50">Pendente</span>
+                            @elseif($agendamento->status == 'confirmado')
+                                <span class="px-3 py-1 bg-blue-900/30 text-blue-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-blue-800/50">Confirmado</span>
+                            @elseif($agendamento->status == 'concluido')
+                                <span class="px-3 py-1 bg-emerald-900/30 text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-emerald-800/50">Concluído</span>
+                            @elseif($agendamento->status == 'cancelado' || $agendamento->status == 'faltou')
+                                <span class="px-3 py-1 bg-rose-900/30 text-rose-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-rose-800/50">{{ ucfirst($agendamento->status) }}</span>
+                            @endif
                         </div>
                     </div>
-                </div>
-
-                <div class="flex items-center gap-3">
-                    @if($agendamento->status == 'pendente')
-                        <span class="px-3 py-1 bg-amber-900/30 text-amber-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-amber-800/50">Pendente</span>
-                    @elseif($agendamento->status == 'confirmado')
-                        <span class="px-3 py-1 bg-blue-900/30 text-blue-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-blue-800/50">Confirmado</span>
-                    @elseif($agendamento->status == 'concluido')
-                        <span class="px-3 py-1 bg-emerald-900/30 text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-emerald-800/50">Concluído</span>
-                    @elseif($agendamento->status == 'cancelado' || $agendamento->status == 'faltou')
-                        <span class="px-3 py-1 bg-rose-900/30 text-rose-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-rose-800/50">{{ $agendamento->status }}</span>
-                    @endif
-                </div>
-            </div>
+                @else
+                    @php $evento = $entrada['item']; @endphp
+                    <div class="bg-[#0B0F19] border border-blue-900/40 hover:border-blue-700/50 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all group">
+                        <div class="flex items-center gap-5">
+                            <div class="text-center w-14">
+                                <div class="text-lg font-bold text-white tracking-tight">{{ $evento->dia_inteiro ? '—' : \Carbon\Carbon::parse($evento->inicio)->format('H:i') }}</div>
+                                <div class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">{{ $evento->dia_inteiro ? 'Dia todo' : \Carbon\Carbon::parse($evento->fim)->format('H:i') }}</div>
+                            </div>
+                            <div class="h-10 w-px bg-blue-900/40"></div>
+                            <div>
+                                <h3 class="text-sm font-bold text-white uppercase tracking-tight group-hover:text-blue-400 transition-colors">{{ $evento->titulo ?? 'Sem título' }}</h3>
+                                @if($evento->descricao)
+                                    <p class="text-xs text-gray-400 mt-0.5">{{ \Illuminate\Support\Str::limit($evento->descricao, 60) }}</p>
+                                @endif
+                                <div class="flex items-center gap-2 mt-2">
+                                    <i class="fa-brands fa-google text-blue-400 text-[10px]"></i>
+                                    <span class="text-[10px] text-blue-500/70 font-bold tracking-widest uppercase">Google Calendar</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 bg-blue-900/20 text-blue-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-blue-800/40">
+                                <i class="fa-brands fa-google mr-1"></i>Calendar
+                            </span>
+                        </div>
+                    </div>
+                @endif
             @endforeach
         </div>
         @endif

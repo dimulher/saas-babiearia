@@ -12,6 +12,7 @@ use App\Models\Assinatura;
 use Carbon\Carbon;
 use App\Models\Notificacao;
 use App\Jobs\SyncAgendamentoToGoogleCalendar;
+use App\Models\EventoGoogleCalendar;
 
 class AgendamentoController
 {
@@ -37,7 +38,13 @@ class AgendamentoController
         $agendamentos = $query->orderBy('data_inicio', 'asc')->get();
         $profissionais = Profissional::where('barbearia_id', $barbeariaId)->where('ativo', true)->get();
 
-        return view('panel.agendamentos', compact('agendamentos', 'profissionais', 'date', 'profissionalId', 'status'));
+        $eventosCalendar = EventoGoogleCalendar::where('barbearia_id', $barbeariaId)
+            ->whereDate('inicio', $date)
+            ->where('status', '!=', 'cancelled')
+            ->orderBy('inicio')
+            ->get();
+
+        return view('panel.agendamentos', compact('agendamentos', 'profissionais', 'date', 'profissionalId', 'status', 'eventosCalendar'));
     }
 
     public function store(Request $request)
