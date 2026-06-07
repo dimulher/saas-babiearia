@@ -60,7 +60,7 @@
                 <input type="checkbox" name="remember" class="w-4 h-4 rounded bg-gray-900 border-gray-700 text-green-500 focus:ring-green-500">
                 <span class="text-[11px] text-gray-500 font-medium group-hover:text-gray-300 transition-colors">Lembrar acesso</span>
             </label>
-            <a href="#" onclick="alert('Recuperação de senha em desenvolvimento. Fale com o suporte.')" class="text-[11px] text-green-500 font-bold hover:text-green-400 transition-colors">
+            <a href="{{ route('password.request') }}" class="text-[11px] text-green-500 font-bold hover:text-green-400 transition-colors">
                 Recuperar senha
             </a>
         </div>

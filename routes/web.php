@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 use App\Http\Controllers\AgendamentoController;
 use App\Http\Controllers\ProfissionalController;
 use App\Http\Controllers\ExpedienteController;
@@ -81,6 +84,42 @@ Route::match(['get', 'post'], '/logout', function (\Illuminate\Http\Request $req
     $request->session()->regenerateToken();
     return redirect('/login'); 
 })->name('logout');
+
+// Recuperação de senha
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->name('password.request');
+
+Route::post('/forgot-password', function (\Illuminate\Http\Request $request) {
+    $request->validate(['email' => 'required|email']);
+    $status = Password::sendResetLink($request->only('email'));
+    return $status === Password::RESET_LINK_SENT
+        ? back()->with('status', __($status))
+        : back()->withErrors(['email' => __($status)]);
+})->name('password.email');
+
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->name('password.reset');
+
+Route::post('/reset-password', function (\Illuminate\Http\Request $request) {
+    $request->validate([
+        'token'    => 'required',
+        'email'    => 'required|email',
+        'password' => 'required|min:8|confirmed',
+    ]);
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (\App\Models\User $user, string $password) {
+            $user->forceFill(['password' => $password])->setRememberToken(Str::random(60));
+            $user->save();
+            event(new PasswordReset($user));
+        }
+    );
+    return $status === Password::PASSWORD_RESET
+        ? redirect('/login/proprietario')->with('status', 'Senha redefinida com sucesso. Faça login.')
+        : back()->withErrors(['email' => [__($status)]]);
+})->name('password.update');
 
 // Rotas do Funcionário
 Route::get('/funcionario/login', [FuncionarioController::class, 'showLogin'])->name('funcionario.login');
