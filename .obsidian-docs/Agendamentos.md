@@ -65,12 +65,13 @@ Veja também: [[Rotas e Controllers]] · [[Autenticação e Perfis]]
 
 ### Públicas (sem autenticação)
 
-| Método | URI                        | Controller / Ação                           | Nome                  | Descrição                                          |
-|--------|----------------------------|---------------------------------------------|-----------------------|----------------------------------------------------|
-| GET    | `/agendar/{slug?}`         | closure (inline)                            | `booking`             | Página pública de agendamento por slug da barbearia|
-| POST   | `/agendar`                 | `AgendamentoController@store`               | `booking.store`       | Cria novo agendamento vindo da página pública      |
-| GET    | `/api/check-vip`           | `AgendamentoController@checkVip`            | `api.check-vip`       | Verifica se o telefone tem assinatura VIP ativa    |
-| GET    | `/b/{slug}`                | redirect → `booking`                        | —                     | Alias legado de slug curto                         |
+| Método | URI                               | Controller / Ação                           | Nome                  | Descrição                                          |
+|--------|-----------------------------------|---------------------------------------------|-----------------------|----------------------------------------------------|
+| GET    | `/agendar/{slug?}`                | closure (inline)                            | `booking`             | Página pública de agendamento por slug da barbearia|
+| POST   | `/agendar`                        | `AgendamentoController@store`               | `booking.store`       | Cria novo agendamento vindo da página pública      |
+| GET    | `/webhooks/check-vip`             | `AgendamentoController@checkVip`            | `api.check-vip`       | Verifica se o telefone tem assinatura VIP ativa    |
+| GET    | `/b/{slug}`                       | redirect → `booking`                        | —                     | Alias legado de slug curto                         |
+| POST   | `/webhooks/google-calendar/sync`  | `GoogleCalendarSyncController@store`        | `api.google-calendar.sync` | Recebe eventos do Calendar via Make.com (token) |
 
 ### Painel Interno (middleware `auth`)
 
@@ -137,37 +138,84 @@ Cliente acessa /agendar/{slug}
 
 ## Integração com Google Calendar (via Make.com)
 
-> Sincroniza automaticamente cada novo agendamento online com o Google Calendar do profissional, sem que ele precise abrir o Calendar manualmente.
+> Sincronização bidirecional automática entre a plataforma e o Google Calendar. O profissional nunca precisa abrir o Calendar — tudo acontece automaticamente.
 
-**Como funciona:**
+### Sentido 1 — Plataforma → Google Calendar (escrita)
 
 ```
 AgendamentoController@store cria o Agendamento
     └─► Dispara App\Jobs\SyncAgendamentoToGoogleCalendar (fila, ShouldQueue)
             └─► POST para webhook do Make.com (config services.make.agendamento_webhook)
-                    └─► Cenário Make "Agendamento → Google Calendar (Barbearia)"
+                    └─► Cenário Make 4771510 "Agendamento → Google Calendar (Barbearia)"
                             ├─ Módulo 1: Custom Webhook (gateway:CustomWebHook, hook 2738899)
                             └─ Módulo 2: google-calendar:createAnEvent (conexão vitorjpereira.12@gmail.com)
                                     └─► Evento criado no Google Calendar do profissional
 ```
 
-- **Job:** `app/Jobs/SyncAgendamentoToGoogleCalendar.php` — envia `cliente_nome`, `cliente_telefone`, `servico_nome`, `profissional_nome`, `data_inicio`, `data_fim`, `observacoes`, `status` e `action` (`created`) para o webhook via `Http::post()`.
-- **Disparo:** chamado em `AgendamentoController@store` logo após criar a `Notificacao` do painel — `SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, 'created')`.
-- **Config:** URL do webhook fica em `MAKE_AGENDAMENTO_WEBHOOK_URL` (`.env` / `config/services.php` → `services.make.agendamento_webhook`).
-- **Make.com:** organização 462751, time 181064, pasta 320545, cenário 4771510, hook 2738899 (conta `jorgemurilho@gmail.com`). Conexão Google usa `vitorjpereira.12@gmail.com` (mais próxima da conta solicitada `vitorj.teste2@gmail.com`, que não existia entre as conexões já autorizadas).
+- **Job:** `app/Jobs/SyncAgendamentoToGoogleCalendar.php` — envia `cliente_nome`, `cliente_telefone`, `servico_nome`, `profissional_nome`, `data_inicio`, `data_fim`, `observacoes`, `status` e `action` (`created`) via `Http::post()`.
+- **Disparo:** `AgendamentoController@store` logo após criar a `Notificacao` — `SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, 'created')`.
+- **Config:** `MAKE_AGENDAMENTO_WEBHOOK_URL` → `config/services.php` → `services.make.agendamento_webhook`.
+- **Make.com:** org 462751, time 181064, pasta 320545, cenário **4771510**, hook 2738899. Conexão Google: `vitorjpereira.12@gmail.com`.
 
-**⚠️ Detalhe importante de configuração — gatilho não é "instant" de fato:**
+**⚠️ Polling, não instantâneo:** cenário usa `scheduling: {"type": "indefinitely", "interval": 60}` — o Make impõe ciclo mínimo de ~3 minutos. Evento aparece no Calendar em até 3 min após agendamento, mas sem nenhum clique manual (confirmado: execuções com `authorId: null`).
 
-O cenário foi criado com `metadata.instant: true` e `scheduling: on-demand` (configuração padrão para webhooks instantâneos), mas na prática o listener instantâneo **não disparava sozinho** — as requisições só ficavam acumuladas na fila do hook (`queueCount` crescendo) até serem processadas manualmente. Para resolver isso e garantir automação 100% sem intervenção humana, o agendamento foi trocado para *polling* (`scheduling: {"type": "indefinitely", "interval": 60}`). O Make ajustou sozinho para um ciclo mínimo de ~3 minutos (`nextExec` sempre 180s à frente, mesmo pedindo 60s — provável limite do plano da conta). **Resultado:** o evento aparece no Google Calendar automaticamente em até ~3 minutos após o agendamento — não é instantâneo, mas totalmente automático (testado e confirmado: execuções com `authorId: null` rodando sozinhas a cada ciclo, sem nenhum clique manual).
+**Escopo atual — só criação:** job disparado somente em `action: 'created'`. Updates/cancelamentos não sincronizam ainda (requer guardar `google_event_id` e lógica find-and-update no Make).
 
-**Escopo atual — só cobre criação:**
+---
 
-Por enquanto o job só é disparado na **criação** (`action: 'created'`). Atualizações e cancelamentos de agendamento **ainda não disparam sync** — o cenário Make só sabe *criar* eventos, não buscar/atualizar/excluir. Disparar `'updated'`/`'cancelled'` agora geraria eventos duplicados no Calendar. Isso requer trabalho futuro: armazenar o `google_event_id` retornado pela criação e construir lógica de busca+atualização no Make antes de habilitar sync em updates/cancelamentos.
+### Sentido 2 — Google Calendar → Plataforma (leitura)
 
-**Pendências para visão unificada (cliente nunca precisa abrir o Google Calendar):**
-- [ ] Cenário de leitura no Make: buscar eventos do Calendar e enviar de volta para a plataforma
-- [ ] Endpoint/tela no painel Laravel para exibir os eventos do Calendar dentro da própria plataforma
-- [ ] Suporte a updates/cancelamentos (depende de guardar `google_event_id` e lógica de find-and-update no Make)
+```
+Cenário Make 4771604 (polling ~3min)
+    └─► Módulo 1: util:BasicTrigger (gatilho agendado)
+    └─► Módulo 2: google-calendar:searchEvents — próximos 45 dias do calendário primário
+    └─► Módulo 3: json:CreateJSON — monta payload com data structure 281809
+    └─► Módulo 4: POST https://saas-babiearia.vercel.app/webhooks/google-calendar/sync
+            └─► GoogleCalendarSyncController@store
+                    ├─ Autentica via header X-Calendar-Sync-Token
+                    ├─ updateOrCreate em eventos_google_calendar (por barbearia_id + google_event_id)
+                    └─ Se status = 'cancelled' → deleta o registro local
+```
+
+- **Endpoint:** `POST /webhooks/google-calendar/sync` (fora de `/api/` — ver [[Deploy e Ambiente]] sobre conflito do Vercel com `/api/`).
+- **Autenticação:** header `X-Calendar-Sync-Token` — token compartilhado em `MAKE_CALENDAR_SYNC_TOKEN` / `config/services.php` → `services.make.calendar_sync_token`.
+- **Controller:** `app/Http/Controllers/GoogleCalendarSyncController.php` — upsert idempotente (cada ciclo do Make reenvia todos os eventos dos próximos 45 dias sem dano).
+- **Model:** `app/Models/EventoGoogleCalendar.php` → tabela `eventos_google_calendar`.
+- **Make.com:** cenário **4771604**, data structure **281809** ("Evento Calendar Sync (Barbearia)").
+- **CSRF:** excluído em `bootstrap/app.php` → `validateCsrfTokens(except: ['webhooks/google-calendar/sync'])`.
+
+#### Tabela `eventos_google_calendar`
+
+| Coluna            | Tipo                       | Descrição                                          |
+|-------------------|----------------------------|----------------------------------------------------|
+| `id`              | bigint (PK)                | —                                                  |
+| `barbearia_id`    | unsignedBigInteger         | Tenant — **sem FK constraint** (ver nota abaixo)   |
+| `google_event_id` | string                     | ID do evento no Google Calendar                    |
+| `titulo`          | string (null)              | Campo `summary` do evento                          |
+| `descricao`       | text (null)                | Campo `description` do evento                      |
+| `inicio`          | datetime                   | Início do evento                                   |
+| `fim`             | datetime                   | Fim do evento                                      |
+| `dia_inteiro`     | boolean                    | Evento de dia inteiro?                             |
+| `status`          | string (null)              | `confirmed`, `tentative`, `cancelled`              |
+| `created_at`      | timestamp                  | —                                                  |
+| `updated_at`      | timestamp                  | —                                                  |
+
+- **Unique composto:** `(barbearia_id, google_event_id)` — um mesmo evento pode existir para barbearias diferentes.
+- **Sem FK em barbearia_id** — a FK original (`constrained('barbearias')`) foi removida na migration de correção `2026_06_07_000001` porque a FK do Supabase bloqueava o INSERT em produção quando a migration original não havia sido aplicada.
+
+> **Migrations:**
+> - `2026_06_06_180000_create_eventos_google_calendar_table.php` — criação original (com FK, pode não ter rodado em produção)
+> - `2026_06_07_000001_fix_eventos_google_calendar_table.php` — recria sem FK, com unique composto ✅
+
+#### Gotchas do Make Cenário 4771604
+
+> [!WARNING]
+> **Eventos especiais do Google Calendar (Out of Office, Working Location, Focus Time, birthdays) retornam `null` para todos os campos** no módulo `google-calendar:searchEvents`. O cenário foi atualizado para filtrar apenas `eventTypes: ["default"]` e usar `formatDate(2.start; "YYYY-MM-DDTHH:mm:ss")` para garantir conversão correta das datas.
+
+**Configuração atual do cenário (2026-06-07):**
+- Módulo 2 (`searchEvents`): `eventTypes: ["default"]` — filtra eventos especiais
+- Módulo 3 (`json:CreateJSON`): `inicio` e `fim` usam `formatDate` explícito
+- Módulo 3: filtro "Apenas eventos com ID" (`{{2.id}} exist`) para pular registros inválidos
 
 ---
 
@@ -199,13 +247,14 @@ pendente → confirmado → concluido
 
 ## Pendências / TODOs
 
+- [x] ~~Exibir `eventos_google_calendar` na tela `/panel/agendamentos` (visão unificada)~~ ✅ 2026-06-06
+- [x] ~~Sincronização Google Calendar → Plataforma (Make cenário 4771604)~~ ✅ 2026-06-07
 - [ ] Registrar rotas de `agendamentos-recorrentes` no `web.php`
 - [ ] Implementar geração automática de `agendamentos` a partir dos recorrentes (command/scheduler)
 - [ ] Adicionar envio de lembrete (campo `lembrete_enviado` já existe na tabela)
 - [ ] Soft-delete: criar rota de restauração de agendamentos cancelados
 - [ ] Sincronizar updates/cancelamentos com o Google Calendar (guardar `google_event_id`, lógica de find-and-update no Make)
-- [ ] Cenário Make de leitura do Calendar + tela no painel para visão unificada (sem precisar abrir o Google Calendar)
 
 ---
 
-*Última atualização: 2026-06-06 — adicionada integração Make.com → Google Calendar*
+*Última atualização: 2026-06-07 — corrigida migration eventos_google_calendar (sem FK), Make cenário corrigido (eventTypes: default, formatDate), sincronização bidirecional Google Calendar ↔ Plataforma funcionando*

@@ -8,10 +8,10 @@ Veja também: [[Stack Tecnológica]] · [[Banco de Dados]]
 
 ## Ambientes
 
-| Ambiente | Driver DB | URL                          | Status       |
-|----------|-----------|------------------------------|--------------|
-| Local    | SQLite    | `http://127.0.0.1:8000`      | ✅ Ativo      |
-| Produção | SQLite    | Vercel (vercel-php runtime)  | ⚠️ Configurar|
+| Ambiente | Driver DB         | URL                                          | Status   |
+|----------|-------------------|----------------------------------------------|----------|
+| Local    | SQLite            | `http://127.0.0.1:8000`                      | ✅ Ativo  |
+| Produção | PostgreSQL (Supabase) | `https://saas-babiearia.vercel.app`      | ✅ Ativo  |
 
 ---
 
@@ -76,8 +76,28 @@ Todas as rotas → api/index.php → Laravel bootstrap
 ### Cache de Assets
 Assets buildados recebem header `Cache-Control: public, max-age=31536000, immutable` (1 ano).
 
+### Cold Start e Auto-migrate
+
+O `api/index.php` detecta se é o primeiro request do container (verifica se `/tmp/routes.php` e `/tmp/config.php` existem) e, se não existirem, roda automaticamente:
+
+```php
+$console->call('migrate', ['--force' => true]);  // cria tabelas no Supabase se não existirem
+$console->call('config:cache');
+$console->call('route:cache');
+$console->call('view:cache');
+```
+
+Isso garante que novas migrations sejam aplicadas automaticamente em produção sem intervenção manual.
+
+### ⚠️ Conflito de roteamento: não usar prefixo `/api/` em rotas Laravel
+
+O runtime `vercel-php` trata caminhos iniciados em `/api/` de forma especial (o entry point está em `api/index.php`), stripando o prefixo antes de passar para o PHP. Resultado: `POST /api/foo` chega no Laravel como `POST /foo` → rota não encontrada.
+
+**Regra:** rotas externas (webhooks, endpoints sem sessão) devem usar o prefixo `/webhooks/` em vez de `/api/`.
+
+Exemplo: `POST /webhooks/google-calendar/sync` ✅ — `POST /api/google-calendar/sync` ❌
+
 ### Limitações no Vercel
-- **SQLite:** o arquivo `database.sqlite` deve ser versionado ou a DB precisa ser recriada a cada deploy
 - **Filesystem:** uploads de imagens (`Storage::disk('local')`) não persistem entre deploys — necessário configurar S3/Cloudflare R2 para produção
 - **Queue:** `QUEUE_CONNECTION=sync` — jobs executam de forma síncrona
 - **MaxDuration:** 30 segundos por requisição
@@ -102,18 +122,34 @@ npm run dev          # Vite HMR em :5173
 
 ---
 
-## Variáveis de Ambiente a Configurar para Produção
+## Variáveis de Ambiente em Produção (Vercel)
 
-| Variável                    | O que é                                    |
-|-----------------------------|--------------------------------------------|
-| `APP_KEY`                   | Gerar com `php artisan key:generate`       |
-| `APP_URL`                   | URL da produção no Vercel                  |
-| `APP_ENV`                   | Mudar para `production`                    |
-| `APP_DEBUG`                 | Mudar para `false`                         |
-| `WHATSAPP_API_URL`          | URL da instância Z-API ou Evolution API    |
-| `WHATSAPP_API_TOKEN`        | Token de autenticação da API               |
-| `MERCADOPAGO_ACCESS_TOKEN`  | Token da conta do MercadoPago              |
+| Variável                    | O que é                                                          | Status   |
+|-----------------------------|------------------------------------------------------------------|----------|
+| `APP_KEY`                   | Chave de criptografia Laravel                                    | ✅ Configurado |
+| `APP_URL`                   | `https://saas-babiearia.vercel.app`                             | ✅ Configurado |
+| `APP_ENV`                   | `production`                                                     | ✅ Configurado |
+| `APP_DEBUG`                 | `false`                                                          | ✅ Configurado |
+| `DB_CONNECTION`             | `pgsql` (Supabase)                                               | ✅ Configurado |
+| `DB_HOST`                   | `aws-1-sa-east-1.pooler.supabase.com`                           | ✅ Configurado |
+| `DB_PORT`                   | `6543` (Transaction Pooler)                                      | ✅ Configurado |
+| `DB_USERNAME`               | `postgres.hywqwshhfwwqqpogknoi` — **formato obrigatório com project-ref** | ✅ Configurado |
+| `DB_PASSWORD`               | Senha do Supabase (redefinida em 2026-06-06)                     | ✅ Configurado |
+| `DB_DATABASE`               | `postgres`                                                       | ✅ Configurado |
+| `MAKE_AGENDAMENTO_WEBHOOK_URL` | URL do webhook Make.com (cenário 4771510)                    | ✅ Configurado |
+| `MAKE_CALENDAR_SYNC_TOKEN`  | Token para autenticar POSTs do Make → `/webhooks/google-calendar/sync` | ✅ Configurado |
+| `WHATSAPP_API_URL`          | URL da instância Z-API ou Evolution API                          | ⏳ Pendente |
+| `WHATSAPP_API_TOKEN`        | Token de autenticação da API                                     | ⏳ Pendente |
+| `MERCADOPAGO_ACCESS_TOKEN`  | Token da conta do MercadoPago                                    | ⏳ Pendente |
+
+> **Supabase Transaction Pooler:** o username deve ser `postgres.[project-ref]` (não apenas `postgres`). Encontrar a string completa em Supabase → Settings → Database → Connection Pooling → Transaction mode.
 
 ---
 
-*Última atualização: 2026-06-06*
+### ⚠️ Deploy automático: branch `main`, não `master`
+
+O Vercel monitora o branch **`main`** do repositório `dimulher/saas-babiearia`. Commits enviados ao branch `master` **não disparam deploy automático** — é necessário fazer merge em `main` ou redeploy manual pelo painel. O local de trabalho usa branch `master`; sempre executar `git push origin main` após commitar.
+
+---
+
+*Última atualização: 2026-06-07 — DB_USERNAME e DB_PASSWORD confirmados; descoberto que branch Vercel é `main`; Supabase project-ref = `hywqwshhfwwqqpogknoi`*

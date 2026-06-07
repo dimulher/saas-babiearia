@@ -129,43 +129,6 @@ Route::get('/b/{slug}', function ($slug) {
 Route::get('/webhooks/check-vip', [AgendamentoController::class, 'checkVip'])->name('api.check-vip');
 Route::post('/webhooks/google-calendar/sync', [GoogleCalendarSyncController::class, 'store'])->name('api.google-calendar.sync');
 
-// Lê o último request capturado pelo controller (diagnóstico Make)
-Route::get('/webhooks/debug-last-request', function (\Illuminate\Http\Request $request) {
-    if ($request->get('key') !== 'barbearia-debug-2026') {
-        return response()->json(['error' => 'unauthorized'], 403);
-    }
-    $file = '/tmp/last_make_request.json';
-    if (!file_exists($file)) {
-        return response()->json(['error' => 'Nenhum request capturado ainda']);
-    }
-    return response(file_get_contents($file), 200)->header('Content-Type', 'application/json');
-});
-
-// Diagnóstico temporário — remover após resolver o 500
-Route::get('/webhooks/debug-db', function (\Illuminate\Http\Request $request) {
-    if ($request->get('key') !== 'barbearia-debug-2026') {
-        return response()->json(['error' => 'unauthorized'], 403);
-    }
-    $result = [];
-    try {
-        $result['db_connection'] = config('database.default');
-        $result['db_host']       = config('database.connections.' . config('database.default') . '.host');
-        $result['db_username']   = config('database.connections.' . config('database.default') . '.username');
-
-        $barbearias = \Illuminate\Support\Facades\DB::table('barbearias')->select('id', 'nome')->orderBy('id')->get();
-        $result['barbearias'] = $barbearias->toArray();
-
-        $tableExists = \Illuminate\Support\Facades\Schema::hasTable('eventos_google_calendar');
-        $result['eventos_google_calendar_exists'] = $tableExists;
-        if ($tableExists) {
-            $result['eventos_count'] = \Illuminate\Support\Facades\DB::table('eventos_google_calendar')->count();
-        }
-    } catch (\Throwable $e) {
-        $result['exception'] = $e->getMessage();
-        $result['exception_file'] = basename($e->getFile()) . ':' . $e->getLine();
-    }
-    return response()->json($result);
-});
 
 
 
