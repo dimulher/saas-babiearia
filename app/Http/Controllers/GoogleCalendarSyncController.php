@@ -52,20 +52,29 @@ class GoogleCalendarSyncController
             return response()->json(['success' => true, 'removido' => (bool) $removido]);
         }
 
-        EventoGoogleCalendar::updateOrCreate(
-            [
-                'barbearia_id'    => $barbeariaId,
-                'google_event_id' => $request->input('google_event_id'),
-            ],
-            [
-                'titulo'      => $request->input('titulo'),
-                'descricao'   => $request->input('descricao'),
-                'inicio'      => $request->input('inicio') ?? $request->input('fim') ?? now(),
-                'fim'         => $request->input('fim') ?? $request->input('inicio') ?? now(),
-                'dia_inteiro' => $request->boolean('dia_inteiro'),
-                'status'      => $request->input('status'),
-            ]
-        );
+        try {
+            EventoGoogleCalendar::updateOrCreate(
+                [
+                    'barbearia_id'    => $barbeariaId,
+                    'google_event_id' => $request->input('google_event_id'),
+                ],
+                [
+                    'titulo'      => $request->input('titulo'),
+                    'descricao'   => $request->input('descricao'),
+                    'inicio'      => $request->input('inicio') ?? $request->input('fim') ?? now(),
+                    'fim'         => $request->input('fim') ?? $request->input('inicio') ?? now(),
+                    'dia_inteiro' => $request->boolean('dia_inteiro'),
+                    'status'      => $request->input('status'),
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Debug temporário — retorna 200 para Make exibir o erro nos logs
+            return response()->json([
+                'success' => false,
+                'debug_error' => $e->getMessage(),
+                'debug_input' => $request->all(),
+            ]);
+        }
 
         return response()->json(['success' => true]);
     }
