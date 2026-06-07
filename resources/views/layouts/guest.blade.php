@@ -28,6 +28,7 @@
         <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-800/8 rounded-full blur-3xl"></div>
     </div>
 
+    @php $errors = $errors ?? new \Illuminate\Support\ViewErrorBag; @endphp
     <div class="w-full max-w-lg px-4 relative z-10">
         @yield('content')
     </div>
