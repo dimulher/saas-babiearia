@@ -23,13 +23,14 @@ if ($dbConnection === 'pgsql') {
         putenv('DB_USERNAME=' . $fixed);
         $_ENV['DB_USERNAME']    = $fixed;
         $_SERVER['DB_USERNAME'] = $fixed;
+        // DB_USERNAME foi corrigido em runtime — regenera config para que o cache reflita isso
+        @unlink('/tmp/config.php');
     }
     if (!getenv('DB_SSLMODE')) {
         putenv('DB_SSLMODE=require');
         $_ENV['DB_SSLMODE']    = 'require';
         $_SERVER['DB_SSLMODE'] = 'require';
     }
-    @unlink('/tmp/config.php'); // regenera config com credenciais corretas
 }
 
 
