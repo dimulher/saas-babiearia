@@ -145,6 +145,26 @@ class AgendamentoController
         return response()->json(['success' => true]);
     }
 
+    public function updateStatus(Request $request, Agendamento $agendamento)
+    {
+        $barbeariaId = auth()->user()->barbearia_id;
+
+        if ($agendamento->barbearia_id !== $barbeariaId) {
+            abort(403);
+        }
+
+        $request->validate([
+            'status' => 'required|in:confirmado,cancelado,faltou,pendente',
+        ]);
+
+        $agendamento->update(['status' => $request->status]);
+
+        $action = $request->status === 'cancelado' ? 'cancelled' : 'updated';
+        SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, $action);
+
+        return response()->json(['success' => true, 'status' => $request->status]);
+    }
+
     public function checkVip(Request $request)
     {
         $telefone = $request->get('telefone');

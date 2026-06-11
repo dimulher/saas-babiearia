@@ -110,15 +110,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2 flex-wrap justify-end">
                             @if($agendamento->status == 'pendente')
                                 <span class="px-3 py-1 bg-amber-900/30 text-amber-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-amber-800/50">Pendente</span>
+                                <button onclick="atualizarStatus({{ $agendamento->id }}, 'confirmado')" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-[9px] font-bold uppercase tracking-widest transition-all">Confirmar</button>
+                                <button onclick="atualizarStatus({{ $agendamento->id }}, 'cancelado')" class="px-3 py-1 bg-rose-900/50 hover:bg-rose-800 text-rose-300 rounded-full text-[9px] font-bold uppercase tracking-widest border border-rose-800/50 transition-all">Cancelar</button>
+                                <button onclick="atualizarStatus({{ $agendamento->id }}, 'faltou')" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-gray-700 transition-all">Faltou</button>
                             @elseif($agendamento->status == 'confirmado')
                                 <span class="px-3 py-1 bg-blue-900/30 text-blue-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-blue-800/50">Confirmado</span>
+                                <button onclick="atualizarStatus({{ $agendamento->id }}, 'cancelado')" class="px-3 py-1 bg-rose-900/50 hover:bg-rose-800 text-rose-300 rounded-full text-[9px] font-bold uppercase tracking-widest border border-rose-800/50 transition-all">Cancelar</button>
+                                <button onclick="atualizarStatus({{ $agendamento->id }}, 'faltou')" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-gray-700 transition-all">Faltou</button>
                             @elseif($agendamento->status == 'concluido')
                                 <span class="px-3 py-1 bg-emerald-900/30 text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-emerald-800/50">Concluído</span>
                             @elseif($agendamento->status == 'cancelado' || $agendamento->status == 'faltou')
                                 <span class="px-3 py-1 bg-rose-900/30 text-rose-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-rose-800/50">{{ ucfirst($agendamento->status) }}</span>
+                                <button onclick="atualizarStatus({{ $agendamento->id }}, 'pendente')" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-gray-700 transition-all">Reabrir</button>
                             @endif
                         </div>
                     </div>
@@ -155,4 +161,22 @@
     </div>
 
 </div>
+
+@push('scripts')
+<script>
+function atualizarStatus(agendamentoId, novoStatus) {
+    fetch(`/panel/agendamentos/${agendamentoId}/status`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({ status: novoStatus }),
+    })
+    .then(r => r.json())
+    .then(data => { if (data.success) window.location.reload(); })
+    .catch(() => alert('Erro ao atualizar status. Tente novamente.'));
+}
+</script>
+@endpush
 @endsection

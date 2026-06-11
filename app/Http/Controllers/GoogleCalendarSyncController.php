@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agendamento;
 use App\Models\EventoGoogleCalendar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -66,6 +67,27 @@ class GoogleCalendarSyncController
                 'status'      => $request->input('status'),
             ]
         );
+
+        return response()->json(['success' => true]);
+    }
+
+    // Callback chamado pelo Make após criar evento no Google Calendar.
+    // Armazena o google_event_id no agendamento para permitir update/delete futuro.
+    public function storeEventId(Request $request)
+    {
+        $token = config('services.make.calendar_sync_token');
+
+        if (!$token || $request->header('X-Calendar-Sync-Token') !== $token) {
+            return response()->json(['error' => 'Não autorizado'], 401);
+        }
+
+        $request->validate([
+            'agendamento_id' => 'required|integer',
+            'google_event_id' => 'required|string',
+        ]);
+
+        Agendamento::where('id', $request->integer('agendamento_id'))
+            ->update(['google_event_id' => $request->input('google_event_id')]);
 
         return response()->json(['success' => true]);
     }

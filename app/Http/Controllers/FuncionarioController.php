@@ -6,6 +6,7 @@ use App\Models\Profissional;
 use App\Models\Agendamento;
 use App\Models\Comanda;
 use App\Models\ComandaItem;
+use App\Jobs\SyncAgendamentoToGoogleCalendar;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -129,6 +130,8 @@ class FuncionarioController
         }
 
         $comanda->calcularTotal();
+
+        SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, 'updated');
 
         return redirect()->back()->with('success', 'Atendimento finalizado com sucesso!');
     }

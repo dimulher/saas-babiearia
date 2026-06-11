@@ -138,6 +138,15 @@ npm run dev          # Vite HMR em :5173
 | `DB_DATABASE`               | `postgres`                                                       | ✅ Configurado |
 | `MAKE_AGENDAMENTO_WEBHOOK_URL` | URL do webhook Make.com (cenário 4771510)                    | ✅ Configurado |
 | `MAKE_CALENDAR_SYNC_TOKEN`  | Token para autenticar POSTs do Make → `/webhooks/google-calendar/sync` | ✅ Configurado |
+| `SESSION_DRIVER`            | `cookie` — obrigatório em serverless (padrão é `database`, sem tabela) | ✅ Configurado |
+| `MAIL_MAILER`               | Provedor de e-mail para recuperação de senha                     | ⏳ Pendente |
+| `MAIL_HOST`                 | Ex: `smtp.resend.com`                                            | ⏳ Pendente |
+| `MAIL_PORT`                 | Ex: `465`                                                        | ⏳ Pendente |
+| `MAIL_USERNAME`             | Ex: `resend`                                                     | ⏳ Pendente |
+| `MAIL_PASSWORD`             | API key do provedor de e-mail                                    | ⏳ Pendente |
+| `MAIL_ENCRYPTION`           | Ex: `ssl`                                                        | ⏳ Pendente |
+| `MAIL_FROM_ADDRESS`         | Ex: `noreply@seudominio.com`                                     | ⏳ Pendente |
+| `MAIL_FROM_NAME`            | `GlowSystem`                                                     | ⏳ Pendente |
 | `WHATSAPP_API_URL`          | URL da instância Z-API ou Evolution API                          | ⏳ Pendente |
 | `WHATSAPP_API_TOKEN`        | Token de autenticação da API                                     | ⏳ Pendente |
 | `MERCADOPAGO_ACCESS_TOKEN`  | Token da conta do MercadoPago                                    | ⏳ Pendente |
@@ -152,4 +161,14 @@ O Vercel monitora o branch **`main`** do repositório `dimulher/saas-babiearia`.
 
 ---
 
-*Última atualização: 2026-06-07 — DB_USERNAME e DB_PASSWORD confirmados; descoberto que branch Vercel é `main`; Supabase project-ref = `hywqwshhfwwqqpogknoi`*
+### ⚠️ `$errors` indefinido em views — causa raiz e fix
+
+O driver de sessão padrão do Laravel é `database`, mas a tabela `sessions` não existe no Supabase. Com isso, `ShareErrorsFromSession` não injeta `$errors` nas views e qualquer diretiva `@error` causa `Undefined variable $errors`.
+
+**Fix aplicado (2026-06-11):** `AppServiceProvider::boot()` registra um view composer global que injeta `ViewErrorBag` vazio como fallback antes de qualquer view renderizar. Isso cobre layouts, views standalone (ex: `funcionario/login.blade.php`) e qualquer view futura.
+
+> ⚠️ Um fix via `@php` no layout (`guest.blade.php`) **não funciona** — o layout roda depois que as seções filho já foram avaliadas, chegando tarde demais.
+
+---
+
+*Última atualização: 2026-06-11 — SESSION_DRIVER=cookie configurado; fix de \$errors via AppServiceProvider; recuperação de senha implementada (pendente config de SMTP)*

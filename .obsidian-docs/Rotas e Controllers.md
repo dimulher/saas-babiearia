@@ -21,12 +21,20 @@ Veja também: [[Autenticação e Perfis]] · [[Agendamentos]] · [[Financeiro]] 
 
 ### Agendamento Público
 
-| Método | URI              | Controller / Action              | Nome            |
-|--------|------------------|----------------------------------|-----------------|
+| Método | URI               | Controller / Action              | Nome            |
+|--------|-------------------|----------------------------------|-----------------|
 | GET    | `/agendar/{slug?}`| closure (dados reais da barbearia)| `booking`      |
-| POST   | `/agendar`       | `AgendamentoController@store`    | `booking.store` |
-| GET    | `/b/{slug}`      | redirect → `booking`             | —               |
-| GET    | `/api/check-vip` | `AgendamentoController@checkVip` | `api.check-vip` |
+| POST   | `/agendar`        | `AgendamentoController@store`    | `booking.store` |
+| GET    | `/b/{slug}`       | redirect → `booking`             | —               |
+| GET    | `/webhooks/check-vip` | `AgendamentoController@checkVip` | `api.check-vip` |
+
+### Webhooks Externos (sem sessão/CSRF, autenticados por token)
+
+> ⚠️ Devem usar prefixo `/webhooks/` — não `/api/`. Ver [[Deploy e Ambiente]] sobre conflito com o runtime do Vercel.
+
+| Método | URI                              | Controller / Action                      | Nome                      |
+|--------|----------------------------------|------------------------------------------|---------------------------|
+| POST   | `/webhooks/google-calendar/sync` | `GoogleCalendarSyncController@store`     | `api.google-calendar.sync`|
 
 ### Funcionário
 

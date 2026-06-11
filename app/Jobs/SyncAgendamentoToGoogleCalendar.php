@@ -39,6 +39,7 @@ class SyncAgendamentoToGoogleCalendar implements ShouldQueue
 
         $response = Http::timeout(15)->post($webhookUrl, [
             'agendamento_id'    => $agendamento->id,
+            'google_event_id'   => $agendamento->google_event_id,
             'cliente_nome'      => $agendamento->nome_cliente,
             'cliente_telefone'  => $agendamento->cliente_telefone,
             'servico_nome'      => $agendamento->servico?->nome,

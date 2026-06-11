@@ -167,6 +167,7 @@ Route::get('/b/{slug}', function ($slug) {
 // Webhooks e endpoints chamados externamente (fora de /api/ para evitar conflito com o runtime do Vercel)
 Route::get('/webhooks/check-vip', [AgendamentoController::class, 'checkVip'])->name('api.check-vip');
 Route::post('/webhooks/google-calendar/sync', [GoogleCalendarSyncController::class, 'store'])->name('api.google-calendar.sync');
+Route::post('/webhooks/google-calendar/event-id', [GoogleCalendarSyncController::class, 'storeEventId'])->name('api.google-calendar.event-id');
 
 
 
@@ -183,6 +184,7 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
 
     // Agendamentos
     Route::get('/agendamentos', [AgendamentoController::class, 'index'])->name('agendamentos');
+    Route::patch('/agendamentos/{agendamento}/status', [AgendamentoController::class, 'updateStatus'])->name('agendamentos.status');
 
     // Clube VIP (Assinaturas)
     Route::prefix('assinaturas')->name('assinaturas.')->group(function () {

@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //   autenticadas do painel, que mantêm proteção CSRF normalmente
         $middleware->validateCsrfTokens(except: [
             'webhooks/google-calendar/sync',
+            'webhooks/google-calendar/event-id',
             'login/proprietario',
             'register',
             'logout',
