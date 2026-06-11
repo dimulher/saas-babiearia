@@ -39,7 +39,7 @@ if (!getenv('APP_DEBUG'))        putenv('APP_DEBUG=false');
 if (!getenv('LOG_CHANNEL'))      putenv('LOG_CHANNEL=stderr');
 if (!getenv('CACHE_STORE'))      putenv('CACHE_STORE=array');
 if (!getenv('CACHE_DRIVER'))     putenv('CACHE_DRIVER=array');
-if (!getenv('SESSION_DRIVER'))   putenv('SESSION_DRIVER=cookie');
+if (!getenv('SESSION_DRIVER'))   putenv('SESSION_DRIVER=database');
 if (!getenv('QUEUE_CONNECTION')) putenv('QUEUE_CONNECTION=sync');
 
 // Diretórios de cache no /tmp (único diretório gravável no Vercel)
