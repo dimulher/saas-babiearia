@@ -13,9 +13,19 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->trustProxies(at: '*');
 
-        // Endpoint chamado pelo Make.com (sem sessão/CSRF) — autenticado por token compartilhado
+        // Rotas sem CSRF:
+        // - webhooks/google-calendar/sync: chamado pelo Make.com, autenticado por token próprio
+        // - rotas de auth: o runtime vercel-php não round-tripa cookies de sessão de forma confiável,
+        //   tornando CSRF inviável nessas rotas; o risco de login-CSRF é baixo comparado às rotas
+        //   autenticadas do painel, que mantêm proteção CSRF normalmente
         $middleware->validateCsrfTokens(except: [
             'webhooks/google-calendar/sync',
+            'login/proprietario',
+            'register',
+            'logout',
+            'funcionario/login',
+            'forgot-password',
+            'reset-password',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

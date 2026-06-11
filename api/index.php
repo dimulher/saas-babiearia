@@ -39,11 +39,11 @@ if (!getenv('APP_DEBUG'))        putenv('APP_DEBUG=false');
 if (!getenv('LOG_CHANNEL'))      putenv('LOG_CHANNEL=stderr');
 if (!getenv('CACHE_STORE'))      putenv('CACHE_STORE=array');
 if (!getenv('CACHE_DRIVER'))     putenv('CACHE_DRIVER=array');
-if (!getenv('SESSION_DRIVER'))   putenv('SESSION_DRIVER=database');
+if (!getenv('SESSION_DRIVER'))   putenv('SESSION_DRIVER=file');
 if (!getenv('QUEUE_CONNECTION')) putenv('QUEUE_CONNECTION=sync');
 
 // Diretórios de cache no /tmp (único diretório gravável no Vercel)
-$tmpDirs = ['/tmp/views', '/tmp/cache', '/tmp/framework'];
+$tmpDirs = ['/tmp/views', '/tmp/cache', '/tmp/framework', '/tmp/sessions'];
 foreach ($tmpDirs as $dir) {
     if (!file_exists($dir)) mkdir($dir, 0755, true);
 }
@@ -54,6 +54,9 @@ putenv('APP_PACKAGES_CACHE=/tmp/packages.php');
 putenv('APP_CONFIG_CACHE=/tmp/config.php');
 putenv('APP_ROUTES_CACHE=/tmp/routes.php');
 putenv('APP_EVENTS_CACHE=/tmp/events.php');
+
+// Sessões em arquivo no /tmp — mais confiável que cookie ou database no runtime vercel-php
+if (!getenv('SESSION_FILES_PATH')) putenv('SESSION_FILES_PATH=/tmp/sessions');
 
 // Força HTTPS — Vercel termina SSL no proxy
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
