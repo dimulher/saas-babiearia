@@ -7,11 +7,9 @@
     <title>GlowSystem - @yield('title', 'Painel')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap"></noscript>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.4/dist/turbo.es2017.umd.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Outfit', sans-serif; }
         .sidebar-item { transition: all 0.2s ease; border-radius: 10px; margin-bottom: 2px; }
@@ -74,8 +72,15 @@
     notifications: [],
     get unreadCount() { return this.notifications.filter(n => !n.read).length; },
     init() {
-        this.fetchNotifications();
-        setInterval(() => this.fetchNotifications(), 60000);
+        const load = () => {
+            this.fetchNotifications();
+            setInterval(() => this.fetchNotifications(), 60000);
+        };
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(load, { timeout: 3000 });
+        } else {
+            setTimeout(load, 2500);
+        }
     },
     fetchNotifications() {
         fetch('{{ route('panel.notificacoes.index') }}')
@@ -142,11 +147,11 @@
                 <div class="flex flex-row items-center justify-end gap-2">
 
                     {{-- Botão Novo Agendamento --}}
-                    <a href="/panel/agendamentos"
+                    <button onclick="if(window.location.pathname.startsWith('/panel/agendamentos')){window.dispatchEvent(new CustomEvent('glow:novo-agendamento'))}else{window.location.href='/panel/agendamentos?novo=1'}"
                        class="hidden sm:flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-lg shadow-green-900/30">
                         <i class="fa-solid fa-plus text-xs"></i>
                         Novo Agendamento
-                    </a>
+                    </button>
 
                     {{-- Sino de notificações --}}
                     <div class="relative" @click.outside="notifOpen = false">
@@ -165,7 +170,7 @@
                              x-transition:leave="transition ease-in duration-150"
                              x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                              x-transition:leave-end="opacity-0 translate-y-1 scale-95"
-                             class="absolute right-0 top-full mt-2 z-50 w-[360px] bg-[#111827] shadow-2xl rounded-2xl border border-gray-800 overflow-hidden">
+                             class="fixed sm:absolute inset-x-3 sm:inset-x-auto sm:right-0 top-[54px] sm:top-full sm:mt-2 z-50 sm:w-[360px] bg-[#111827] shadow-2xl rounded-2xl border border-gray-800 overflow-hidden">
 
                             <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800/70">
                                 <div class="flex items-center gap-2">
@@ -233,9 +238,13 @@
                     {{-- Avatar --}}
                     <div class="relative inline-flex" x-data="{ avatarOpen: false }">
                         <button @click="avatarOpen = !avatarOpen" class="size-[38px] inline-flex justify-center items-center text-sm font-semibold rounded-full border border-transparent focus:outline-none">
-                            <div class="w-9 h-9 bg-green-900/50 text-green-400 rounded-full flex items-center justify-center text-xs font-bold select-none uppercase border border-green-800/50">
-                                {{ auth()->user()->initials }}
-                            </div>
+                            @if(auth()->user()->foto)
+                                <img src="{{ auth()->user()->foto }}" class="w-9 h-9 rounded-full object-cover border border-green-800/50">
+                            @else
+                                <div class="w-9 h-9 bg-green-900/50 text-green-400 rounded-full flex items-center justify-center text-xs font-bold select-none uppercase border border-green-800/50">
+                                    {{ auth()->user()->initials }}
+                                </div>
+                            @endif
                         </button>
                         <div x-show="avatarOpen" x-cloak @click.outside="avatarOpen = false"
                              class="absolute right-0 top-full mt-2 z-50 min-w-56 bg-[#111827] shadow-xl rounded-xl border border-gray-800">
@@ -263,23 +272,10 @@
         </nav>
     </header>
 
-    {{-- ==================== BREADCRUMB MOBILE ==================== --}}
-    <div class="sticky top-[49px] inset-x-0 z-20 bg-[#0B0F19] border-y border-gray-800/80 px-4 sm:px-6 lg:hidden">
-        <div class="flex items-center py-2">
-            <button @click="mobileOpen = true"
-                class="px-4 py-1 flex justify-center items-center gap-x-2 border border-gray-700 text-gray-300 hover:text-white rounded-lg focus:outline-none text-sm font-medium">
-                <i class="fa-solid fa-bars text-xs"></i>
-                Menu
-            </button>
-            <ol class="ms-3 flex items-center whitespace-nowrap">
-                <li class="flex items-center text-sm text-gray-500">
-                    App
-                    <svg class="shrink-0 mx-2 overflow-visible size-2.5 text-gray-600" fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 1L10.6869 7.16086C10.8637 7.35239 10.8637 7.64761 10.6869 7.83914L5 14" stroke-linecap="round" stroke-width="2" stroke="currentColor"/>
-                    </svg>
-                </li>
-                <li class="text-sm font-semibold text-white truncate">@yield('title', 'Painel')</li>
-            </ol>
+    {{-- ==================== TÍTULO MOBILE ==================== --}}
+    <div class="sticky top-[49px] inset-x-0 z-20 bg-[#0B0F19] border-b border-gray-800/60 px-4 lg:hidden">
+        <div class="py-2">
+            <p class="text-sm font-bold text-white tracking-tight">@yield('title', 'Painel')</p>
         </div>
     </div>
 
@@ -304,9 +300,13 @@
         {{-- User footer --}}
         <div class="px-4 py-4 border-t border-gray-800/60">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-green-900/50 text-green-400 rounded-full flex items-center justify-center text-xs font-bold select-none uppercase border border-green-800/50 shrink-0">
-                    {{ auth()->user()->initials }}
-                </div>
+                @if(auth()->user()->foto)
+                    <img src="{{ auth()->user()->foto }}" class="w-8 h-8 rounded-full object-cover border border-green-800/50 shrink-0">
+                @else
+                    <div class="w-8 h-8 bg-green-900/50 text-green-400 rounded-full flex items-center justify-center text-xs font-bold select-none uppercase border border-green-800/50 shrink-0">
+                        {{ auth()->user()->initials }}
+                    </div>
+                @endif
                 <div class="flex-1 min-w-0">
                     <p class="text-xs font-semibold text-white truncate">{{ auth()->user()->name }}</p>
                     <p class="text-[10px] text-gray-500 truncate">{{ auth()->user()->barbearia->nome }}</p>
@@ -361,9 +361,41 @@
         </nav>
     </div>
 
+    {{-- ==================== BOTTOM NAV MOBILE ==================== --}}
+    <nav class="fixed bottom-0 inset-x-0 z-[48] lg:hidden bg-[#0d1117] border-t border-gray-800/80" style="padding-bottom: env(safe-area-inset-bottom)">
+        <div class="grid grid-cols-5 h-16">
+            <a href="/panel/dashboard"
+               class="flex flex-col items-center justify-center gap-1 transition-colors {{ request()->is('panel/dashboard') ? 'text-green-400' : 'text-gray-500 hover:text-gray-300' }}">
+                <i class="fa-solid fa-house text-base"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wide">Início</span>
+            </a>
+            <a href="/panel/agendamentos"
+               class="flex flex-col items-center justify-center gap-1 transition-colors {{ request()->is('panel/agendamentos*') ? 'text-green-400' : 'text-gray-500 hover:text-gray-300' }}">
+                <i class="fa-solid fa-calendar-days text-base"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wide">Agenda</span>
+            </a>
+            <button onclick="if(window.location.pathname.startsWith('/panel/agendamentos')){window.dispatchEvent(new CustomEvent('glow:novo-agendamento'))}else{window.location.href='/panel/agendamentos?novo=1'}"
+                class="flex flex-col items-center justify-center">
+                <div class="w-11 h-11 bg-green-500 hover:bg-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-900/50 transition-all -mt-5">
+                    <i class="fa-solid fa-plus text-white text-base"></i>
+                </div>
+            </button>
+            <a href="/panel/financeiro"
+               class="flex flex-col items-center justify-center gap-1 transition-colors {{ request()->is('panel/financeiro*') ? 'text-green-400' : 'text-gray-500 hover:text-gray-300' }}">
+                <i class="fa-solid fa-chart-line text-base"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wide">Finanças</span>
+            </a>
+            <button @click="mobileOpen = true"
+                class="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-gray-300 transition-colors">
+                <i class="fa-solid fa-bars text-base"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wide">Menu</span>
+            </button>
+        </div>
+    </nav>
+
     {{-- ==================== CONTEÚDO PRINCIPAL ==================== --}}
     <div class="w-full lg:ps-[220px]">
-        <div class="p-4 sm:p-6 max-w-screen-2xl">
+        <div class="p-4 sm:p-6 pb-24 lg:pb-6 max-w-screen-2xl mx-auto">
             @yield('content')
         </div>
     </div>
@@ -415,6 +447,10 @@
             if (window.Alpine) Alpine.initTree(document.body);
         });
 
+        const isDesktop = window.innerWidth >= 1024;
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const isFastConn = !conn || (!conn.saveData && !['2g','slow-2g'].includes(conn.effectiveType));
+
         document.addEventListener('turbo:load', () => {
             loadingEl.classList.remove('active');
             document.body.style.opacity = '1';
@@ -423,36 +459,40 @@
             const main = getMain();
             if (main) cacheSet(location.pathname, main.innerHTML);
 
-            setTimeout(() => {
-                document.querySelectorAll('.sidebar-item[href]').forEach((link, i) => {
-                    const href = link.getAttribute('href');
-                    if (!href || cacheGet(href)) return;
-                    setTimeout(() => {
-                        fetch(href, { credentials: 'same-origin', headers: { 'Accept': 'text/html' } })
-                            .then(r => r.text())
-                            .then(html => {
-                                const doc = new DOMParser().parseFromString(html, 'text/html');
-                                const content = doc.querySelector('.w-full.lg\\:ps-\\[220px\\] > div');
-                                if (content) cacheSet(href, content.innerHTML);
-                            }).catch(() => {});
-                    }, 600 + i * 200);
-                });
-            }, 1200);
+            if (isDesktop && isFastConn) {
+                setTimeout(() => {
+                    document.querySelectorAll('.sidebar-item[href]').forEach((link, i) => {
+                        const href = link.getAttribute('href');
+                        if (!href || cacheGet(href)) return;
+                        setTimeout(() => {
+                            fetch(href, { credentials: 'same-origin', headers: { 'Accept': 'text/html' } })
+                                .then(r => r.text())
+                                .then(html => {
+                                    const doc = new DOMParser().parseFromString(html, 'text/html');
+                                    const content = doc.querySelector('.w-full.lg\\:ps-\\[220px\\] > div');
+                                    if (content) cacheSet(href, content.innerHTML);
+                                }).catch(() => {});
+                        }, 600 + i * 200);
+                    });
+                }, 1200);
+            }
         });
 
-        document.addEventListener('mouseover', (e) => {
-            const link = e.target.closest('a.sidebar-item[href]');
-            if (!link) return;
-            const href = link.getAttribute('href');
-            if (!href || cacheGet(href)) return;
-            fetch(href, { credentials: 'same-origin', headers: { 'Accept': 'text/html' } })
-                .then(r => r.text())
-                .then(html => {
-                    const doc = new DOMParser().parseFromString(html, 'text/html');
-                    const content = doc.querySelector('.w-full.lg\\:ps-\\[220px\\] > div');
-                    if (content) cacheSet(href, content.innerHTML);
-                }).catch(() => {});
-        });
+        if (isDesktop && isFastConn) {
+            document.addEventListener('mouseover', (e) => {
+                const link = e.target.closest('a.sidebar-item[href]');
+                if (!link) return;
+                const href = link.getAttribute('href');
+                if (!href || cacheGet(href)) return;
+                fetch(href, { credentials: 'same-origin', headers: { 'Accept': 'text/html' } })
+                    .then(r => r.text())
+                    .then(html => {
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+                        const content = doc.querySelector('.w-full.lg\\:ps-\\[220px\\] > div');
+                        if (content) cacheSet(href, content.innerHTML);
+                    }).catch(() => {});
+            });
+        }
     </script>
     @stack('scripts')
 </body>
