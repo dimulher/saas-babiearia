@@ -77,7 +77,7 @@
                     <i class="fa-solid fa-camera-retro"></i> Mudar Avatar
                 </button>
                 <form x-show="hasNewPhoto" x-cloak
-                      action="{{ route('configuracoes.conta.avatar') }}" method="POST" class="mt-3">
+                      action="{{ route('panel.configuracoes.conta.avatar') }}" method="POST" class="mt-3">
                     @csrf
                     <input type="hidden" name="foto_base64" :value="fotoBase64">
                     <button type="submit" :disabled="loading"
