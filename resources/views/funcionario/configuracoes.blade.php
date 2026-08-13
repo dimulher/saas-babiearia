@@ -55,59 +55,23 @@
     </div>
 
     {{-- ── FOTO DE PERFIL ──────────────────────────── --}}
-    <div class="bg-[#111827] border border-gray-800/60 rounded-2xl overflow-hidden"
-         x-data="{
-             hasNewPhoto: false,
-             newPhotoSrc: '',
-             fotoBase64: '',
-             loading: false,
-             processarFoto(event) {
-                 const file = event.target.files[0];
-                 if (!file) return;
-                 this.loading = true;
-                 const reader = new FileReader();
-                 reader.onload = (e) => {
-                     const img = new Image();
-                     img.onload = () => {
-                         const MAX = 200;
-                         let w = img.width, h = img.height;
-                         if (w > h) { if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; } }
-                         else { if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; } }
-                         const canvas = document.createElement('canvas');
-                         canvas.width = w; canvas.height = h;
-                         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                         const b64 = canvas.toDataURL('image/jpeg', 0.75);
-                         this.$refs.b64field.value = b64;
-                         this.newPhotoSrc = b64;
-                         this.hasNewPhoto = true;
-                         this.loading = false;
-                     };
-                     img.src = e.target.result;
-                 };
-                 reader.readAsDataURL(file);
-             }
-         }">
+    <div class="bg-[#111827] border border-gray-800/60 rounded-2xl overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-800/60 flex items-center gap-2">
             <i class="fa-solid fa-camera text-green-500 text-xs"></i>
             <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Foto de Perfil</p>
         </div>
-        <form action="{{ route('funcionario.configuracoes.update') }}" method="POST" class="p-6 space-y-4">
-            @csrf
-            <input type="hidden" name="foto_base64" x-ref="b64field">
+        <div class="p-6 space-y-4">
             <div class="flex items-center gap-5">
                 <div class="relative shrink-0">
                     <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-dashed border-gray-700 hover:border-green-500 transition-colors cursor-pointer flex items-center justify-center bg-gray-900/50"
-                         @click="$refs.fotoInput.click()">
-                        <div x-show="!hasNewPhoto" class="w-full h-full">
-                            @if($profissional->foto)
-                                <img src="{{ $profissional->foto }}" class="w-full h-full object-cover">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center text-green-400 text-2xl font-black select-none uppercase">
-                                    {{ $profissional->initials }}
-                                </div>
-                            @endif
-                        </div>
-                        <img x-show="hasNewPhoto" :src="newPhotoSrc" class="w-full h-full object-cover" style="display:none">
+                         onclick="document.getElementById('func-foto-file').click()">
+                        @if($profissional->foto)
+                            <img id="func-avatar-preview" src="{{ $profissional->foto }}" class="w-full h-full object-cover">
+                            <span id="func-avatar-initials" class="text-green-400 text-2xl font-black select-none uppercase hidden">{{ $profissional->initials }}</span>
+                        @else
+                            <img id="func-avatar-preview" src="" class="w-full h-full object-cover hidden">
+                            <span id="func-avatar-initials" class="text-green-400 text-2xl font-black select-none uppercase">{{ $profissional->initials }}</span>
+                        @endif
                     </div>
                     <div class="absolute -bottom-1.5 -right-1.5 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center shadow-lg pointer-events-none">
                         <i class="fa-solid fa-camera text-white text-[10px]"></i>
@@ -116,23 +80,27 @@
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-bold text-white">Sua foto de perfil</p>
                     <p class="text-xs text-gray-500 mt-1">Aparece no calendário, na equipe e na página de agendamento. Use uma foto quadrada para melhor resultado.</p>
-                    <input type="file" x-ref="fotoInput" accept="image/*" class="hidden" @change="processarFoto($event)">
-                    <button type="button" @click="$refs.fotoInput.click()"
+                    <button type="button" onclick="document.getElementById('func-foto-file').click()"
                         class="mt-2 text-xs text-green-400 hover:text-green-300 font-bold">
                         <i class="fa-solid fa-upload text-[10px] mr-1"></i> Escolher foto
                     </button>
                 </div>
             </div>
+
+            <form id="func-foto-form" action="{{ route('funcionario.configuracoes.update') }}" method="POST">
+                @csrf
+                <input type="file" id="func-foto-file" accept="image/*" class="hidden">
+                <input type="hidden" name="foto_base64" id="func-foto-b64">
+            </form>
+
             <div class="flex justify-end">
-                <button type="submit"
-                    :disabled="!hasNewPhoto || loading"
+                <button type="button" id="func-btn-salvar" disabled
+                    onclick="document.getElementById('func-foto-form').submit()"
                     class="px-6 py-3 bg-green-500 hover:bg-green-600 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-green-900/20">
-                    <i x-show="!loading" class="fa-solid fa-floppy-disk mr-1.5"></i>
-                    <i x-show="loading" x-cloak class="fa-solid fa-spinner fa-spin mr-1.5"></i>
-                    Salvar Foto
+                    <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar Foto
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 
     {{-- ── TELEFONE ─────────────────────────────────── --}}
@@ -235,3 +203,34 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.getElementById('func-foto-file').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+            const MAX = 200;
+            let w = img.width, h = img.height;
+            if (w > h) { if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; } }
+            else       { if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; } }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            const b64 = canvas.toDataURL('image/jpeg', 0.75);
+            document.getElementById('func-foto-b64').value = b64;
+            const preview = document.getElementById('func-avatar-preview');
+            preview.src = b64;
+            preview.classList.remove('hidden');
+            document.getElementById('func-avatar-initials').classList.add('hidden');
+            document.getElementById('func-btn-salvar').disabled = false;
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+</script>
+@endpush
