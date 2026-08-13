@@ -39,8 +39,8 @@
                          canvas.width = w; canvas.height = h;
                          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                          const b64 = canvas.toDataURL('image/jpeg', 0.75);
+                         this.$refs.b64field.value = b64;
                          this.newPhotoSrc = b64;
-                         this.fotoBase64 = b64;
                          this.hasNewPhoto = true;
                          this.loading = false;
                      };
@@ -79,7 +79,7 @@
                 <form x-show="hasNewPhoto" x-cloak
                       action="{{ route('panel.configuracoes.conta.avatar') }}" method="POST" class="mt-3">
                     @csrf
-                    <input type="hidden" name="foto_base64" :value="fotoBase64">
+                    <input type="hidden" name="foto_base64" x-ref="b64field">
                     <button type="submit" :disabled="loading"
                         class="px-5 py-2.5 bg-green-500 hover:bg-green-600 disabled:opacity-40 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-green-900/20">
                         <i x-show="!loading" class="fa-solid fa-floppy-disk mr-1.5"></i>

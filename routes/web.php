@@ -412,6 +412,11 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
         Route::get('/agendamento', function () { return view('panel.configuracoes.agendamento'); })->name('agendamento');
         Route::get('/conta', function () { return view('panel.configuracoes.conta'); })->name('conta');
         Route::post('/conta/avatar', function (\Illuminate\Http\Request $request) {
+            if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'foto')) {
+                \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                    $table->text('foto')->nullable();
+                });
+            }
             $request->validate(['foto_base64' => 'required|string|max:500000']);
             $foto = $request->foto_base64;
             if (!str_starts_with($foto, 'data:image/')) abort(422);

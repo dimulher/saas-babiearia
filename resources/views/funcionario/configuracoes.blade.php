@@ -77,8 +77,8 @@
                          canvas.width = w; canvas.height = h;
                          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                          const b64 = canvas.toDataURL('image/jpeg', 0.75);
+                         this.$refs.b64field.value = b64;
                          this.newPhotoSrc = b64;
-                         this.fotoBase64 = b64;
                          this.hasNewPhoto = true;
                          this.loading = false;
                      };
@@ -93,7 +93,7 @@
         </div>
         <form action="{{ route('funcionario.configuracoes.update') }}" method="POST" class="p-6 space-y-4">
             @csrf
-            <input type="hidden" name="foto_base64" :value="fotoBase64">
+            <input type="hidden" name="foto_base64" x-ref="b64field">
             <div class="flex items-center gap-5">
                 <div class="relative shrink-0">
                     <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-dashed border-gray-700 hover:border-green-500 transition-colors cursor-pointer flex items-center justify-center bg-gray-900/50"
