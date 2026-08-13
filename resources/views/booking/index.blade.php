@@ -1,478 +1,600 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar — GlowSystem</title>
+    <title>{{ $barbearia?->nome ?? 'Agendar' }} — Reservar horário</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
+        :root { --accent: #22c55e; --accent-dark: #16a34a; }
+        * { box-sizing: border-box; }
         body { font-family: 'Outfit', sans-serif; }
+        [x-cloak] { display: none !important; }
 
-        .hero-cover {
-            background: linear-gradient(135deg, #052e16 0%, #14532d 40%, #166534 70%, #064e3b 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero-cover::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 30% 50%, rgba(34,197,94,0.25) 0%, transparent 60%),
-                        radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.15) 0%, transparent 50%);
-        }
-        .hero-cover::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: linear-gradient(to bottom, transparent, #0B0F19);
+        /* Aurora hero background */
+        .hero-aurora {
+            background:
+                radial-gradient(ellipse at 15% 60%, rgba(22,163,74,.30) 0%, transparent 48%),
+                radial-gradient(ellipse at 85% 25%, rgba(16,185,129,.18) 0%, transparent 44%),
+                radial-gradient(ellipse at 50% 95%, rgba(5,150,105,.14) 0%, transparent 40%),
+                linear-gradient(170deg, #040d06 0%, #071510 40%, #0a1c12 70%, #060e0a 100%);
         }
 
-        .profile-avatar-ring {
-            background: linear-gradient(135deg, #16a34a, #86efac, #16a34a);
-            padding: 3px;
-            border-radius: 28px;
-        }
-        .profile-avatar-inner {
-            background: #0B0F19;
-            border-radius: 25px;
-            overflow: hidden;
+        /* Subtle mesh overlay */
+        .hero-mesh {
+            background-image:
+                linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
 
-        .step-bar-track {
-            background: rgba(255,255,255,0.06);
-            border-radius: 99px;
-            overflow: hidden;
-        }
-        .step-bar-fill {
-            background: linear-gradient(90deg, #16a34a, #86efac);
-            border-radius: 99px;
-            transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-            box-shadow: 0 0 12px rgba(34,197,94,0.5);
-        }
-
-        .step-dot {
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-        }
-        .step-dot.active {
-            box-shadow: 0 0 0 4px rgba(34,197,94,0.25), 0 0 16px rgba(34,197,94,0.5);
-        }
-
-        .card-service {
-            background: rgba(17,24,39,0.8);
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: all 0.25s ease;
-        }
-        .card-service:hover {
-            border-color: rgba(34,197,94,0.6);
-            background: rgba(34,197,94,0.06);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 32px rgba(34,197,94,0.12);
-        }
-
-        .sticky-nav {
+        .glass-bar {
+            background: rgba(6, 10, 17, 0.92);
             backdrop-filter: blur(20px);
-            background: rgba(3,7,18,0.85);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            -webkit-backdrop-filter: blur(20px);
         }
+
+        /* Service card */
+        .svc-card {
+            transition: background .18s ease, border-color .18s ease, transform .18s ease;
+        }
+        .svc-card:hover {
+            background: rgba(22,163,74,.07);
+            border-color: rgba(34,197,94,.40);
+            transform: translateX(2px);
+        }
+        .svc-card:active { transform: scale(.99); }
+
+        /* Prof list row */
+        .prof-row { transition: background .15s ease; }
+        .prof-row:hover { background: rgba(255,255,255,.04); }
+
+        /* Time chips */
+        .time-chip { transition: all .15s ease; }
+        .time-chip:active { transform: scale(.93); }
+
+        /* Sticky bottom selection bar */
+        .sel-bar {
+            background: rgba(6,10,17,.96);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        /* Step line transition */
+        .step-connector { transition: background .4s ease; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 99px; }
     </style>
 </head>
-<body class="bg-[#0B0F19] min-h-screen text-white" x-data="booking()">
+<body class="bg-[#070C12] min-h-screen text-white" x-data="booking()">
 
-    <!-- ═══════════════ HERO HEADER ═══════════════ -->
-    <div class="hero-cover h-44 relative">
-        <!-- Decorative orbs -->
-        <div class="absolute top-4 left-8 w-32 h-32 rounded-full bg-green-500/10 blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-8 right-12 w-24 h-24 rounded-full bg-purple-400/10 blur-2xl pointer-events-none"></div>
-    </div>
+    {{-- ══════════════════════════════════════
+         HERO  —  "aurora cover" style
+    ══════════════════════════════════════ --}}
+    <div class="hero-aurora relative overflow-hidden" style="min-height:260px;">
 
-    <!-- Profile Card (sobreposição ao hero) -->
-    <div class="max-w-lg mx-auto px-4 relative" style="margin-top: -56px; z-index: 10;">
-        <div class="flex flex-col items-center text-center">
+        {{-- Mesh overlay --}}
+        <div class="hero-mesh absolute inset-0 pointer-events-none"></div>
 
-            <!-- Avatar do estabelecimento -->
-            <div class="profile-avatar-ring shadow-[0_8px_32px_rgba(124,58,237,0.4)] mb-4">
-                <div class="profile-avatar-inner w-24 h-24 flex items-center justify-center">
+        {{-- Light beam accents --}}
+        <div class="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-green-500/20 via-transparent to-transparent pointer-events-none"></div>
+        <div class="absolute top-0 right-1/3 w-px h-3/4 bg-gradient-to-b from-emerald-400/10 via-transparent to-transparent pointer-events-none"></div>
+
+        {{-- Content --}}
+        <div class="relative max-w-xl mx-auto px-5 flex flex-col justify-end" style="min-height:260px;padding-bottom:32px;padding-top:40px;">
+
+            {{-- Top-right: share --}}
+            <div class="absolute top-5 right-5">
+                <button type="button"
+                    onclick="if(navigator.share)navigator.share({title:document.title,url:location.href});else navigator.clipboard?.writeText(location.href)"
+                    class="w-9 h-9 rounded-xl bg-white/8 border border-white/10 flex items-center justify-center hover:bg-white/14 transition-colors">
+                    <i class="fa-solid fa-share-nodes text-gray-400 text-sm"></i>
+                </button>
+            </div>
+
+            {{-- Avatar + Name --}}
+            <div class="flex items-end gap-4">
+                <div class="w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl overflow-hidden ring-2 ring-green-500/30 shadow-2xl shadow-black/60 shrink-0">
                     @if(!empty($barbearia?->logo))
-                        <img src="{{ Storage::url($barbearia->logo) }}"
-                             alt="{{ $barbearia->nome }}"
-                             class="w-full h-full object-cover">
+                        <img src="{{ Storage::url($barbearia->logo) }}" alt="{{ $barbearia->nome }}" class="w-full h-full object-cover">
                     @else
-                        <div class="w-full h-full bg-gradient-to-br from-green-600 to-purple-900 flex items-center justify-center">
-                            <span class="text-3xl font-black text-white select-none">
-                                {{ strtoupper(substr($barbearia?->nome ?? 'G', 0, 1)) }}
-                            </span>
+                        <div class="w-full h-full bg-gradient-to-br from-green-600 to-emerald-900 flex items-center justify-center">
+                            <span class="text-3xl font-black text-white select-none">{{ strtoupper(substr($barbearia?->nome ?? 'G',0,1)) }}</span>
                         </div>
+                    @endif
+                </div>
+
+                <div class="pb-1 flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="inline-flex items-center gap-1.5 text-[9px] font-black text-green-400 bg-green-400/10 border border-green-500/20 px-2.5 py-1 rounded-full uppercase tracking-[.12em]">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shrink-0"></span>
+                            Aberto · Aceitando reservas
+                        </span>
+                    </div>
+                    <h1 class="text-[22px] sm:text-2xl font-black text-white tracking-tight leading-none">
+                        {{ $barbearia?->nome ?? 'GlowSystem' }}
+                    </h1>
+                    @if(!empty($barbearia?->descricao))
+                    <p class="text-sm text-gray-400 mt-1.5 leading-snug line-clamp-1">{{ $barbearia->descricao }}</p>
                     @endif
                 </div>
             </div>
 
-            <!-- Nome e status -->
-            <h1 class="text-2xl font-bold tracking-tight text-white leading-none">
-                {{ $barbearia?->nome ?? 'GlowSystem' }}
-            </h1>
-            @if(!empty($barbearia?->descricao))
-                <p class="text-sm text-gray-400 font-medium mt-1 max-w-xs">{{ $barbearia->descricao }}</p>
-            @endif
-            <div class="flex items-center gap-2 mt-3 px-4 py-1.5 bg-green-500/10 border border-green-500/20 rounded-full">
-                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse flex-shrink-0"></span>
-                <span class="text-xs text-green-400 font-bold uppercase tracking-widest">Aberto · Aceitando reservas</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══════════════ STICKY PROGRESS BAR ═══════════════ -->
-    <div class="sticky top-0 z-50 sticky-nav mt-8">
-
-        <!-- Step indicator compacto -->
-        <div class="max-w-lg mx-auto px-4 py-3">
-            <div class="flex items-center gap-3">
-                <!-- Dots -->
-                <div class="flex items-center gap-2">
-                    <template x-for="i in 5" :key="i">
-                        <div class="step-dot rounded-full transition-all"
-                             :class="i < etapa ? 'w-2 h-2 bg-green-500' :
-                                     i === etapa ? 'w-6 h-2 bg-green-500 active' :
-                                     'w-2 h-2 bg-gray-700'">
-                        </div>
-                    </template>
+            {{-- Stats strip --}}
+            <div class="flex items-center gap-5 mt-5 border-t border-white/6 pt-4">
+                <div class="flex items-center gap-2 text-xs text-gray-400">
+                    <div class="w-6 h-6 rounded-lg bg-green-500/12 flex items-center justify-center">
+                        <i class="fa-solid fa-scissors text-green-500 text-[10px]"></i>
+                    </div>
+                    <span><strong class="text-white font-bold">{{ $servicos->count() }}</strong> {{ $servicos->count() === 1 ? 'serviço' : 'serviços' }}</span>
                 </div>
-                <!-- Label da etapa atual -->
-                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1" x-text="[
-                    '', 'Escolha o serviço', 'Profissional', 'Data & Hora', 'Adicionais', 'Confirmar'
-                ][etapa]"></span>
-                <!-- Passo X/5 -->
-                <span class="ml-auto text-xs font-black text-green-400" x-text="etapa + '/5'"></span>
+                <div class="w-px h-4 bg-white/8"></div>
+                <div class="flex items-center gap-2 text-xs text-gray-400">
+                    <div class="w-6 h-6 rounded-lg bg-green-500/12 flex items-center justify-center">
+                        <i class="fa-solid fa-user-tie text-green-500 text-[10px]"></i>
+                    </div>
+                    <span><strong class="text-white font-bold">{{ $profissionais->count() }}</strong> {{ $profissionais->count() === 1 ? 'profissional' : 'profissionais' }}</span>
+                </div>
+                <div class="w-px h-4 bg-white/8"></div>
+                <div class="flex items-center gap-2 text-xs text-gray-400">
+                    <div class="w-6 h-6 rounded-lg bg-green-500/12 flex items-center justify-center">
+                        <i class="fa-regular fa-calendar text-green-500 text-[10px]"></i>
+                    </div>
+                    <span>Agendamento online</span>
+                </div>
             </div>
-            <!-- Barra de progresso -->
-            <div class="step-bar-track h-0.5 mt-2">
-                <div class="step-bar-fill h-full" :style="`width: ${(etapa / 5) * 100}%`"></div>
+        </div>
+
+        {{-- Bottom fade --}}
+        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-[#070C12] pointer-events-none"></div>
+    </div>
+
+    {{-- ══════════════════════════════════════
+         STEPPER STICKY
+    ══════════════════════════════════════ --}}
+    <div class="sticky top-0 z-50 glass-bar border-b border-white/5" x-show="etapa < 6" x-cloak>
+        <div class="max-w-xl mx-auto px-5 py-3.5">
+            <div class="flex items-center">
+                @foreach([1=>'Serviço',2=>'Profissional',3=>'Data',4=>'Adicionais',5=>'Confirmar'] as $n=>$label)
+                <div class="flex items-center {{ $n < 5 ? 'flex-1' : '' }}">
+                    <div class="flex flex-col items-center shrink-0">
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black transition-all duration-300"
+                             :class="etapa > {{ $n }} ? 'bg-green-500 text-white' : etapa === {{ $n }} ? 'bg-green-500 text-white shadow-[0_0_0_4px_rgba(34,197,94,.18)]' : 'bg-gray-800 text-gray-600 border border-gray-700/60'">
+                            <span x-show="etapa <= {{ $n }}">{{ $n }}</span>
+                            <i class="fa-solid fa-check text-[10px]" x-show="etapa > {{ $n }}" x-cloak></i>
+                        </div>
+                        <span class="hidden sm:block text-[9px] font-bold uppercase tracking-wider mt-1 transition-colors"
+                              :class="etapa === {{ $n }} ? 'text-green-400' : etapa > {{ $n }} ? 'text-green-700' : 'text-gray-700'">{{ $label }}</span>
+                    </div>
+                    @if($n < 5)
+                    <div class="flex-1 h-px mx-1.5 step-connector"
+                         :class="etapa > {{ $n }} ? 'bg-green-500' : 'bg-gray-800'"></div>
+                    @endif
+                </div>
+                @endforeach
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════ CONTEÚDO PRINCIPAL ═══════════════ -->
-    <div class="max-w-lg mx-auto px-4 py-6">
+    {{-- ══════════════════════════════════════
+         CONTEÚDO PRINCIPAL
+    ══════════════════════════════════════ --}}
+    <div class="max-w-xl mx-auto px-5 pt-6"
+         :class="etapa > 1 && etapa < 6 ? 'pb-28' : 'pb-16'">
 
-        <!-- Etapa 1: Selecionar serviço -->
-        <div x-show="etapa === 1" x-transition.opacity class="space-y-3">
-            <div class="mb-6">
-                <p class="text-xs font-bold text-green-400 uppercase tracking-widest mb-1">Passo 1 de 5</p>
-                <h2 class="text-2xl font-bold text-white tracking-tight">Escolha o serviço</h2>
+        {{-- ─── ETAPA 1: CATÁLOGO ─────────────────────────────── --}}
+        <div x-show="etapa === 1"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0">
+
+            {{-- Search --}}
+            <div class="relative mb-5">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none"></i>
+                <input type="text" x-model="busca" placeholder="Buscar serviço..."
+                    class="w-full bg-gray-900/70 border border-gray-800 rounded-2xl pl-11 pr-4 py-3.5 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-green-600 focus:bg-gray-900 transition-all">
+                <button type="button" x-show="busca" @click="busca = ''"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-400 transition-colors" x-cloak>
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            {{-- Section label --}}
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest">Serviços disponíveis</p>
+                <p class="text-[10px] text-gray-700">{{ $servicos->count() }} ao total</p>
+            </div>
+
+            {{-- Service list --}}
+            <div class="space-y-2">
             @forelse($servicos as $s)
-            <button @click="servico_id = {{ $s->id }}; servico_nome = '{{ $s->nome }}'; avancarDeServico()"
-                class="card-service relative flex flex-col text-left bg-gray-900 border-2 border-gray-800 rounded-2xl overflow-hidden group hover:border-green-500/60 transition-all">
+            <button type="button"
+                data-nome="{{ mb_strtolower($s->nome . ' ' . ($s->descricao ?? '')) }}"
+                x-show="!busca || $el.dataset.nome.indexOf(busca.toLowerCase()) !== -1"
+                @click="servico_id = {{ $s->id }}; servico_nome = '{{ addslashes($s->nome) }}'; avancarDeServico()"
+                class="svc-card w-full flex items-center gap-4 p-3.5 rounded-2xl border border-gray-800/70 bg-gray-900/40 text-left group">
 
-                <!-- Foto do serviço -->
-                <div class="aspect-square w-full bg-gray-800 overflow-hidden">
+                {{-- Thumbnail --}}
+                <div class="w-14 h-14 rounded-xl overflow-hidden shrink-0 flex-none">
                     @if($s->imagem_url)
-                        <img src="{{ $s->imagem_url }}" alt="{{ $s->nome }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <img src="{{ $s->imagem_url }}" alt="{{ $s->nome }}" class="w-full h-full object-cover">
                     @else
-                        <div class="w-full h-full flex items-center justify-center text-green-700/60">
-                            <i class="fa-solid fa-scissors text-3xl"></i>
+                        <div class="w-full h-full flex items-center justify-center rounded-xl"
+                             style="background:{{ $s->cor ?? '#16a34a' }}15; border:1px solid {{ $s->cor ?? '#16a34a' }}28;">
+                            <i class="fa-solid fa-scissors text-xl" style="color:{{ $s->cor ?? '#4ade80' }}cc;"></i>
                         </div>
                     @endif
-                    <div class="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/40 backdrop-blur-sm border border-white/30 flex items-center justify-center group-hover:bg-green-500 group-hover:border-green-500 transition-colors">
-                        <i class="fa-solid fa-chevron-right text-[10px] text-white"></i>
+                </div>
+
+                {{-- Info --}}
+                <div class="flex-1 min-w-0">
+                    <p class="font-bold text-white text-sm group-hover:text-green-300 transition-colors leading-snug truncate">{{ $s->nome }}</p>
+                    <div class="flex items-center gap-2 mt-1 flex-wrap">
+                        <span class="inline-flex items-center gap-1 bg-gray-800/80 text-gray-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            <i class="fa-regular fa-clock text-[9px]"></i> {{ $s->duracao_minutos }}min
+                        </span>
+                        @if($s->descricao)
+                        <span class="text-[11px] text-gray-600 truncate max-w-[120px]">{{ Str::limit($s->descricao, 30) }}</span>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Informações -->
-                <div class="p-3.5 flex-1 flex flex-col">
-                    <p class="font-bold text-white text-sm leading-snug line-clamp-2 group-hover:text-green-300 transition-colors">{{ $s->nome }}</p>
-                    <p class="text-xs text-gray-500 mt-1 font-medium"><i class="fa-regular fa-clock mr-1"></i>{{ $s->duracao_minutos }} min</p>
-                    <p class="font-black text-green-400 text-base mt-auto pt-2">R$ {{ number_format($s->preco, 2, ',', '.') }}</p>
+                {{-- Price --}}
+                <div class="shrink-0 flex flex-col items-end gap-2.5">
+                    <span class="font-black text-green-400 text-base whitespace-nowrap">R$ {{ number_format($s->preco, 2, ',', '.') }}</span>
+                    <div class="w-7 h-7 rounded-full bg-gray-800 group-hover:bg-green-500 flex items-center justify-center transition-all">
+                        <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white transition-colors"></i>
+                    </div>
                 </div>
             </button>
             @empty
-            <div class="col-span-2 text-center py-12 rounded-2xl border border-dashed border-gray-800">
-                <i class="fa-solid fa-calendar-xmark text-gray-700 text-3xl mb-3"></i>
-                <p class="text-gray-500 font-medium">Nenhum serviço disponível no momento.</p>
+            <div class="text-center py-16 rounded-2xl border border-dashed border-gray-800/50">
+                <i class="fa-solid fa-scissors text-gray-800 text-3xl mb-3 block"></i>
+                <p class="text-gray-500 text-sm font-medium">Nenhum serviço cadastrado.</p>
             </div>
             @endforelse
             </div>
         </div>
 
-        <!-- Etapa 2: Selecionar profissional -->
-        <div x-show="etapa === 2" x-transition.opacity class="space-y-3" style="display: none;">
+        {{-- ─── ETAPA 2: PROFISSIONAIS ────────────────────────── --}}
+        <div x-show="etapa === 2"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             style="display:none;">
+
             <div class="flex items-center gap-3 mb-6">
-                <button @click="etapa = 1"
-                    class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors flex-shrink-0">
-                    <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
+                <button type="button" @click="etapa = 1"
+                    class="w-9 h-9 flex items-center justify-center bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors shrink-0">
+                    <i class="fa-solid fa-arrow-left text-gray-300 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest">Passo 2 de 5</p>
-                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Profissional</h2>
+                    <h2 class="text-lg font-black text-white tracking-tight">Escolha o profissional</h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Para <span class="text-green-400 font-semibold" x-text="servico_nome"></span></p>
                 </div>
             </div>
 
-            @if(!$preselected)
-            <button @click="profissional_id = ''; profissional_nome = 'Qualquer profissional'; proximaEtapa(3)"
-                class="card-service w-full flex items-center gap-4 p-5 rounded-2xl group">
-                <div class="w-12 h-12 rounded-2xl bg-gray-800/80 border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/20 transition-colors">
-                    <i class="fa-solid fa-shuffle text-gray-400 group-hover:text-green-400"></i>
-                </div>
-                <div class="text-left flex-1">
-                    <p class="font-bold text-white text-base group-hover:text-green-300 transition-colors">Qualquer profissional</p>
-                    <p class="text-xs text-gray-500 mt-0.5 font-medium">Primeiro disponível</p>
-                </div>
-                <div class="w-7 h-7 rounded-full bg-white/5 group-hover:bg-green-500 flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white"></i>
-                </div>
-            </button>
-            @endif
+            {{-- Lista de profissionais --}}
+            <div class="rounded-2xl border border-gray-800/70 overflow-hidden divide-y divide-gray-800/60">
 
-            @foreach($profissionais as $p)
-            <button @click="profissional_id = {{ $p->id }}; profissional_nome = '{{ $p->nome }}'; proximaEtapa(3)"
-                class="card-service w-full flex items-center gap-4 p-5 rounded-2xl group">
-                <div class="w-12 h-12 rounded-2xl bg-green-900/40 border border-green-600/40 flex items-center justify-center font-black text-green-400 text-lg flex-shrink-0 group-hover:bg-green-500/30 transition-colors">
-                    {{ $p->initials }}
-                </div>
-                <div class="text-left flex-1">
-                    <p class="font-bold text-white text-base group-hover:text-green-300 transition-colors">
-                        {{ $p->nome }}
-                        @if($preselected && $preselected->id === $p->id)
-                            <span class="ml-2 px-2 py-0.5 bg-green-500 text-white text-[10px] uppercase font-black rounded-md">Sugerido</span>
-                        @endif
-                    </p>
-                    <p class="text-xs text-gray-500 mt-0.5 font-medium">Especialista</p>
-                </div>
-                <div class="w-7 h-7 rounded-full bg-white/5 group-hover:bg-green-500 flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-500 group-hover:text-white"></i>
-                </div>
-            </button>
-            @endforeach
+                @if(!$preselected)
+                <button type="button"
+                    @click="profissional_id = ''; profissional_nome = 'Qualquer profissional'; proximaEtapa(3)"
+                    class="prof-row w-full flex items-center gap-4 px-4 py-4 text-left group">
+                    <div class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700/50 flex items-center justify-center shrink-0 group-hover:border-green-600/50 transition-colors">
+                        <i class="fa-solid fa-shuffle text-gray-400 group-hover:text-green-400 transition-colors"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-white text-sm group-hover:text-green-300 transition-colors">Qualquer disponível</p>
+                        <p class="text-[11px] text-gray-600 mt-0.5">Primeiro profissional livre</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-700 group-hover:text-green-500 transition-colors text-xs shrink-0"></i>
+                </button>
+                @endif
+
+                @foreach($profissionais as $p)
+                <button type="button"
+                    @click="profissional_id = {{ $p->id }}; profissional_nome = '{{ addslashes($p->nome) }}'; proximaEtapa(3)"
+                    class="prof-row w-full flex items-center gap-4 px-4 py-4 text-left group">
+                    @if($p->foto)
+                        <img src="{{ $p->foto }}" class="w-11 h-11 rounded-full object-cover border border-green-700/25 shrink-0 group-hover:border-green-500/40 transition-all">
+                    @else
+                        <div class="w-11 h-11 rounded-full bg-green-900/25 border border-green-700/25 flex items-center justify-center font-black text-green-400 text-base shrink-0 group-hover:bg-green-500/20 group-hover:border-green-500/40 transition-all">
+                            {{ $p->initials }}
+                        </div>
+                    @endif
+                    <div class="flex-1">
+                        <p class="font-bold text-white text-sm group-hover:text-green-300 transition-colors">{{ $p->nome }}</p>
+                        <p class="text-[11px] mt-0.5
+                            @if($preselected && $preselected->id === $p->id) text-green-500 font-bold @else text-gray-600 @endif">
+                            @if($preselected && $preselected->id === $p->id) Sugerido para este serviço @else Especialista @endif
+                        </p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-700 group-hover:text-green-500 transition-colors text-xs shrink-0"></i>
+                </button>
+                @endforeach
+            </div>
         </div>
 
-        <!-- Etapa 3: Selecionar data e hora -->
-        <div x-show="etapa === 3" x-transition.opacity class="space-y-6" style="display: none;">
-            <div class="flex items-center gap-3 mb-6">
-                <button @click="voltarDeDateHora()"
-                    class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors flex-shrink-0">
-                    <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
+        {{-- ─── ETAPA 3: DATA & HORA ──────────────────────────── --}}
+        <div x-show="etapa === 3"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             style="display:none;">
+
+            <div class="flex items-center gap-3 mb-5">
+                <button type="button" @click="voltarDeDateHora()"
+                    class="w-9 h-9 flex items-center justify-center bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors shrink-0">
+                    <i class="fa-solid fa-arrow-left text-gray-300 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest" x-text="exclusivo ? 'Passo 2 de 4' : 'Passo 3 de 5'"></p>
-                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Data &amp; Hora</h2>
+                    <h2 class="text-lg font-black text-white tracking-tight">Data & Horário</h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Escolha quando quer ser atendido</p>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Selecione a data</label>
-                <input type="date" x-model="data" min="{{ now()->format('Y-m-d') }}"
-                    class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
-            </div>
-
-            <div>
-                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Horários disponíveis</label>
-                <div class="grid grid-cols-4 gap-3">
-                    @foreach(['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30', '17:00', '17:30', '18:00', '18:30', '19:00'] as $h)
-                    <button @click="hora = '{{ $h }}'"
-                        :class="hora === '{{ $h }}' ? 'bg-green-500 border-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.4)]' : 'bg-gray-900 border-gray-800 text-gray-300 hover:border-green-500 hover:text-white'"
-                        class="border rounded-xl py-3 text-sm font-black transition-all">
-                        {{ $h }}
-                    </button>
-                    @endforeach
+            <div class="space-y-5">
+                {{-- Data --}}
+                <div>
+                    <label class="block text-[10px] font-black text-gray-600 uppercase tracking-widest mb-2">Data</label>
+                    <input type="date" x-model="data" min="{{ now()->format('Y-m-d') }}"
+                        class="w-full bg-gray-900/70 border border-gray-800 rounded-2xl px-5 py-4 text-white font-bold focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600/15 transition-all">
                 </div>
-            </div>
 
-            <button @click="if(hora) proximaEtapa({{ $produtos->count() > 0 ? 4 : 5 }})" :class="hora ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-gray-800 text-gray-500 cursor-not-allowed'"
-                class="w-full py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-colors mt-4">
-                Continuar
-            </button>
+                {{-- Horários --}}
+                <div>
+                    <label class="block text-[10px] font-black text-gray-600 uppercase tracking-widest mb-3">Horário disponível</label>
+                    <div class="grid grid-cols-4 sm:grid-cols-5 gap-2">
+                        @foreach(['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00'] as $h)
+                        <button type="button" @click="hora = '{{ $h }}'"
+                            :class="hora === '{{ $h }}' ? 'bg-green-500 border-green-500 text-white shadow-[0_0_12px_rgba(34,197,94,.35)]' : 'bg-gray-900/70 border-gray-800 text-gray-400 hover:border-green-700/50 hover:text-white'"
+                            class="time-chip border rounded-xl py-2.5 text-[13px] font-bold transition-all">
+                            {{ $h }}
+                        </button>
+                        @endforeach
+                    </div>
+                </div>
+
+                <button type="button"
+                    @click="if(hora) proximaEtapa({{ $produtos->count() > 0 ? 4 : 5 }})"
+                    :class="hora ? 'bg-green-500 hover:bg-green-600 cursor-pointer shadow-[0_4px_20px_rgba(34,197,94,.22)]' : 'bg-gray-800/60 text-gray-600 cursor-not-allowed'"
+                    class="w-full py-4 rounded-2xl text-sm font-black uppercase tracking-widest text-white transition-all">
+                    Continuar <i class="fa-solid fa-arrow-right ml-1.5"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- Etapa 4: Adicionais (Produtos) -->
+        {{-- ─── ETAPA 4: ADICIONAIS ───────────────────────────── --}}
         @if($produtos->count() > 0)
-        <div x-show="etapa === 4" x-transition.opacity class="space-y-6" style="display: none;">
+        <div x-show="etapa === 4"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             style="display:none;">
+
             <div class="flex items-center gap-3 mb-6">
-                <button @click="etapa = 3"
-                    class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors flex-shrink-0">
-                    <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
+                <button type="button" @click="etapa = 3"
+                    class="w-9 h-9 flex items-center justify-center bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors shrink-0">
+                    <i class="fa-solid fa-arrow-left text-gray-300 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest">Passo 4 de 5</p>
-                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Adicionais</h2>
+                    <h2 class="text-lg font-black text-white tracking-tight">Adicionais</h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Produtos para garantir no atendimento</p>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3 ml-1">Catálogo de Produtos</label>
-                <p class="text-sm text-gray-500 font-medium mb-4 ml-1">Deseja garantir algum produto? Ele estará separado para você após o serviço.</p>
-
-                <div class="grid grid-cols-2 gap-3">
-                    @foreach($produtos as $p)
-                    <label class="relative flex flex-col bg-gray-900 border-2 border-gray-800 rounded-2xl overflow-hidden cursor-pointer hover:border-green-500/60 transition-all group"
-                           :class="produtos_ids.includes('{{ $p->id }}') ? 'border-green-500 ring-2 ring-green-500/30' : ''">
-                        <input type="checkbox" value="{{ $p->id }}" x-model="produtos_ids" class="sr-only">
-
-                        <!-- Selo de selecionado -->
-                        <div class="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full flex items-center justify-center border-2 transition-all"
-                             :class="produtos_ids.includes('{{ $p->id }}') ? 'bg-green-500 border-green-500' : 'bg-black/40 border-white/30 backdrop-blur-sm'">
-                            <i class="fa-solid fa-check text-[11px] transition-opacity" :class="produtos_ids.includes('{{ $p->id }}') ? 'text-white opacity-100' : 'opacity-0'"></i>
-                        </div>
-
-                        <!-- Foto do produto -->
-                        <div class="aspect-square w-full bg-gray-800 overflow-hidden">
-                            @if($p->imagem_url)
-                                <img src="{{ $p->imagem_url }}" alt="{{ $p->nome }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-600">
-                                    <i class="fa-solid fa-box text-3xl"></i>
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- Informações -->
-                        <div class="p-3.5 flex-1 flex flex-col">
-                            <p class="font-bold text-white text-sm leading-snug line-clamp-2">{{ $p->nome }}</p>
-                            <p class="font-black text-green-400 text-base mt-auto pt-2">R$ {{ number_format($p->preco_venda, 2, ',', '.') }}</p>
-                        </div>
-                    </label>
-                    @endforeach
-                </div>
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                @foreach($produtos as $p)
+                <label class="relative flex flex-col bg-gray-900/50 border-2 rounded-2xl overflow-hidden cursor-pointer transition-all group"
+                       :class="produtos_ids.includes('{{ $p->id }}') ? 'border-green-500 ring-2 ring-green-500/15' : 'border-gray-800 hover:border-green-700/50'">
+                    <input type="checkbox" value="{{ $p->id }}" x-model="produtos_ids" class="sr-only">
+                    <div class="absolute top-2.5 right-2.5 z-10 w-5 h-5 rounded-full flex items-center justify-center border-2 transition-all"
+                         :class="produtos_ids.includes('{{ $p->id }}') ? 'bg-green-500 border-green-500' : 'bg-black/50 border-white/20'">
+                        <i class="fa-solid fa-check text-[9px] text-white transition-opacity"
+                           :class="produtos_ids.includes('{{ $p->id }}') ? 'opacity-100' : 'opacity-0'"></i>
+                    </div>
+                    <div class="aspect-square bg-gray-800 overflow-hidden">
+                        @if($p->imagem_url)
+                            <img src="{{ $p->imagem_url }}" alt="{{ $p->nome }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center text-gray-700">
+                                <i class="fa-solid fa-box text-3xl"></i>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="p-3">
+                        <p class="font-bold text-white text-xs leading-snug line-clamp-2">{{ $p->nome }}</p>
+                        <p class="font-black text-green-400 text-sm mt-1.5">R$ {{ number_format($p->preco_venda, 2, ',', '.') }}</p>
+                    </div>
+                </label>
+                @endforeach
             </div>
 
-            <button @click="proximaEtapa(5)" class="w-full py-4 bg-green-500 text-white hover:bg-green-600 rounded-2xl text-sm font-black uppercase tracking-widest transition-colors mt-4">
-                Ir para Confirmação
+            <button type="button" @click="proximaEtapa(5)"
+                class="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-2xl text-sm font-black uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(34,197,94,.22)]">
+                <span x-text="produtos_ids.length > 0 ? 'Continuar com ' + produtos_ids.length + ' produto(s)' : 'Continuar sem adicionais'"></span>
+                <i class="fa-solid fa-arrow-right ml-2"></i>
             </button>
         </div>
         @endif
 
-        <!-- Etapa 5: Confirmação -->
-        <div x-show="etapa === 5" x-transition.opacity class="space-y-6" style="display: none;">
+        {{-- ─── ETAPA 5: CONFIRMAÇÃO ──────────────────────────── --}}
+        <div x-show="etapa === 5"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             style="display:none;">
+
             <div class="flex items-center gap-3 mb-6">
-                <button @click="etapa = {{ $produtos->count() > 0 ? 4 : 3 }}"
-                    class="w-9 h-9 flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-colors flex-shrink-0">
-                    <i class="fa-solid fa-arrow-left text-gray-400 text-sm"></i>
+                <button type="button" @click="etapa = {{ $produtos->count() > 0 ? 4 : 3 }}"
+                    class="w-9 h-9 flex items-center justify-center bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors shrink-0">
+                    <i class="fa-solid fa-arrow-left text-gray-300 text-sm"></i>
                 </button>
                 <div>
-                    <p class="text-xs font-bold text-green-400 uppercase tracking-widest">Passo 5 de 5</p>
-                    <h2 class="text-2xl font-bold text-white tracking-tight leading-none">Confirmar Reserva</h2>
+                    <h2 class="text-lg font-black text-white tracking-tight">Confirmar reserva</h2>
+                    <p class="text-sm text-gray-500 mt-0.5">Último passo — preencha seus dados</p>
                 </div>
             </div>
 
-            <!-- Resumo -->
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6 space-y-4">
-                <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-3 mb-4">Resumo do Pedido</h3>
-                
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-400 font-medium">Serviço</span>
-                    <span class="text-sm font-bold text-white" x-text="servico_nome"></span>
+            {{-- Resumo --}}
+            <div class="bg-gray-900/50 border border-gray-800/70 rounded-2xl overflow-hidden mb-5">
+                <div class="px-5 py-3 border-b border-gray-800/60 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-green-600 text-xs"></i>
+                    <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest">Resumo da reserva</p>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-400 font-medium">Profissional</span>
-                    <span class="text-sm font-bold text-white" x-text="profissional_nome"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-400 font-medium">Data</span>
-                    <span class="text-sm font-bold text-white" x-text="data.split('-').reverse().join('/')"></span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-sm text-gray-400 font-medium">Horário</span>
-                    <span class="text-sm font-bold text-white" x-text="hora"></span>
-                </div>
-                
-                <div x-show="produtos_ids.length > 0" class="pt-3 border-t border-gray-800 mt-3">
-                    <div class="flex justify-between items-start">
-                        <span class="text-sm text-gray-400 font-medium">Produtos</span>
-                        <span class="text-sm font-bold text-green-400 text-right" x-text="produtos_ids.length + ' item(ns)'"></span>
+                <div class="divide-y divide-gray-800/50">
+                    <div class="grid grid-cols-2 px-5 py-3.5">
+                        <span class="text-sm text-gray-500">Serviço</span>
+                        <span class="text-sm font-bold text-white text-right truncate" x-text="servico_nome"></span>
+                    </div>
+                    <div class="grid grid-cols-2 px-5 py-3.5">
+                        <span class="text-sm text-gray-500">Profissional</span>
+                        <span class="text-sm font-bold text-white text-right" x-text="profissional_nome"></span>
+                    </div>
+                    <div class="grid grid-cols-2 px-5 py-3.5">
+                        <span class="text-sm text-gray-500">Data</span>
+                        <span class="text-sm font-bold text-white text-right" x-text="data.split('-').reverse().join('/')"></span>
+                    </div>
+                    <div class="grid grid-cols-2 px-5 py-3.5">
+                        <span class="text-sm text-gray-500">Horário</span>
+                        <span class="text-sm font-bold text-green-400 text-right" x-text="hora"></span>
+                    </div>
+                    <div x-show="produtos_ids.length > 0" class="grid grid-cols-2 px-5 py-3.5">
+                        <span class="text-sm text-gray-500">Adicionais</span>
+                        <span class="text-sm font-bold text-green-400 text-right" x-text="produtos_ids.length + ' produto(s)'"></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Dados do cliente -->
-            <div class="space-y-4">
-                <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">Seus Dados</h3>
-                
-                <div>
-                    <input type="text" x-model="nomeCliente"
-                        class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-green-500 transition-all placeholder-gray-600"
-                        placeholder="Nome completo">
-                </div>
-                <div>
-                    <input type="tel" x-model="telefone" @input="checkVipStatus"
-                        class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white font-bold focus:outline-none focus:ring-2 focus:ring-green-500 transition-all placeholder-gray-600"
-                        placeholder="WhatsApp (com DDD)">
-                </div>
+            {{-- Campos --}}
+            <div class="space-y-3">
+                <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest">Seus dados</p>
 
-                <!-- Toggle Sou VIP -->
-                <div class="flex items-center gap-3 bg-gray-900/50 border border-gray-800 rounded-2xl p-4">
-                    <input type="checkbox" id="is_vip_checkbox" x-model="isVipChecked" @change="checkVipStatus" class="w-5 h-5 rounded border-gray-700 text-green-500 focus:ring-green-500 bg-gray-900 cursor-pointer">
-                    <label for="is_vip_checkbox" class="text-sm font-bold text-gray-300 cursor-pointer flex-1">Sou Cliente VIP</label>
-                </div>
+                <input type="text" x-model="nomeCliente" placeholder="Nome completo"
+                    class="w-full bg-gray-900/70 border border-gray-800 rounded-2xl px-5 py-4 text-white font-medium text-sm placeholder-gray-600 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600/15 transition-all">
 
-                <!-- Feedback VIP -->
-                <div x-show="isVipChecked && isVipVerificado" x-transition class="bg-green-900/20 border border-green-500/30 rounded-2xl p-4 flex items-start gap-3">
-                    <i class="fa-solid fa-crown text-green-400 mt-1"></i>
-                    <div>
-                        <p class="text-sm font-bold text-green-400 uppercase tracking-widest" x-text="'Plano ' + vipPlan + ' Ativado!'"></p>
-                        <p class="text-[10px] font-medium text-gray-400 mt-0.5">Seus benefícios VIP serão aplicados automaticamente nesta reserva.</p>
+                <input type="tel" x-model="telefone" @input="formatTelefone" placeholder="WhatsApp com DDD"
+                    class="w-full bg-gray-900/70 border border-gray-800 rounded-2xl px-5 py-4 text-white font-medium text-sm placeholder-gray-600 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600/15 transition-all">
+
+                {{-- Checkbox VIP --}}
+                <label class="flex items-center gap-3.5 bg-gray-900/40 border border-gray-800 hover:border-gray-700 rounded-2xl p-4 cursor-pointer transition-all"
+                       :class="isVipChecked ? 'border-amber-500/30 bg-amber-950/20' : ''">
+                    <input type="checkbox" id="is_vip_checkbox" x-model="isVipChecked" @change="toggleVip"
+                        class="w-5 h-5 rounded border-gray-700 text-green-500 focus:ring-green-500 bg-gray-800 cursor-pointer shrink-0">
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-white">Sou Cliente VIP</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">Informe seu CPF para aplicar os benefícios</p>
+                    </div>
+                    <i class="fa-solid fa-crown shrink-0 transition-colors"
+                       :class="isVipChecked ? 'text-amber-400' : 'text-amber-500/30'"></i>
+                </label>
+
+                {{-- Campo CPF — aparece ao marcar VIP --}}
+                <div x-show="isVipChecked" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" style="display:none;">
+                    <div class="relative">
+                        <i class="fa-solid fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-amber-500/50 text-sm pointer-events-none"></i>
+                        <input type="text" x-model="cpf" @input="checkVipStatus" placeholder="CPF (000.000.000-00)"
+                            maxlength="14"
+                            class="w-full bg-gray-900/70 border rounded-2xl pl-11 pr-4 py-4 text-white font-medium text-sm placeholder-gray-600 focus:outline-none focus:ring-2 transition-all"
+                            :class="isVipVerificado ? 'border-green-500 focus:border-green-500 focus:ring-green-500/15' : 'border-amber-800/50 focus:border-amber-500 focus:ring-amber-500/10'">
+                    </div>
+
+                    {{-- VIP confirmado --}}
+                    <div x-show="isVipVerificado" x-transition
+                         class="flex items-center gap-3 bg-green-950/60 border border-green-500/25 rounded-2xl p-4 mt-3">
+                        <div class="w-8 h-8 bg-green-500/15 rounded-xl flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-crown text-green-400 text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-green-400" x-text="'Plano ' + vipPlan + ' ativo!'"></p>
+                            <p class="text-xs text-gray-400 mt-0.5">Benefícios serão aplicados automaticamente.</p>
+                        </div>
+                    </div>
+
+                    {{-- CPF não encontrado --}}
+                    <div x-show="!isVipVerificado && cpf.length === 14" x-transition
+                         class="flex items-start gap-3 bg-red-950/40 border border-red-500/20 rounded-2xl p-4 mt-3">
+                        <i class="fa-solid fa-triangle-exclamation text-red-400 mt-0.5 shrink-0 text-sm"></i>
+                        <div>
+                            <p class="text-sm font-bold text-red-400">CPF não encontrado</p>
+                            <p class="text-xs text-gray-500 mt-0.5">Verifique o CPF cadastrado no Clube VIP.</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Aviso VIP Inválido -->
-                <div x-show="isVipChecked && !isVipVerificado && telefone.length >= 14" x-transition class="bg-red-900/10 border border-red-500/20 rounded-2xl p-4 flex items-start gap-3">
-                    <i class="fa-solid fa-triangle-exclamation text-red-400 mt-1"></i>
-                    <div>
-                        <p class="text-xs font-bold text-red-400">Assinatura não encontrada</p>
-                        <p class="text-[10px] font-medium text-gray-500 mt-0.5">Verifique se o WhatsApp digitado é o mesmo cadastrado no seu Clube VIP.</p>
-                    </div>
-                </div>
-
-                <div>
-                    <textarea x-model="descricao" rows="2" placeholder="Deixe uma observação para o profissional (opcional)"
-                        class="w-full bg-gray-900 border border-gray-800 rounded-2xl px-5 py-4 text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-green-500 transition-all resize-none placeholder-gray-600"></textarea>
-                </div>
+                <textarea x-model="descricao" rows="2" placeholder="Observação (opcional)"
+                    class="w-full bg-gray-900/70 border border-gray-800 rounded-2xl px-5 py-4 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600/15 transition-all resize-none"></textarea>
             </div>
 
-            <button @click="confirmar()" :disabled="isLoading || !nomeCliente || !telefone"
-                class="w-full bg-green-500 hover:bg-green-600 py-5 rounded-2xl text-sm font-black uppercase tracking-widest text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(34,197,94,0.3)] mt-6">
-                <i class="fa-solid fa-check mr-2" x-show="!isLoading"></i>
-                <i class="fa-solid fa-spinner fa-spin mr-2" x-show="isLoading" style="display: none;"></i>
-                <span x-text="isLoading ? 'Processando...' : 'Confirmar Reserva'"></span>
+            <button type="button" @click="confirmar()" :disabled="isLoading || !nomeCliente || !telefone"
+                class="w-full mt-5 bg-green-500 hover:bg-green-600 py-5 rounded-2xl text-sm font-black uppercase tracking-widest text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_24px_rgba(34,197,94,.22)]">
+                <template x-if="!isLoading"><span><i class="fa-solid fa-calendar-check mr-2"></i>Confirmar Reserva</span></template>
+                <template x-if="isLoading"><span><i class="fa-solid fa-spinner fa-spin mr-2"></i>Processando...</span></template>
             </button>
         </div>
 
-        <!-- Etapa 6: Sucesso -->
-        <div x-show="etapa === 6" x-transition.opacity class="text-center py-16 space-y-6" style="display: none;">
-            <!-- Ícone animado -->
-            <div class="relative mx-auto w-28 h-28">
-                <div class="absolute inset-0 bg-green-500/10 rounded-full animate-ping opacity-30"></div>
-                <div class="relative w-28 h-28 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center">
-                    <i class="fa-solid fa-check text-green-400 text-4xl"></i>
+        {{-- ─── ETAPA 6: SUCESSO ──────────────────────────────── --}}
+        <div x-show="etapa === 6"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="text-center py-10 space-y-6"
+             style="display:none;">
+
+            <div class="relative mx-auto w-24 h-24">
+                <div class="absolute inset-0 bg-green-500/10 rounded-full animate-ping opacity-40"></div>
+                <div class="relative w-24 h-24 bg-green-500/8 border border-green-500/25 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-check text-green-400 text-3xl"></i>
                 </div>
             </div>
 
             <div>
-                <p class="text-xs font-bold text-green-400 uppercase tracking-widest mb-2">Tudo certo!</p>
-                <h2 class="text-3xl font-bold text-white tracking-tight">Reserva Confirmada!</h2>
-                <p class="text-gray-400 font-medium mt-2">Você receberá os detalhes no seu WhatsApp.</p>
+                <p class="text-[10px] font-black text-green-400 uppercase tracking-widest mb-2">Reserva confirmada!</p>
+                <h2 class="text-2xl font-black text-white">Até breve!</h2>
+                <p class="text-sm text-gray-400 mt-2">Você receberá os detalhes no WhatsApp.</p>
             </div>
 
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6 text-left space-y-3 mx-auto">
-                <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest border-b border-white/10 pb-3 mb-3">Resumo</h3>
-                <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Serviço</span><span class="text-sm font-bold text-white" x-text="servico_nome"></span></div>
-                <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Profissional</span><span class="text-sm font-bold text-white" x-text="profissional_nome"></span></div>
-                <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Data</span><span class="text-sm font-bold text-white" x-text="data.split('-').reverse().join('/')"></span></div>
-                <div class="flex justify-between items-center"><span class="text-sm text-gray-400">Horário</span><span class="text-sm font-bold text-green-400" x-text="hora"></span></div>
+            <div class="bg-gray-900/50 border border-gray-800/70 rounded-2xl overflow-hidden text-left">
+                <div class="divide-y divide-gray-800/50">
+                    <div class="grid grid-cols-2 px-5 py-3.5"><span class="text-sm text-gray-500">Serviço</span><span class="text-sm font-bold text-white text-right truncate" x-text="servico_nome"></span></div>
+                    <div class="grid grid-cols-2 px-5 py-3.5"><span class="text-sm text-gray-500">Profissional</span><span class="text-sm font-bold text-white text-right" x-text="profissional_nome"></span></div>
+                    <div class="grid grid-cols-2 px-5 py-3.5"><span class="text-sm text-gray-500">Data</span><span class="text-sm font-bold text-white text-right" x-text="data.split('-').reverse().join('/')"></span></div>
+                    <div class="grid grid-cols-2 px-5 py-3.5"><span class="text-sm text-gray-500">Horário</span><span class="text-sm font-bold text-green-400 text-right" x-text="hora"></span></div>
+                </div>
             </div>
 
-            <button @click="window.location.reload()"
-                class="inline-flex items-center gap-2 mt-4 px-6 py-3 bg-green-500/10 border border-green-500/30 hover:bg-green-500/20 rounded-full text-xs font-black text-green-400 uppercase tracking-widest transition-all">
-                Fazer nova reserva <i class="fa-solid fa-arrow-right"></i>
+            <button type="button" @click="window.location.reload()"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/8 hover:bg-white/10 rounded-full text-xs font-bold text-gray-400 uppercase tracking-widest transition-all">
+                <i class="fa-solid fa-plus text-green-500 text-xs"></i> Nova reserva
             </button>
         </div>
 
+    </div>{{-- /main --}}
+
+    {{-- ══════════════════════════════════════
+         BARRA STICKY DE SELEÇÃO (etapas 2-5)
+    ══════════════════════════════════════ --}}
+    <div x-show="etapa > 1 && etapa < 6" x-transition x-cloak
+         class="sel-bar fixed bottom-0 left-0 right-0 z-40 border-t border-white/6 px-5 py-3.5">
+        <div class="max-w-xl mx-auto flex items-center gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-green-500/12 border border-green-500/18 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-scissors text-green-400 text-xs"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-white truncate leading-none" x-text="servico_nome"></p>
+                <p class="text-[11px] text-gray-500 mt-0.5 truncate"
+                   x-text="hora ? profissional_nome + ' · ' + hora : (profissional_nome || 'Definindo detalhes...')"></p>
+            </div>
+            <span class="text-[10px] font-black text-gray-600 uppercase tracking-wider shrink-0" x-text="'Etapa ' + etapa + ' / 5'"></span>
+        </div>
     </div>
 
     <script>
@@ -480,9 +602,9 @@
 
         function booking() {
             return {
-                // Modo exclusivo: link de profissional → começa no serviço, pula etapa 2
                 etapa: 1,
                 exclusivo: exclusivo,
+                busca: '',
                 barbearia_id: '{{ $barbearia->id }}',
                 servico_id: '',
                 servico_nome: '',
@@ -494,17 +616,14 @@
                 produtos_ids: [],
                 nomeCliente: '',
                 telefone: '',
+                cpf: '',
                 isVipChecked: false,
                 isVipVerificado: false,
                 vipPlan: '',
                 isLoading: false,
 
-                init() {
-                    this.etapa = 1;
-                },
+                init() { this.etapa = 1; },
 
-                // Se exclusivo: serviço → data/hora (pula profissional)
-                // Se normal:    serviço → profissional → data/hora
                 avancarDeServico() {
                     this.proximaEtapa(this.exclusivo ? 3 : 2);
                 },
@@ -518,22 +637,35 @@
                     this.etapa = prox;
                 },
 
-                checkVipStatus() {
+                // Formata telefone sem disparar check VIP
+                formatTelefone() {
                     let val = this.telefone.replace(/\D/g, '').substring(0, 11);
                     this.telefone = val.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d)(\d{4})$/, '$1-$2');
+                },
 
-                    if (this.isVipChecked && val.length >= 10) {
-                        fetch(`/api/check-vip?barbearia_id=${this.barbearia_id}&telefone=${encodeURIComponent(this.telefone)}&t=${Date.now()}`, { cache: 'no-store' })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.isVip) {
-                                    this.isVipVerificado = true;
-                                    this.vipPlan = data.plano;
-                                } else {
-                                    this.isVipVerificado = false;
-                                    this.vipPlan = '';
-                                }
-                            });
+                // Reseta o CPF/status ao desmarcar VIP
+                toggleVip() {
+                    if (!this.isVipChecked) {
+                        this.cpf = '';
+                        this.isVipVerificado = false;
+                        this.vipPlan = '';
+                    }
+                },
+
+                // Verifica VIP pelo CPF digitado
+                checkVipStatus() {
+                    // Formata CPF: 000.000.000-00
+                    let raw = this.cpf.replace(/\D/g, '').substring(0, 11);
+                    let fmt = raw
+                        .replace(/(\d{3})(\d)/, '$1.$2')
+                        .replace(/(\d{3})(\d)/, '$1.$2')
+                        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    this.cpf = fmt;
+
+                    if (raw.length === 11) {
+                        fetch(`/webhooks/check-vip?barbearia_id=${this.barbearia_id}&cpf=${encodeURIComponent(this.cpf)}&telefone=${encodeURIComponent(this.telefone)}&t=${Date.now()}`, { cache: 'no-store' })
+                            .then(r => r.json())
+                            .then(d => { this.isVipVerificado = d.isVip; this.vipPlan = d.isVip ? d.plano : ''; });
                     } else {
                         this.isVipVerificado = false;
                         this.vipPlan = '';
@@ -541,13 +673,8 @@
                 },
 
                 confirmar() {
-                    if(!this.nomeCliente || !this.telefone) {
-                        alert('Preencha seu nome e WhatsApp.');
-                        return;
-                    }
-
+                    if (!this.nomeCliente || !this.telefone) { alert('Preencha seu nome e WhatsApp.'); return; }
                     this.isLoading = true;
-
                     fetch('/agendar', {
                         method: 'POST',
                         headers: {
@@ -558,6 +685,7 @@
                         body: JSON.stringify({
                             nomeCliente: this.nomeCliente,
                             telefone: this.telefone,
+                            cpf: this.cpf,
                             profissional_id: this.profissional_id,
                             servico_id: this.servico_id,
                             barbearia_id: this.barbearia_id,
@@ -568,20 +696,13 @@
                             is_vip: this.isVipVerificado
                         })
                     })
-                    .then(response => response.json())
-                    .then(data => {
+                    .then(r => r.json())
+                    .then(d => {
                         this.isLoading = false;
-                        if(data.success) {
-                            this.proximaEtapa(6);
-                        } else {
-                            alert('Erro ao agendar. Tente novamente. Detalhes: ' + JSON.stringify(data.errors || data.message));
-                        }
+                        if (d.success) { this.proximaEtapa(6); }
+                        else { alert('Erro ao agendar. Tente novamente.\n' + JSON.stringify(d.errors || d.message)); }
                     })
-                    .catch(error => {
-                        this.isLoading = false;
-                        alert('Erro ao agendar. Verifique a conexão.');
-                        console.error('Error:', error);
-                    });
+                    .catch(() => { this.isLoading = false; alert('Erro na conexão. Tente novamente.'); });
                 }
             }
         }

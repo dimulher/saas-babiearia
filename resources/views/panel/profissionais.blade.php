@@ -54,22 +54,26 @@
             <table class="w-full text-sm text-left">
                 <thead class="bg-gray-900/50 text-gray-500 uppercase text-[9px] font-bold tracking-widest">
                     <tr>
-                        <th class="px-6 py-4">Especialista</th>
-                        <th class="px-6 py-4">Contato</th>
-                        <th class="px-6 py-4 text-center">Comissão</th>
-                        <th class="px-6 py-4 text-center">Agenda Online</th>
-                        <th class="px-6 py-4 text-right">Ações</th>
+                        <th class="px-3 sm:px-6 py-4">Especialista</th>
+                        <th class="px-3 sm:px-6 py-4">Contato</th>
+                        <th class="px-3 sm:px-6 py-4 text-center">Comissão</th>
+                        <th class="px-3 sm:px-6 py-4 text-center">Agenda Online</th>
+                        <th class="px-3 sm:px-6 py-4 text-right">Ações</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-800/50">
                     @forelse($profissionais as $profissional)
                         <tr class="hover:bg-gray-900/40 transition-colors group">
-                            <td class="px-6 py-5">
+                            <td class="px-3 sm:px-6 py-5">
                                 <div class="flex items-center gap-4">
                                     <div class="relative">
-                                        <div class="w-12 h-12 rounded-xl bg-green-900/30 flex items-center justify-center text-green-400 font-bold text-sm border border-green-800/50 group-hover:bg-green-500 group-hover:text-white group-hover:border-green-500 transition-all">
-                                            {{ $profissional->initials }}
-                                        </div>
+                                        @if($profissional->foto)
+                                            <img src="{{ $profissional->foto }}" class="w-12 h-12 rounded-xl object-cover border border-gray-800 group-hover:border-green-500 transition-all">
+                                        @else
+                                            <div class="w-12 h-12 rounded-xl bg-green-900/30 flex items-center justify-center text-green-400 font-bold text-sm border border-green-800/50 group-hover:bg-green-500 group-hover:text-white group-hover:border-green-500 transition-all">
+                                                {{ $profissional->initials }}
+                                            </div>
+                                        @endif
                                         @if($profissional->is_online)
                                             <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#111827] rounded-full"></div>
                                         @else
@@ -86,7 +90,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-5">
+                            <td class="px-3 sm:px-6 py-5">
                                 <div class="text-xs font-medium text-gray-300">{{ $profissional->telefone ?? '—' }}</div>
                                 <div class="text-[10px] text-gray-500 mt-0.5">{{ $profissional->email ?? 'Sem e-mail' }}</div>
                                 @if($profissional->codigo_acesso)
@@ -99,10 +103,10 @@
                                     </div>
                                 @endif
                             </td>
-                            <td class="px-6 py-5 text-center font-bold text-white text-base tracking-tight">
+                            <td class="px-3 sm:px-6 py-5 text-center font-bold text-white text-base tracking-tight">
                                 {{ number_format($profissional->comissao_percentual, 0) }}%
                             </td>
-                            <td class="px-6 py-5 text-center">
+                            <td class="px-3 sm:px-6 py-5 text-center">
                                 @if($profissional->aceita_agendamento_online && $profissional->is_online)
                                     <span class="px-3 py-1 bg-emerald-900/30 text-emerald-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-emerald-800/50">Visível</span>
                                 @elseif($profissional->aceita_agendamento_online && !$profissional->is_online)
@@ -111,7 +115,7 @@
                                     <span class="px-3 py-1 bg-rose-900/30 text-rose-400 rounded-full text-[9px] font-bold uppercase tracking-widest border border-rose-800/50">Privado</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-5">
+                            <td class="px-3 sm:px-6 py-5">
                                 <div class="flex items-center justify-end gap-3">
                                     <button type="button" @click='confirmCode(@json($profissional))' class="text-green-400 hover:text-green-300 text-[10px] font-bold uppercase tracking-widest transition-colors">
                                         Gerar Código
@@ -140,15 +144,17 @@
     </div>
 
     <!-- Modal Novo/Editar Profissional -->
-    <div x-show="showModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4">
+    <div x-show="showModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div x-transition.opacity class="fixed inset-0 bg-black/70 backdrop-blur-sm" @click="showModal = false"></div>
-        <div x-show="showModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-             class="relative bg-[#111827] rounded-2xl shadow-2xl w-full max-w-lg border border-gray-800 z-10">
+        <div x-show="showModal"
+             x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 translate-y-4"
+             class="relative bg-[#111827] rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-lg border border-gray-800 z-10">
             <form :action="editMode ? `/panel/profissionais/${professional.id}` : '/panel/profissionais'" method="POST">
                 @csrf
                 <template x-if="editMode"><input type="hidden" name="_method" value="PUT"></template>
 
-                <div class="px-7 pt-7 pb-6">
+                <div class="px-5 sm:px-7 pt-6 sm:pt-7 pb-5 sm:pb-6">
                     <div class="flex items-center justify-between mb-7">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-xl bg-green-900/30 flex items-center justify-center text-green-400 border border-green-800/50">
@@ -186,7 +192,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-900/60 border-t border-gray-800 px-7 py-5 flex flex-col sm:flex-row-reverse gap-3">
+                <div class="bg-gray-900/60 border-t border-gray-800 px-5 sm:px-7 py-4 sm:py-5 flex flex-col sm:flex-row-reverse gap-3">
                     <button type="submit" class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-green-900/20" x-text="editMode ? 'Salvar Alterações' : 'Criar Cadastro'"></button>
                     <button type="button" @click="showModal = false" class="px-8 py-3 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">Cancelar</button>
                 </div>
@@ -195,10 +201,12 @@
     </div>
 
     <!-- Modal Exclusão -->
-    <div x-show="showDeleteModal" x-cloak class="fixed inset-0 z-[60] overflow-y-auto flex items-center justify-center p-4">
+    <div x-show="showDeleteModal" x-cloak class="fixed inset-0 z-[60] overflow-y-auto flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div x-transition.opacity class="fixed inset-0 bg-black/80 backdrop-blur-sm" @click="showDeleteModal = false"></div>
-        <div x-show="showDeleteModal" x-transition.scale.origin.bottom
-             class="relative bg-[#111827] rounded-2xl shadow-2xl w-full max-w-sm border border-gray-800 p-7 z-10">
+        <div x-show="showDeleteModal"
+             x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 translate-y-4"
+             class="relative bg-[#111827] rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-sm border border-gray-800 p-6 sm:p-7 z-10">
             <div class="flex flex-col items-center text-center">
                 <div class="w-14 h-14 rounded-full bg-rose-900/30 flex items-center justify-center text-rose-500 mb-5 border border-rose-800/50">
                     <i class="fa-solid fa-triangle-exclamation text-xl"></i>
@@ -217,10 +225,12 @@
     </div>
 
     <!-- Modal Código -->
-    <div x-show="showCodeModal" x-cloak class="fixed inset-0 z-[60] overflow-y-auto flex items-center justify-center p-4">
+    <div x-show="showCodeModal" x-cloak class="fixed inset-0 z-[60] overflow-y-auto flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div x-transition.opacity class="fixed inset-0 bg-black/80 backdrop-blur-sm" @click="showCodeModal = false"></div>
-        <div x-show="showCodeModal" x-transition.scale.origin.bottom
-             class="relative bg-[#111827] rounded-2xl shadow-2xl w-full max-w-sm border border-gray-800 p-7 z-10">
+        <div x-show="showCodeModal"
+             x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0 translate-y-4"
+             class="relative bg-[#111827] rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-sm border border-gray-800 p-6 sm:p-7 z-10">
             <div class="flex flex-col items-center text-center">
                 <div class="w-14 h-14 rounded-full bg-green-900/30 flex items-center justify-center text-green-400 mb-5 border border-green-800/50">
                     <i class="fa-solid fa-key text-xl"></i>
