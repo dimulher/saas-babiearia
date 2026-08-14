@@ -2,9 +2,9 @@
 @section('title', 'Entrar')
 
 @section('content')
-<div class="bg-[#111827] rounded-2xl border border-gray-800 p-10 glow-green relative z-10">
+<div class="bg-[#111827] rounded-2xl border border-gray-800 p-6 sm:p-10 glow-green relative z-10">
 
-    <a href="{{ route('login') }}" class="absolute top-8 left-8 inline-flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-white uppercase tracking-widest transition-colors">
+    <a href="{{ route('login') }}" class="absolute top-5 sm:top-8 left-5 sm:left-8 inline-flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-white uppercase tracking-widest transition-colors">
         <i class="fa-solid fa-arrow-left"></i> Voltar
     </a>
 
@@ -16,8 +16,11 @@
         <p class="text-gray-400 text-sm mt-1">Acesso do Proprietário</p>
     </div>
 
-    <form method="POST" action="{{ route('login.proprietario.post') }}" class="space-y-5">
+    <form method="POST" action="{{ route('login.proprietario.post') }}" class="space-y-5" autocomplete="off">
         @csrf
+        {{-- Campos isca para enganar o autofill do navegador --}}
+        <input type="text"     style="display:none" tabindex="-1" aria-hidden="true">
+        <input type="password" style="display:none" tabindex="-1" aria-hidden="true">
 
         @if(session('error'))
             <div class="bg-red-950/50 border border-red-800/50 text-red-400 text-[10px] font-bold uppercase tracking-widest px-4 py-3 rounded-xl">
@@ -31,7 +34,8 @@
                 <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-600">
                     <i class="fa-solid fa-envelope text-xs"></i>
                 </span>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required autocomplete="off" readonly
+                    onfocus="this.removeAttribute('readonly')"
                     class="block w-full pl-10 pr-4 py-3.5 bg-gray-900/60 border border-gray-700 rounded-xl text-sm font-medium text-white focus:ring-2 focus:ring-green-500/50 focus:border-green-600 focus:bg-gray-900 transition-all outline-none @error('email') border-red-600/50 @enderror"
                     placeholder="seu@email.com">
             </div>
@@ -46,7 +50,8 @@
                 <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-600">
                     <i class="fa-solid fa-lock text-xs"></i>
                 </span>
-                <input type="password" id="password" name="password" required
+                <input type="password" id="password" name="password" required autocomplete="new-password" readonly
+                    onfocus="this.removeAttribute('readonly')"
                     class="block w-full pl-10 pr-4 py-3.5 bg-gray-900/60 border border-gray-700 rounded-xl text-sm font-medium text-white focus:ring-2 focus:ring-green-500/50 focus:border-green-600 focus:bg-gray-900 transition-all outline-none @error('password') border-red-600/50 @enderror"
                     placeholder="••••••••">
             </div>
