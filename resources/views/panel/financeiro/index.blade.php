@@ -11,11 +11,16 @@
         this.$watch('activeTab', tab => this.$nextTick(() => requestAnimationFrame(() => glowInitChart(tab))));
     }
 }">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white">Financeiro</h1>
             <p class="text-sm text-gray-500 mt-1">Gestão completa das movimentações do seu estabelecimento.</p>
         </div>
+        <button onclick="gerarRelatorioPDF()"
+            class="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-green-700 text-gray-300 hover:text-green-400 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all group">
+            <i class="fa-solid fa-file-arrow-down text-sm group-hover:text-green-400 transition-colors"></i>
+            Baixar PDF
+        </button>
     </div>
 
     <!-- Tabs -->
@@ -695,6 +700,8 @@
     $__fluxoDep    = $__datas->map(fn($d) => (float) $__movDiario->get($d)->where('tipo','despesa')->sum('valor'))->values();
 @endphp
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script>
 // ── Dados PHP → JS ─────────────────────────────────────────────────────────
 const _fluxoLabels   = {!! json_encode($__fluxoLabels->toArray()) !!};
@@ -706,6 +713,186 @@ const _evolLabels    = {!! json_encode($faturamentoDiario->map(fn($d) => \Carbon
 const _evolData      = {!! json_encode($faturamentoDiario->pluck('total')->toArray()) !!};
 const _svcLabels     = {!! json_encode($servicosDistribuiucao->pluck('descricao')->toArray()) !!};
 const _svcData       = {!! json_encode($servicosDistribuiucao->pluck('qtd')->toArray()) !!};
+
+// ── Dados para PDF ─────────────────────────────────────────────────────────
+const _pdfMovimentacoes = {!! json_encode($movimentacoes->map(fn($m) => [
+    'data'            => \Carbon\Carbon::parse($m['data'])->format('d/m/Y'),
+    'descricao'       => $m['descricao'],
+    'categoria'       => $m['categoria'],
+    'tipo'            => $m['tipo'],
+    'valor'           => (float) $m['valor'],
+    'forma_pagamento' => $m['forma_pagamento'] ?? '-',
+])->values()->toArray()) !!};
+const _pdfProfissionais = {!! json_encode($faturamentoPorProfissional->map(fn($p) => ['nome' => $p->nome, 'total' => (float) $p->total])->toArray()) !!};
+const _pdfServicos      = {!! json_encode($servicosDistribuiucao->map(fn($s) => ['descricao' => $s->descricao, 'qtd' => (int) $s->qtd, 'total' => (float) $s->total])->toArray()) !!};
+const _pdfBarbearia     = @json(auth()->user()->barbearia->nome);
+const _pdfPeriodo       = "{{ \Carbon\Carbon::parse($start)->format('d/m/Y') }} a {{ \Carbon\Carbon::parse($end)->format('d/m/Y') }}";
+const _pdfEntradas      = {{ $totalEntradas }};
+const _pdfSaidas        = {{ $totalSaidas }};
+const _pdfSaldo         = {{ $saldo }};
+
+window.gerarRelatorioPDF = function() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const W = doc.internal.pageSize.getWidth();
+    const H = doc.internal.pageSize.getHeight();
+    const M = 14;
+    const brl = v => 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    let y = 0;
+
+    // ── Cabeçalho ────────────────────────────────────────────────────────────
+    doc.setFillColor(13, 17, 23);
+    doc.rect(0, 0, W, 38, 'F');
+    doc.setFillColor(22, 163, 74);
+    doc.roundedRect(M, 8, 8, 8, 1.5, 1.5, 'F');
+    doc.setTextColor(34, 197, 94);
+    doc.setFontSize(15);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Glow', M + 11, 15.5);
+    doc.setTextColor(255, 255, 255);
+    doc.text('System', M + 28, 15.5);
+    doc.setTextColor(156, 163, 175);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Relatório Financeiro', M + 11, 21);
+
+    doc.setTextColor(209, 213, 219);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text(_pdfBarbearia, W - M, 13, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(156, 163, 175);
+    doc.text('Período: ' + _pdfPeriodo, W - M, 20, { align: 'right' });
+    doc.text('Gerado em: ' + new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }), W - M, 27, { align: 'right' });
+
+    y = 46;
+
+    // ── Cards de resumo ───────────────────────────────────────────────────────
+    const bW = (W - M * 2 - 8) / 3;
+    const cards = [
+        { label: 'RECEITAS DO PERÍODO', valor: _pdfEntradas, cor: [6, 78, 59],   textCor: [134, 239, 172] },
+        { label: 'DESPESAS DO PERÍODO', valor: _pdfSaidas,   cor: [127, 29, 29], textCor: [252, 165, 165] },
+        { label: 'LUCRO DO PERÍODO',    valor: _pdfSaldo,    cor: _pdfSaldo >= 0 ? [6,78,59] : [127,29,29], textCor: [209, 213, 219] },
+    ];
+    cards.forEach((c, i) => {
+        const x = M + i * (bW + 4);
+        doc.setFillColor(...c.cor);
+        doc.roundedRect(x, y, bW, 20, 2, 2, 'F');
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...c.textCor);
+        doc.text(c.label, x + 4, y + 7);
+        doc.setFontSize(12);
+        doc.setTextColor(255, 255, 255);
+        doc.text(brl(c.valor), x + 4, y + 16);
+    });
+    y += 28;
+
+    // ── Tabela de movimentações ───────────────────────────────────────────────
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 30, 30);
+    doc.text('Movimentações do Período', M, y);
+    y += 2;
+
+    if (_pdfMovimentacoes.length === 0) {
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(150, 150, 150);
+        doc.text('Nenhuma movimentação no período selecionado.', M, y + 8);
+        y += 18;
+    } else {
+        doc.autoTable({
+            startY: y,
+            margin: { left: M, right: M },
+            head: [['Data', 'Descrição', 'Categoria', 'Tipo', 'Pagamento', 'Valor']],
+            body: _pdfMovimentacoes.map(m => [
+                m.data, m.descricao, m.categoria,
+                m.tipo === 'receita' ? 'Receita' : 'Despesa',
+                m.forma_pagamento,
+                (m.tipo === 'receita' ? '+' : '-') + ' ' + brl(m.valor),
+            ]),
+            headStyles: { fillColor: [17, 24, 39], textColor: [156, 163, 175], fontStyle: 'bold', fontSize: 7.5 },
+            bodyStyles: { fontSize: 8, textColor: [40, 40, 40] },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            columnStyles: {
+                0: { cellWidth: 20 },
+                1: { cellWidth: 52 },
+                2: { cellWidth: 30 },
+                3: { cellWidth: 20, halign: 'center' },
+                4: { cellWidth: 28 },
+                5: { cellWidth: 28, halign: 'right' },
+            },
+            didParseCell: d => {
+                if (d.section !== 'body') return;
+                if (d.column.index === 3) {
+                    d.cell.styles.fontStyle = 'bold';
+                    d.cell.styles.textColor = d.cell.raw === 'Receita' ? [5,150,105] : [220,38,38];
+                }
+                if (d.column.index === 5) {
+                    d.cell.styles.fontStyle = 'bold';
+                    d.cell.styles.textColor = String(d.cell.raw).startsWith('+') ? [5,150,105] : [220,38,38];
+                }
+            },
+        });
+        y = doc.lastAutoTable.finalY + 10;
+    }
+
+    // ── Top Serviços ─────────────────────────────────────────────────────────
+    if (_pdfServicos.length > 0) {
+        if (y > H - 60) { doc.addPage(); y = M; }
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(30, 30, 30);
+        doc.text('Top Serviços do Período', M, y);
+        y += 2;
+        doc.autoTable({
+            startY: y, margin: { left: M, right: M },
+            head: [['Serviço', 'Qtd.', 'Faturamento']],
+            body: _pdfServicos.map(s => [s.descricao, s.qtd, brl(s.total)]),
+            headStyles: { fillColor: [17, 24, 39], textColor: [156, 163, 175], fontStyle: 'bold', fontSize: 7.5 },
+            bodyStyles: { fontSize: 8, textColor: [40, 40, 40] },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            columnStyles: { 1: { halign: 'center', cellWidth: 20 }, 2: { halign: 'right', cellWidth: 35 } },
+        });
+        y = doc.lastAutoTable.finalY + 10;
+    }
+
+    // ── Desempenho da Equipe ──────────────────────────────────────────────────
+    if (_pdfProfissionais.length > 0) {
+        if (y > H - 60) { doc.addPage(); y = M; }
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(30, 30, 30);
+        doc.text('Desempenho da Equipe', M, y);
+        y += 2;
+        doc.autoTable({
+            startY: y, margin: { left: M, right: M },
+            head: [['Profissional', 'Faturamento do Período']],
+            body: _pdfProfissionais.map(p => [p.nome, brl(p.total)]),
+            headStyles: { fillColor: [17, 24, 39], textColor: [156, 163, 175], fontStyle: 'bold', fontSize: 7.5 },
+            bodyStyles: { fontSize: 8, textColor: [40, 40, 40] },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            columnStyles: { 1: { halign: 'right' } },
+        });
+    }
+
+    // ── Rodapé em todas as páginas ────────────────────────────────────────────
+    const pages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pages; i++) {
+        doc.setPage(i);
+        doc.setFillColor(13, 17, 23);
+        doc.rect(0, H - 10, W, 10, 'F');
+        doc.setFontSize(7);
+        doc.setTextColor(107, 114, 128);
+        doc.text('GlowSystem — Relatório gerado automaticamente', M, H - 3.5);
+        doc.text(`Página ${i} de ${pages}`, W - M, H - 3.5, { align: 'right' });
+    }
+
+    const nomeSanitizado = _pdfBarbearia.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '-').toLowerCase();
+    doc.save(`financeiro-${nomeSanitizado}-${new Date().toISOString().slice(0,10)}.pdf`);
+};
 
 // ── Registro de instâncias para evitar reinicialização ─────────────────────
 window._glowCharts = {};
