@@ -101,8 +101,17 @@
 
             {{-- Avatar + Name --}}
             <div class="flex items-end gap-4">
+                {{-- Avatar: foto do profissional no link exclusivo, logo da barbearia nos demais --}}
                 <div class="w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl overflow-hidden ring-2 ring-green-500/30 shadow-2xl shadow-black/60 shrink-0">
-                    @if(!empty($barbearia?->logo))
+                    @if($exclusivo && $preselected)
+                        @if($preselected->foto)
+                            <img src="{{ $preselected->foto }}" alt="{{ $preselected->nome }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full bg-gradient-to-br from-green-600 to-emerald-900 flex items-center justify-center">
+                                <span class="text-3xl font-black text-white select-none">{{ $preselected->initials }}</span>
+                            </div>
+                        @endif
+                    @elseif(!empty($barbearia?->logo))
                         <img src="{{ Storage::url($barbearia->logo) }}" alt="{{ $barbearia->nome }}" class="w-full h-full object-cover">
                     @else
                         <div class="w-full h-full bg-gradient-to-br from-green-600 to-emerald-900 flex items-center justify-center">
@@ -118,11 +127,20 @@
                             Aberto · Aceitando reservas
                         </span>
                     </div>
-                    <h1 class="text-[22px] sm:text-2xl font-black text-white tracking-tight leading-none">
-                        {{ $barbearia?->nome ?? 'GlowSystem' }}
-                    </h1>
-                    @if(!empty($barbearia?->descricao))
-                    <p class="text-sm text-gray-400 mt-1.5 leading-snug line-clamp-1">{{ $barbearia->descricao }}</p>
+                    @if($exclusivo && $preselected)
+                        <h1 class="text-[22px] sm:text-2xl font-black text-white tracking-tight leading-none">
+                            {{ $preselected->nome }}
+                        </h1>
+                        <p class="text-sm text-gray-400 mt-1.5 leading-snug">
+                            <i class="fa-solid fa-scissors text-green-600 text-[10px] mr-1"></i>{{ $barbearia?->nome }}
+                        </p>
+                    @else
+                        <h1 class="text-[22px] sm:text-2xl font-black text-white tracking-tight leading-none">
+                            {{ $barbearia?->nome ?? 'GlowSystem' }}
+                        </h1>
+                        @if(!empty($barbearia?->descricao))
+                        <p class="text-sm text-gray-400 mt-1.5 leading-snug line-clamp-1">{{ $barbearia->descricao }}</p>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -140,7 +158,11 @@
                     <div class="w-6 h-6 rounded-lg bg-green-500/12 flex items-center justify-center">
                         <i class="fa-solid fa-user-tie text-green-500 text-[10px]"></i>
                     </div>
-                    <span><strong class="text-white font-bold">{{ $profissionais->count() }}</strong> {{ $profissionais->count() === 1 ? 'profissional' : 'profissionais' }}</span>
+                    @if($exclusivo && $preselected)
+                        <span class="text-white font-bold">Especialista exclusivo</span>
+                    @else
+                        <span><strong class="text-white font-bold">{{ $profissionais->count() }}</strong> {{ $profissionais->count() === 1 ? 'profissional' : 'profissionais' }}</span>
+                    @endif
                 </div>
                 <div class="w-px h-4 bg-white/8"></div>
                 <div class="flex items-center gap-2 text-xs text-gray-400">
