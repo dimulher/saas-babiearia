@@ -185,7 +185,7 @@
     {{-- ══════════════════════════════════════
          STEPPER STICKY
     ══════════════════════════════════════ --}}
-    <div class="sticky top-0 z-50 glass-bar border-b border-white/5" x-show="etapa < 6" x-cloak>
+    <div class="sticky top-0 z-50 glass-bar border-b border-white/5" x-show="etapa >= 1 && etapa < 6" x-cloak>
         <div class="max-w-xl mx-auto px-5 py-3.5">
             <div class="flex items-center">
                 @foreach([1=>'Serviço',2=>'Profissional',3=>'Data',4=>'Adicionais',5=>'Confirmar'] as $n=>$label)
@@ -215,11 +215,68 @@
     <div class="max-w-xl mx-auto px-5 pt-6"
          :class="etapa > 1 && etapa < 6 ? 'pb-28' : 'pb-16'">
 
-        {{-- ─── ETAPA 1: CATÁLOGO ─────────────────────────────── --}}
+        {{-- ─── ETAPA 0: CATÁLOGO DE PRODUTOS ─────────────────── --}}
+        @if($produtos->count() > 0)
+        <div x-show="etapa === 0"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0">
+
+            <div class="mb-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-6 h-6 rounded-lg bg-green-500/12 flex items-center justify-center">
+                        <i class="fa-solid fa-store text-green-500 text-[10px]"></i>
+                    </div>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Nossos produtos</p>
+                </div>
+                <h2 class="text-xl font-black text-white tracking-tight">Conheça o que temos</h2>
+                <p class="text-sm text-gray-500 mt-1">Produtos disponíveis no estabelecimento para o seu atendimento.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-8">
+                @foreach($produtos as $p)
+                <div class="flex flex-col bg-gray-900/50 border border-gray-800/70 rounded-2xl overflow-hidden">
+                    <div class="aspect-square bg-gray-800/60 overflow-hidden">
+                        @if($p->imagem_url)
+                            <img src="{{ $p->imagem_url }}" alt="{{ $p->nome }}" class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fa-solid fa-box text-3xl text-gray-700"></i>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="p-3.5">
+                        <p class="font-bold text-white text-sm leading-snug line-clamp-2">{{ $p->nome }}</p>
+                        <p class="font-black text-green-400 text-sm mt-2">R$ {{ number_format($p->preco_venda, 2, ',', '.') }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <button type="button" @click="etapa = 1"
+                class="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-2xl text-sm font-black uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(34,197,94,.22)]">
+                <i class="fa-solid fa-calendar mr-2"></i> Agendar um serviço
+                <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+            </button>
+        </div>
+        @endif
+
+        {{-- ─── ETAPA 1: SERVIÇOS ──────────────────────────────── --}}
         <div x-show="etapa === 1"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 translate-y-2"
              x-transition:enter-end="opacity-100 translate-y-0">
+
+            {{-- Voltar ao catálogo --}}
+            @if($produtos->count() > 0)
+            <div class="flex items-center gap-3 mb-5">
+                <button type="button" @click="etapa = 0"
+                    class="w-9 h-9 flex items-center justify-center bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors shrink-0">
+                    <i class="fa-solid fa-arrow-left text-gray-300 text-sm"></i>
+                </button>
+                <p class="text-xs text-gray-500">Voltar ao catálogo de produtos</p>
+            </div>
+            @endif
 
             {{-- Search --}}
             <div class="relative mb-5">
@@ -608,7 +665,7 @@
     {{-- ══════════════════════════════════════
          BARRA STICKY DE SELEÇÃO (etapas 2-5)
     ══════════════════════════════════════ --}}
-    <div x-show="etapa > 1 && etapa < 6" x-transition x-cloak
+    <div x-show="etapa > 1 && etapa < 6 && etapa !== 0" x-transition x-cloak
          class="sel-bar fixed bottom-0 left-0 right-0 z-40 border-t border-white/6 px-5 py-3.5">
         <div class="max-w-xl mx-auto flex items-center gap-3.5">
             <div class="w-9 h-9 rounded-xl bg-green-500/12 border border-green-500/18 flex items-center justify-center shrink-0">
@@ -628,7 +685,7 @@
 
         function booking() {
             return {
-                etapa: 1,
+                etapa: {{ $produtos->count() > 0 ? 0 : 1 }},
                 exclusivo: exclusivo,
                 busca: '',
                 barbearia_id: '{{ $barbearia->id }}',
@@ -648,7 +705,7 @@
                 vipPlan: '',
                 isLoading: false,
 
-                init() { this.etapa = 1; },
+                init() { this.etapa = {{ $produtos->count() > 0 ? 0 : 1 }}; },
 
                 avancarDeServico() {
                     this.proximaEtapa(this.exclusivo ? 3 : 2);
