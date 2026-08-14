@@ -172,75 +172,6 @@ Route::get('/b/{slug}', function ($slug) {
     return redirect()->route('booking', ['slug' => $slug]);
 });
 
-// Rota temporária — adiciona coluna foto à tabela users — REMOVER após executar uma vez
-Route::get('/panel/run-migration-user-foto', function () {
-    if (!auth()->check()) abort(403);
-    if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'foto')) {
-        \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-            $table->text('foto')->nullable();
-        });
-        return response()->json(['status' => 'ok', 'message' => 'Coluna foto adicionada à tabela users.']);
-    }
-    return response()->json(['status' => 'already_exists', 'message' => 'Coluna foto já existe.']);
-});
-
-// Rota temporária de criação de agendamento via token — REMOVER após validação
-Route::get('/teste-booking', function (\Illuminate\Http\Request $request) {
-    if ($request->get('token') !== 'glow2026') abort(403);
-
-    $barbearia    = \App\Models\Barbearia::first();
-    if (!$barbearia) return response()->json(['error' => 'Nenhuma barbearia encontrada'], 404);
-
-    $profissional = \App\Models\Profissional::where('barbearia_id', $barbearia->id)
-        ->where('nome', 'like', '%João%')->first()
-        ?? \App\Models\Profissional::where('barbearia_id', $barbearia->id)->where('ativo', true)->first()
-        ?? \App\Models\Profissional::create([
-            'barbearia_id'              => $barbearia->id,
-            'nome'                      => 'João Barbeiro',
-            'ativo'                     => true,
-            'aceita_agendamento_online' => true,
-            'comissao_percentual'       => 40,
-            'codigo_acesso'             => strtoupper(substr(md5(uniqid()), 0, 6)),
-        ]);
-
-    $servico = \App\Models\Servico::where('barbearia_id', $barbearia->id)->where('ativo', true)->first()
-        ?? \App\Models\Servico::create([
-            'barbearia_id'      => $barbearia->id,
-            'nome'              => 'Corte de Cabelo',
-            'preco'             => 35.00,
-            'duracao_minutos'   => 30,
-            'ativo'             => true,
-            'disponivel_online' => true,
-        ]);
-
-    $hora      = \Carbon\Carbon::now()->setTimezone('America/Sao_Paulo')->setTime(14, 0, 0);
-    $dataFim   = (clone $hora)->addMinutes($servico->duracao_minutos ?? 30);
-
-    $agendamento = \App\Models\Agendamento::create([
-        'barbearia_id'     => $barbearia->id,
-        'profissional_id'  => $profissional->id,
-        'servico_id'       => $servico->id,
-        'cliente_nome'     => 'Maria da Silva',
-        'cliente_telefone' => '11988887777',
-        'data_inicio'      => $hora,
-        'data_fim'         => $dataFim,
-        'preco'            => $servico->preco ?? 35,
-        'status'           => 'confirmado',
-        'agendado_online'  => true,
-        'descricao'        => 'Agendamento via link de teste.',
-    ]);
-
-    return response()->json([
-        'success'           => true,
-        'agendamento_id'    => $agendamento->id,
-        'cliente'           => $agendamento->cliente_nome,
-        'profissional'      => $profissional->nome,
-        'servico'           => $servico->nome,
-        'data_inicio'       => $hora->toDateTimeString(),
-        'booking_url'       => url('/agendar/' . $barbearia->slug . '?funcionario=' . $profissional->id),
-        'calendario_url'    => url('/panel/agendamentos'),
-    ]);
-});
 
 // Webhooks e endpoints chamados externamente (fora de /api/ para evitar conflito com o runtime do Vercel)
 Route::get('/webhooks/check-vip', [AgendamentoController::class, 'checkVip'])->name('api.check-vip');
@@ -265,70 +196,6 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     Route::post('/agendamentos', [AgendamentoController::class, 'storePanel'])->name('agendamentos.store');
     Route::get('/agendamentos/eventos', [AgendamentoController::class, 'eventosJson'])->name('agendamentos.eventos');
     Route::patch('/agendamentos/{agendamento}/status', [AgendamentoController::class, 'updateStatus'])->name('agendamentos.status');
-
-    // Rota temporária de info — remover após validação
-    Route::get('/agendamentos/info-teste', function () {
-        $barbeariaId  = auth()->user()->barbearia_id;
-        $barbearia    = \App\Models\Barbearia::find($barbeariaId);
-        $profissional = \App\Models\Profissional::where('barbearia_id', $barbeariaId)->first();
-        $servico      = \App\Models\Servico::where('barbearia_id', $barbeariaId)->first();
-        return response()->json([
-            'barbearia_id'     => $barbeariaId,
-            'barbearia_slug'   => $barbearia?->slug,
-            'profissional_id'  => $profissional?->id,
-            'profissional_nome'=> $profissional?->nome,
-            'servico_id'       => $servico?->id,
-            'servico_nome'     => $servico?->nome,
-            'booking_url'      => url('/agendar/' . $barbearia?->slug . '?funcionario=' . $profissional?->id),
-        ]);
-    });
-
-    // Rota temporária de seed — remover após validação
-    Route::get('/agendamentos/seed-teste', function () {
-        $barbeariaId = auth()->user()->barbearia_id;
-
-        // Garante que existe ao menos um profissional
-        $profissional = \App\Models\Profissional::where('barbearia_id', $barbeariaId)->first()
-            ?? \App\Models\Profissional::create([
-                'barbearia_id'              => $barbeariaId,
-                'nome'                      => 'João Barbeiro',
-                'ativo'                     => true,
-                'aceita_agendamento_online' => true,
-                'comissao_percentual'       => 40,
-                'codigo_acesso'             => strtoupper(substr(md5(uniqid()), 0, 6)),
-            ]);
-
-        // Garante que existe ao menos um serviço
-        $servico = \App\Models\Servico::where('barbearia_id', $barbeariaId)->first()
-            ?? \App\Models\Servico::create([
-                'barbearia_id'      => $barbeariaId,
-                'nome'              => 'Corte de Cabelo',
-                'preco'             => 35.00,
-                'duracao_minutos'   => 30,
-                'ativo'             => true,
-                'disponivel_online' => true,
-            ]);
-
-        // Cria o agendamento para hoje às 10h
-        $inicio = \Carbon\Carbon::now()->startOfDay()->addHours(10);
-        $fim    = (clone $inicio)->addMinutes($servico->duracao_minutos ?? 30);
-
-        \App\Models\Agendamento::create([
-            'barbearia_id'     => $barbeariaId,
-            'profissional_id'  => $profissional->id,
-            'servico_id'       => $servico->id,
-            'cliente_nome'     => 'Cliente Teste',
-            'cliente_telefone' => '11999999999',
-            'data_inicio'      => $inicio,
-            'data_fim'         => $fim,
-            'preco'            => $servico->preco ?? 35,
-            'status'           => 'confirmado',
-            'agendado_online'  => false,
-            'descricao'        => 'Agendamento de teste.',
-        ]);
-
-        return redirect('/panel/agendamentos');
-    })->name('agendamentos.seed-teste');
 
     // Agendamentos Recorrentes
     Route::get('/agendamentos-recorrentes', [AgendamentoRecorrenteController::class, 'index'])->name('agendamentos-recorrentes');
@@ -412,11 +279,6 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
         Route::get('/agendamento', function () { return view('panel.configuracoes.agendamento'); })->name('agendamento');
         Route::get('/conta', function () { return view('panel.configuracoes.conta'); })->name('conta');
         Route::post('/conta/avatar', function (\Illuminate\Http\Request $request) {
-            if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'foto')) {
-                \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                    $table->text('foto')->nullable();
-                });
-            }
             $request->validate(['foto_base64' => 'required|string|max:500000']);
             $foto = $request->foto_base64;
             if (!str_starts_with($foto, 'data:image/')) abort(422);

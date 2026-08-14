@@ -59,7 +59,8 @@ class DashboardController extends Controller
         $profissionaisList = Profissional::where('barbearia_id', $barbeariaId)
             ->where('ativo', true)
             ->where('aceita_agendamento_online', true)
-            ->select('id', 'nome')
+            ->with('barbearia:id,slug')
+            ->select('id', 'nome', 'barbearia_id')
             ->get();
 
         return view('panel.dashboard', [

@@ -297,12 +297,6 @@ class FuncionarioController
         if ($request->filled('foto_base64')) {
             $foto = $request->foto_base64;
             if (str_starts_with($foto, 'data:image/')) {
-                // A migração original criou foto como varchar(255); base64 precisa de text
-                try {
-                    \Illuminate\Support\Facades\DB::statement(
-                        'ALTER TABLE profissionais ALTER COLUMN foto TYPE text'
-                    );
-                } catch (\Exception $e) { /* já é text ou não aplicável */ }
                 $updates['foto'] = $foto;
             }
         }

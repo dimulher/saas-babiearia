@@ -135,11 +135,17 @@ class FinanceiroController extends Controller
         $profissionais = Profissional::where('barbearia_id', $barbeariaId)
             ->select('id', 'nome')->get();
 
+        $contasLista = Conta::where('barbearia_id', $barbeariaId)
+            ->latest('vencimento')
+            ->limit(200)
+            ->get();
+
         return view('panel.financeiro.index', compact(
             'movimentacoes', 'totalEntradas', 'totalSaidas', 'saldo',
             'start', 'end', 'resumoMes', 'resumoHoje',
             'faturamentoPorProfissional', 'profissionais',
-            'faturamentoDiario', 'servicosDistribuiucao'
+            'faturamentoDiario', 'servicosDistribuiucao',
+            'contasLista'
         ));
     }
 

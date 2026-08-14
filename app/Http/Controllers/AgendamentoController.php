@@ -18,33 +18,131 @@ class AgendamentoController
 {
     public function index(Request $request)
     {
+        $barbeariaId   = auth()->user()->barbearia_id;
+        $profissionais = Profissional::where('barbearia_id', $barbeariaId)->where('ativo', true)->orderBy('nome')->get();
+        $servicos      = Servico::where('barbearia_id', $barbeariaId)->where('ativo', true)->orderBy('nome')->get();
+        $produtos      = Produto::where('barbearia_id', $barbeariaId)->where('ativo', true)->orderBy('nome')->get();
+        return view('panel.agendamentos', compact('profissionais', 'servicos', 'produtos'));
+    }
+
+    public function storePanel(Request $request)
+    {
         $barbeariaId = auth()->user()->barbearia_id;
-        $date = $request->get('date', today()->format('Y-m-d'));
+
+        $request->validate([
+            'nome_cliente'    => 'required|string|max:255',
+            'telefone'        => 'nullable|string|max:20',
+            'profissional_id' => 'required|integer',
+            'servico_id'      => 'required|integer',
+            'data'            => 'required|date',
+            'hora'            => 'required|string',
+            'status'          => 'required|in:pendente,confirmado',
+            'descricao'       => 'nullable|string|max:1000',
+        ]);
+
+        $profissional = Profissional::where('barbearia_id', $barbeariaId)->findOrFail($request->profissional_id);
+        $servico      = Servico::where('barbearia_id', $barbeariaId)->findOrFail($request->servico_id);
+
+        $dataInicio = Carbon::parse($request->data . ' ' . $request->hora);
+        $dataFim    = (clone $dataInicio)->addMinutes($servico->duracao_minutos ?? 30);
+
+        $agendamento = Agendamento::create([
+            'barbearia_id'     => $barbeariaId,
+            'profissional_id'  => $profissional->id,
+            'servico_id'       => $servico->id,
+            'cliente_nome'     => $request->nome_cliente,
+            'cliente_telefone' => $request->telefone,
+            'data_inicio'      => $dataInicio,
+            'data_fim'         => $dataFim,
+            'preco'            => $servico->preco ?? 0,
+            'status'           => $request->status,
+            'agendado_online'  => false,
+            'descricao'        => $request->descricao,
+        ]);
+
+        SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, 'created');
+
+        return response()->json(['success' => true]);
+    }
+
+    public function eventosJson(Request $request)
+    {
+        $barbeariaId = auth()->user()->barbearia_id;
+        $start = $request->get('start') ? Carbon::parse($request->get('start')) : now()->startOfMonth();
+        $end   = $request->get('end')   ? Carbon::parse($request->get('end'))   : now()->endOfMonth();
         $profissionalId = $request->get('profissional_id');
-        $status = $request->get('status');
+
+        $servicoId  = $request->get('servico_id');
+        $produtoId  = $request->get('produto_id');
+        $busca      = $request->get('busca');
 
         $query = Agendamento::where('barbearia_id', $barbeariaId)
-            ->with(['profissional', 'servico'])
-            ->whereDate('data_inicio', $date);
+            ->with(['profissional:id,nome', 'servico:id,nome'])
+            ->where('data_inicio', '>=', $start)
+            ->where('data_inicio', '<=', $end);
 
-        if ($profissionalId) {
-            $query->where('profissional_id', $profissionalId);
+        if ($profissionalId) $query->where('profissional_id', $profissionalId);
+        if ($servicoId)      $query->where('servico_id', $servicoId);
+        if ($busca)          $query->where('cliente_nome', 'like', '%' . $busca . '%');
+        if ($produtoId) {
+            $prod = Produto::find($produtoId);
+            if ($prod) $query->where('produtos_solicitados', 'like', '%' . $prod->nome . '%');
         }
 
-        if ($status) {
-            $query->where('status', $status);
-        }
+        $cores = [
+            'pendente'   => ['#d97706', '#92400e'],
+            'confirmado' => ['#2563eb', '#1e3a8a'],
+            'concluido'  => ['#059669', '#065f46'],
+            'cancelado'  => ['#e11d48', '#881337'],
+            'faltou'     => ['#6b7280', '#374151'],
+        ];
 
-        $agendamentos = $query->orderBy('data_inicio', 'asc')->get();
-        $profissionais = Profissional::where('barbearia_id', $barbeariaId)->where('ativo', true)->get();
+        $agendamentos = $query->get()->map(function ($a) use ($cores) {
+            [$bg, $border] = $cores[$a->status] ?? ['#6b7280', '#374151'];
+            return [
+                'id'              => 'ag_' . $a->id,
+                'title'           => $a->cliente_nome ?? 'Cliente',
+                'start'           => $a->data_inicio->toIso8601String(),
+                'end'             => $a->data_fim ? $a->data_fim->toIso8601String() : null,
+                'backgroundColor' => $bg,
+                'borderColor'     => $border,
+                'textColor'       => '#ffffff',
+                'extendedProps'   => [
+                    'tipo'            => 'agendamento',
+                    'agendamento_id'  => $a->id,
+                    'servico'         => $a->servico?->nome ?? '—',
+                    'profissional'    => $a->profissional?->nome ?? '—',
+                    'telefone'        => $a->cliente_telefone ?? '',
+                    'preco'           => 'R$ ' . number_format($a->preco ?? 0, 2, ',', '.'),
+                    'status'          => $a->status,
+                    'descricao'       => $a->descricao ?? '',
+                ],
+            ];
+        });
 
-        $eventosCalendar = EventoGoogleCalendar::where('barbearia_id', $barbeariaId)
-            ->whereDate('inicio', $date)
+        $gcEventos = EventoGoogleCalendar::where('barbearia_id', $barbeariaId)
+            ->where('inicio', '>=', $start)
+            ->where('inicio', '<=', $end)
             ->where('status', '!=', 'cancelled')
-            ->orderBy('inicio')
-            ->get();
+            ->get()
+            ->map(function ($e) {
+                return [
+                    'id'              => 'gc_' . $e->id,
+                    'title'           => $e->titulo ?? 'Evento',
+                    'start'           => $e->inicio->toIso8601String(),
+                    'end'             => $e->fim?->toIso8601String(),
+                    'allDay'          => (bool) $e->dia_inteiro,
+                    'backgroundColor' => '#4285f4',
+                    'borderColor'     => '#1a56db',
+                    'textColor'       => '#ffffff',
+                    'extendedProps'   => [
+                        'tipo'      => 'google_calendar',
+                        'descricao' => $e->descricao ?? '',
+                    ],
+                ];
+            });
 
-        return view('panel.agendamentos', compact('agendamentos', 'profissionais', 'date', 'profissionalId', 'status', 'eventosCalendar'));
+        return response()->json($agendamentos->merge($gcEventos)->values());
     }
 
     public function store(Request $request)
@@ -96,9 +194,9 @@ class AgendamentoController
         if ($request->is_vip) {
             // Verificar no backend se o telefone bate com uma assinatura ativa
             $cleanTel = preg_replace('/[^0-9]/', '', $request->telefone);
-            $cliente = Cliente::where('barbearia_id', $barbeariaId)->get()->first(function ($c) use ($cleanTel) {
-                return preg_replace('/[^0-9]/', '', (string)$c->telefone) === $cleanTel;
-            });
+            $cliente = Cliente::where('barbearia_id', $barbeariaId)
+                ->whereRaw("REGEXP_REPLACE(CAST(telefone AS TEXT), '[^0-9]', '', 'g') = ?", [$cleanTel])
+                ->first();
             
             if ($cliente) {
                 $assinatura = Assinatura::where('barbearia_id', $barbeariaId)
@@ -167,25 +265,36 @@ class AgendamentoController
 
     public function checkVip(Request $request)
     {
-        $telefone = $request->get('telefone');
         $barbeariaId = $request->get('barbearia_id');
-        
-        if (!$telefone || !$barbeariaId) {
+        $cpf         = $request->get('cpf');
+        $telefone    = $request->get('telefone');
+
+        if (!$barbeariaId || (!$cpf && !$telefone)) {
             return response()->json(['isVip' => false]);
         }
 
-        $cleanTel = preg_replace('/[^0-9]/', '', $telefone);
+        $cliente = null;
 
-        // Busca o cliente filtrando pela string limpa e barbearia
-        $cliente = Cliente::where('barbearia_id', $barbeariaId)->get()->first(function ($c) use ($cleanTel) {
-            return preg_replace('/[^0-9]/', '', (string)$c->telefone) === $cleanTel;
-        });
+        // Busca prioritária por CPF
+        if ($cpf) {
+            $cleanCpf = preg_replace('/[^0-9]/', '', $cpf);
+            $cliente = Cliente::where('barbearia_id', $barbeariaId)
+                ->whereRaw("REGEXP_REPLACE(CAST(cpf AS TEXT), '[^0-9]', '', 'g') = ?", [$cleanCpf])
+                ->first();
+        }
+
+        // Fallback por telefone se CPF não encontrou
+        if (!$cliente && $telefone) {
+            $cleanTel = preg_replace('/[^0-9]/', '', $telefone);
+            $cliente = Cliente::where('barbearia_id', $barbeariaId)
+                ->whereRaw("REGEXP_REPLACE(CAST(telefone AS TEXT), '[^0-9]', '', 'g') = ?", [$cleanTel])
+                ->first();
+        }
 
         if (!$cliente) {
             return response()->json(['isVip' => false]);
         }
 
-        // Verifica se tem assinatura ativa
         $assinatura = Assinatura::where('barbearia_id', $barbeariaId)
             ->where('cliente_id', $cliente->id)
             ->where('status', 'ativo')
