@@ -39,41 +39,39 @@ class FinanceiroController extends Controller
             ->whereBetween('fechada_em', [$start, $end])
             ->get(['id', 'fechada_em', 'cliente_nome', 'total', 'forma_pagamento', 'profissional_id']);
 
-        // ── Query 3: Resumos financeiros (hoje + mês) em uma única query ──
-        $resumos = DB::table('contas')
-            ->where('barbearia_id', $barbeariaId)
-            ->where('status', 'pago')
-            ->selectRaw("
-                SUM(CASE WHEN tipo='receita' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END) as receitas_hoje,
-                SUM(CASE WHEN tipo='despesa' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END) as despesas_hoje,
-                SUM(CASE WHEN tipo='receita' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END) as receitas_mes,
-                SUM(CASE WHEN tipo='despesa' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END) as despesas_mes
-            ", [
-                $hojeStart, $hojeEnd,
-                $hojeStart, $hojeEnd,
-                $mesStart,  $mesEnd,
-                $mesStart,  $mesEnd,
-            ])
-            ->first();
-
-        $comandaReceitas = DB::table('comandas')
-            ->where('barbearia_id', $barbeariaId)
-            ->where('status', 'fechada')
-            ->selectRaw("
-                SUM(CASE WHEN fechada_em BETWEEN ? AND ? THEN total ELSE 0 END) as hoje,
-                SUM(CASE WHEN fechada_em BETWEEN ? AND ? THEN total ELSE 0 END) as mes
-            ", [$hojeStart, $hojeEnd, $mesStart, $mesEnd])
-            ->first();
+        // ── Query 3: Resumos financeiros (contas + comandas) em uma única round-trip ──
+        $r = DB::selectOne("
+            SELECT
+                (SELECT COALESCE(SUM(CASE WHEN tipo='receita' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END),0)
+                    FROM contas WHERE barbearia_id = ? AND status = 'pago') as receitas_hoje,
+                (SELECT COALESCE(SUM(CASE WHEN tipo='despesa' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END),0)
+                    FROM contas WHERE barbearia_id = ? AND status = 'pago') as despesas_hoje,
+                (SELECT COALESCE(SUM(CASE WHEN tipo='receita' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END),0)
+                    FROM contas WHERE barbearia_id = ? AND status = 'pago') as receitas_mes,
+                (SELECT COALESCE(SUM(CASE WHEN tipo='despesa' AND pago_em BETWEEN ? AND ? THEN valor ELSE 0 END),0)
+                    FROM contas WHERE barbearia_id = ? AND status = 'pago') as despesas_mes,
+                (SELECT COALESCE(SUM(CASE WHEN fechada_em BETWEEN ? AND ? THEN total ELSE 0 END),0)
+                    FROM comandas WHERE barbearia_id = ? AND status = 'fechada') as comanda_hoje,
+                (SELECT COALESCE(SUM(CASE WHEN fechada_em BETWEEN ? AND ? THEN total ELSE 0 END),0)
+                    FROM comandas WHERE barbearia_id = ? AND status = 'fechada') as comanda_mes
+        ", [
+            $hojeStart, $hojeEnd, $barbeariaId,
+            $hojeStart, $hojeEnd, $barbeariaId,
+            $mesStart,  $mesEnd,  $barbeariaId,
+            $mesStart,  $mesEnd,  $barbeariaId,
+            $hojeStart, $hojeEnd, $barbeariaId,
+            $mesStart,  $mesEnd,  $barbeariaId,
+        ]);
 
         $resumoHoje = [
-            'receitas' => ($resumos->receitas_hoje ?? 0) + ($comandaReceitas->hoje ?? 0),
-            'despesas' => $resumos->despesas_hoje ?? 0,
-            'lucro'    => (($resumos->receitas_hoje ?? 0) + ($comandaReceitas->hoje ?? 0)) - ($resumos->despesas_hoje ?? 0),
+            'receitas' => ($r->receitas_hoje ?? 0) + ($r->comanda_hoje ?? 0),
+            'despesas' => $r->despesas_hoje ?? 0,
+            'lucro'    => (($r->receitas_hoje ?? 0) + ($r->comanda_hoje ?? 0)) - ($r->despesas_hoje ?? 0),
         ];
         $resumoMes = [
-            'receitas' => ($resumos->receitas_mes ?? 0) + ($comandaReceitas->mes ?? 0),
-            'despesas' => $resumos->despesas_mes ?? 0,
-            'lucro'    => (($resumos->receitas_mes ?? 0) + ($comandaReceitas->mes ?? 0)) - ($resumos->despesas_mes ?? 0),
+            'receitas' => ($r->receitas_mes ?? 0) + ($r->comanda_mes ?? 0),
+            'despesas' => $r->despesas_mes ?? 0,
+            'lucro'    => (($r->receitas_mes ?? 0) + ($r->comanda_mes ?? 0)) - ($r->despesas_mes ?? 0),
         ];
 
         // ── Movimentações mescladas ───────────────────────────────────────

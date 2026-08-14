@@ -53,8 +53,14 @@ putenv('VIEW_COMPILED_PATH=/tmp/views');
 putenv('APP_PACKAGES_CACHE=/tmp/packages.php');
 putenv('APP_SERVICES_CACHE=/tmp/services.php');
 putenv('APP_CONFIG_CACHE=/tmp/config.php');
-putenv('APP_ROUTES_CACHE=/tmp/routes.php');
 putenv('APP_EVENTS_CACHE=/tmp/events.php');
+
+// Rotas: usa o cache pré-gerado no build do Vercel se disponível (cold start mais rápido);
+// caso contrário, gera em /tmp/ na primeira requisição do container.
+$prebuiltRoutes = $basePath . '/bootstrap/cache/routes-v7.php';
+if (!file_exists($prebuiltRoutes)) {
+    putenv('APP_ROUTES_CACHE=/tmp/routes.php');
+}
 
 // Força HTTPS — Vercel termina SSL no proxy
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
@@ -82,10 +88,13 @@ if (!file_exists($cacheFlag)) {
             touch($migrateFlag);
         }
 
-        // Caches que aceleram warm requests neste container
-        $console->call('package:discover', ['--ansi' => false]);
+        // config:cache já faz o package discovery internamente
         $console->call('config:cache');
-        $console->call('route:cache');
+
+        // route:cache só é necessário se não foi pré-gerado no build do Vercel
+        if (!file_exists($prebuiltRoutes)) {
+            $console->call('route:cache');
+        }
 
         touch($cacheFlag);
     } catch (\Throwable $e) {
