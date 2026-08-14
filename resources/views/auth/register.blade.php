@@ -6,6 +6,10 @@
     <div class="absolute -top-24 -right-24 w-48 h-48 bg-green-600/8 blur-[100px] rounded-full"></div>
     <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-emerald-600/8 blur-[100px] rounded-full"></div>
 
+    <a href="{{ route('login') }}" class="absolute top-5 sm:top-8 left-5 sm:left-8 inline-flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-white uppercase tracking-widest transition-colors">
+        <i class="fa-solid fa-arrow-left"></i> Voltar
+    </a>
+
     <div class="relative z-10 text-center mb-8">
         <div class="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-green-900/40">
             <i class="fa-solid fa-bolt text-xl text-white"></i>
