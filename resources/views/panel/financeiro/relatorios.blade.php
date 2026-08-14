@@ -58,6 +58,7 @@
     <!-- Por forma de pagamento -->
     <div class="bg-white rounded-2xl border border-gray-200 p-6">
         <h2 class="text-base font-semibold text-gray-900 mb-4">Receita por Forma de Pagamento</h2>
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100">
@@ -78,6 +79,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
 
 </div>

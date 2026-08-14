@@ -15,6 +15,7 @@
 
     <!-- Tabela -->
     <div class="bg-gray-900/50 rounded-2xl border border-gray-700 overflow-hidden">
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-700 bg-gray-800/50">
@@ -29,6 +30,7 @@
                 <tr><td colspan="5" class="py-12 text-center text-gray-400 text-sm">Nenhum ciclo cadastrado. Clique em "Novo Ciclo" para começar.</td></tr>
             </tbody>
         </table>
+        </div>
     </div>
 
 </div>

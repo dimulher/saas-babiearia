@@ -15,17 +15,19 @@
     </div>
 
     <!-- Tabs -->
-    <div class="flex gap-1 p-1 bg-gray-900 rounded-xl w-fit border border-gray-800">
-        <button @click="tab = 'abertas'"
-            :class="tab === 'abertas' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'"
-            class="px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
-            Em Aberto
-        </button>
-        <button @click="tab = 'fechadas'"
-            :class="tab === 'fechadas' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'"
-            class="px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
-            Finalizadas
-        </button>
+    <div class="overflow-x-auto no-scrollbar -mx-4 sm:mx-0 px-4 sm:px-0">
+        <div class="flex gap-1 p-1 bg-gray-900 rounded-xl border border-gray-800 w-max min-w-full">
+            <button @click="tab = 'abertas'"
+                :class="tab === 'abertas' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+                class="px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                Em Aberto
+            </button>
+            <button @click="tab = 'fechadas'"
+                :class="tab === 'fechadas' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+                class="px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                Finalizadas
+            </button>
+        </div>
     </div>
 
     <!-- Aba Abertas -->

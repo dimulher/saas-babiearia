@@ -67,6 +67,7 @@
                 <i class="fa-solid fa-ranking-star text-[#E2C28A]"></i> Ranking de Profissionais
             </h2>
         </div>
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 bg-gray-50">
@@ -138,6 +139,7 @@
             </tfoot>
             @endif
         </table>
+        </div>
     </div>
 
 </div>

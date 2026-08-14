@@ -44,6 +44,7 @@
 
     <!-- Tabela -->
     <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-200 bg-gray-50">
@@ -59,6 +60,7 @@
                 <tr><td colspan="6" class="py-12 text-center text-gray-400 text-sm">Nenhuma movimentação encontrada no período.</td></tr>
             </tbody>
         </table>
+        </div>
     </div>
 
 </div>

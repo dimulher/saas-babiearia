@@ -22,17 +22,19 @@
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="flex gap-2 p-1 bg-gray-800 rounded-[20px] w-fit border border-gray-700/50">
-        <button @click="tab = 'mensagens'" 
-            :class="tab === 'mensagens' ? 'bg-gray-900/50 text-green-500 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
-            class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
-            Fluxos Automáticos
-        </button>
-        <button @click="tab = 'configuracao'" 
-            :class="tab === 'configuracao' ? 'bg-gray-900/50 text-green-500 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
-            class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all">
-            Painel de Conexão
-        </button>
+    <div class="overflow-x-auto no-scrollbar -mx-4 sm:mx-0 px-4 sm:px-0">
+        <div class="flex gap-2 p-1 bg-gray-800 rounded-[20px] border border-gray-700/50 w-max min-w-full">
+            <button @click="tab = 'mensagens'"
+                :class="tab === 'mensagens' ? 'bg-gray-900/50 text-green-500 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+                class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                Fluxos Automáticos
+            </button>
+            <button @click="tab = 'configuracao'"
+                :class="tab === 'configuracao' ? 'bg-gray-900/50 text-green-500 shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+                class="px-6 py-2.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                Painel de Conexão
+            </button>
+        </div>
     </div>
 
     <!-- Content Sections -->

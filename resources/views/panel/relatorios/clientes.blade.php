@@ -72,6 +72,7 @@
                 <i class="fa-solid fa-trophy text-[#E2C28A]"></i> Top Clientes do Período
             </h2>
         </div>
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 bg-gray-50">
@@ -126,6 +127,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 
 </div>

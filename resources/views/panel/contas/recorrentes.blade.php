@@ -12,14 +12,17 @@
     </div>
 
     <!-- Tabs -->
-    <div class="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
-        <a href="/panel/contas" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900">Todas</a>
-        <a href="/panel/contas/parceladas" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900">Parceladas</a>
-        <a href="/panel/contas/recorrentes" class="px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-900 shadow-sm">Recorrentes</a>
+    <div class="overflow-x-auto no-scrollbar -mx-4 sm:mx-0 px-4 sm:px-0">
+        <div class="flex gap-1 bg-gray-100 rounded-xl p-1 w-max min-w-full">
+            <a href="/panel/contas" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Todas</a>
+            <a href="/panel/contas/parceladas" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 whitespace-nowrap">Parceladas</a>
+            <a href="/panel/contas/recorrentes" class="px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-900 shadow-sm whitespace-nowrap">Recorrentes</a>
+        </div>
     </div>
 
     <!-- Tabela -->
     <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-200 bg-gray-50">
@@ -35,6 +38,7 @@
                 <tr><td colspan="6" class="py-12 text-center text-gray-400 text-sm">Nenhuma conta recorrente cadastrada.</td></tr>
             </tbody>
         </table>
+        </div>
     </div>
 
 </div>

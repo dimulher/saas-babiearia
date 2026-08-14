@@ -39,6 +39,7 @@
 
     {{-- Tabela --}}
     <div class="bg-white rounded-xl border border-gray-200">
+        <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-100 bg-gray-50">
@@ -77,6 +78,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
         @if($movimentacoes->hasPages())
         <div class="p-4 border-t border-gray-100">{{ $movimentacoes->links() }}</div>
         @endif

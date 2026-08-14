@@ -60,13 +60,15 @@
     </div>
 
     <!-- Navegação (Tabs) -->
-    <div class="flex gap-2 p-1 bg-[#111827] rounded-2xl w-fit border border-gray-800">
-        <button @click="tab='planos'" :class="tab==='planos' ? 'bg-gray-800 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'" class="py-2.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-            <i class="fa-solid fa-layer-group mr-2"></i> Planos Disponíveis
-        </button>
-        <button @click="tab='assinantes'" :class="tab==='assinantes' ? 'bg-gray-800 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'" class="py-2.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-            <i class="fa-solid fa-users-viewfinder mr-2"></i> Gerenciar Assinantes
-        </button>
+    <div class="overflow-x-auto no-scrollbar -mx-4 sm:mx-0 px-4 sm:px-0">
+        <div class="flex gap-2 p-1 bg-[#111827] rounded-2xl border border-gray-800 w-max min-w-full">
+            <button @click="tab='planos'" :class="tab==='planos' ? 'bg-gray-800 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'" class="py-2.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                <i class="fa-solid fa-layer-group mr-2"></i> Planos Disponíveis
+            </button>
+            <button @click="tab='assinantes'" :class="tab==='assinantes' ? 'bg-gray-800 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'" class="py-2.5 px-6 rounded-xl text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap">
+                <i class="fa-solid fa-users-viewfinder mr-2"></i> Gerenciar Assinantes
+            </button>
+        </div>
     </div>
 
     <!-- TAB: PLANOS -->
