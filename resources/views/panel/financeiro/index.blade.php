@@ -7,8 +7,8 @@
     periodo: '{{ request('periodo', 'mes') }}',
     showModal: {{ $errors->any() ? 'true' : 'false' }},
     init() {
-        this.$nextTick(() => glowInitChart(this.activeTab));
-        this.$watch('activeTab', tab => this.$nextTick(() => glowInitChart(tab)));
+        this.$nextTick(() => requestAnimationFrame(() => glowInitChart(this.activeTab)));
+        this.$watch('activeTab', tab => this.$nextTick(() => requestAnimationFrame(() => glowInitChart(tab))));
     }
 }">
     <div class="flex items-center justify-between">
@@ -733,8 +733,21 @@ const LEGEND_STYLE = {
 };
 const brl = v => 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
-// ── Inicializador principal (chamado pelo Alpine $nextTick) ─────────────────
+// ── Inicializador principal (chamado pelo Alpine após layout) ─────────────────
 window.glowInitChart = function(tab) {
+    // Destroy existing instances — handles Turbo navigation and cache-preview races
+    ['fluxo', 'dist', 'evol', 'svc'].forEach(k => {
+        if (window._glowCharts && window._glowCharts[k]) {
+            try { window._glowCharts[k].destroy(); } catch(e) {}
+            window._glowCharts[k] = null;
+        }
+    });
+
+    if (typeof Chart === 'undefined') {
+        setTimeout(() => window.glowInitChart(tab), 100);
+        return;
+    }
+
     if (tab === 'visao-geral') {
         initFluxoCaixa();
         initDistribuicao();
@@ -746,7 +759,6 @@ window.glowInitChart = function(tab) {
 
 // ── Fluxo de Caixa ──────────────────────────────────────────────────────────
 function initFluxoCaixa() {
-    if (window._glowCharts.fluxo) return;
     const el = document.getElementById('chartFluxoCaixa');
     if (!el) return;
 
@@ -821,7 +833,6 @@ function initFluxoCaixa() {
 
 // ── Distribuição (Donut) ────────────────────────────────────────────────────
 function initDistribuicao() {
-    if (window._glowCharts.dist) return;
     const el = document.getElementById('chartDistribuicao');
     if (!el) return;
 
@@ -855,7 +866,6 @@ function initDistribuicao() {
 
 // ── Evolução de Receita (Equipe) ────────────────────────────────────────────
 function initEvolucao() {
-    if (window._glowCharts.evol) return;
     const el = document.getElementById('chartEvolucao');
     if (!el) return;
 
@@ -906,7 +916,6 @@ function initEvolucao() {
 
 // ── Serviços Principais (Donut – Equipe) ────────────────────────────────────
 function initServicos() {
-    if (window._glowCharts.svc) return;
     const el = document.getElementById('chartServicos');
     if (!el) return;
 
