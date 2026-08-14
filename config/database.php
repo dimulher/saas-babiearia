@@ -96,8 +96,9 @@ return [
             'search_path' => 'public',
             'sslmode' => 'require',
             'options' => [
-                PDO::ATTR_PERSISTENT => false, // sem persistent connections em serverless
-                PDO::ATTR_TIMEOUT => 5,
+                PDO::ATTR_PERSISTENT => false,
+                PDO::ATTR_EMULATE_PREPARES => true,
+                PDO::PGSQL_ATTR_DISABLE_PREPARES => true,
             ],
         ],
 
