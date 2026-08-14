@@ -19,27 +19,29 @@
     </div>
 
     <!-- Tabs -->
-    <div class="flex gap-1 p-1 bg-gray-900 rounded-xl w-fit max-w-full overflow-x-auto border border-gray-800">
-        @foreach([['visao-geral','Visão Geral'],['movimentacoes','Extrato'],['funcionarios','Equipe'],['caixa','Caixa'],['contas','Contas'],['relatorios','Relatórios']] as [$tab, $label])
-        <button @click="activeTab = '{{ $tab }}'" :class="activeTab === '{{ $tab }}' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'"
-            class="px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap">{{ $label }}</button>
-        @endforeach
+    <div class="overflow-x-auto no-scrollbar -mx-4 sm:mx-0 px-4 sm:px-0">
+        <div class="flex gap-1 p-1 bg-gray-900 rounded-xl border border-gray-800 w-max min-w-full">
+            @foreach([['visao-geral','Visão Geral'],['movimentacoes','Extrato'],['funcionarios','Equipe'],['caixa','Caixa'],['contas','Contas'],['relatorios','Relatórios']] as [$tab, $label])
+            <button @click="activeTab = '{{ $tab }}'" :class="activeTab === '{{ $tab }}' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'"
+                class="px-4 sm:px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap">{{ $label }}</button>
+            @endforeach
+        </div>
     </div>
 
     <!-- 1. Visão Geral -->
     <div x-show="activeTab === 'visao-geral'" x-cloak class="space-y-6">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6 border-l-4 border-l-emerald-500">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6 border-l-4 border-l-emerald-500">
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Receitas do Mês</p>
-                <p class="text-3xl font-bold text-emerald-400 mt-2">R$ {{ number_format($resumoMes['receitas'], 2, ',', '.') }}</p>
+                <p class="text-2xl sm:text-3xl font-bold text-emerald-400 mt-2">R$ {{ number_format($resumoMes['receitas'], 2, ',', '.') }}</p>
             </div>
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6 border-l-4 border-l-rose-500">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6 border-l-4 border-l-rose-500">
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Despesas do Mês</p>
-                <p class="text-3xl font-bold text-rose-400 mt-2">R$ {{ number_format($resumoMes['despesas'], 2, ',', '.') }}</p>
+                <p class="text-2xl sm:text-3xl font-bold text-rose-400 mt-2">R$ {{ number_format($resumoMes['despesas'], 2, ',', '.') }}</p>
             </div>
-            <div class="bg-gradient-to-br from-green-800 to-emerald-900 rounded-2xl p-6 shadow-xl shadow-green-900/30 text-white">
+            <div class="bg-gradient-to-br from-green-800 to-emerald-900 rounded-2xl p-4 sm:p-6 shadow-xl shadow-green-900/30 text-white">
                 <p class="text-[10px] text-green-200 font-bold uppercase tracking-widest">Lucro Estimado</p>
-                <p class="text-3xl font-bold mt-2">R$ {{ number_format($resumoMes['lucro'], 2, ',', '.') }}</p>
+                <p class="text-2xl sm:text-3xl font-bold mt-2">R$ {{ number_format($resumoMes['lucro'], 2, ',', '.') }}</p>
             </div>
         </div>
 
@@ -258,16 +260,16 @@
             </form>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6">
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Faturamento</p>
                 <p class="text-3xl font-bold text-white mt-2">R$ {{ number_format($faturamentoDiario->sum('total'), 2, ',', '.') }}</p>
             </div>
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6">
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Serviços</p>
                 <p class="text-3xl font-bold text-white mt-2">{{ $servicosDistribuiucao->sum('qtd') }}</p>
             </div>
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6 col-span-2 lg:col-span-1">
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Ticket Médio</p>
                 @php $qtdTotal = $servicosDistribuiucao->sum('qtd'); @endphp
                 <p class="text-3xl font-bold text-white mt-2">R$ {{ $qtdTotal > 0 ? number_format($faturamentoDiario->sum('total') / $qtdTotal, 2, ',', '.') : '0,00' }}</p>
@@ -317,20 +319,20 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-5">
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6">
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Saldo Atual</p>
-                <p class="text-3xl font-bold text-white mt-2">R$ {{ number_format($resumoHoje['lucro'], 2, ',', '.') }}</p>
+                <p class="text-xl sm:text-3xl font-bold text-white mt-2">R$ {{ number_format($resumoHoje['lucro'], 2, ',', '.') }}</p>
             </div>
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6">
                 <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Entradas</p>
-                <p class="text-3xl font-bold text-emerald-400 mt-2">R$ {{ number_format($resumoHoje['receitas'], 2, ',', '.') }}</p>
+                <p class="text-xl sm:text-3xl font-bold text-emerald-400 mt-2">R$ {{ number_format($resumoHoje['receitas'], 2, ',', '.') }}</p>
             </div>
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-6">
+            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-4 sm:p-6">
                 <p class="text-[10px] text-rose-400 font-bold uppercase tracking-widest">Saídas</p>
-                <p class="text-3xl font-bold text-rose-400 mt-2">R$ {{ number_format($resumoHoje['despesas'], 2, ',', '.') }}</p>
+                <p class="text-xl sm:text-3xl font-bold text-rose-400 mt-2">R$ {{ number_format($resumoHoje['despesas'], 2, ',', '.') }}</p>
             </div>
-            <div class="bg-gradient-to-br from-green-800 to-emerald-900 rounded-2xl p-6 shadow-xl text-white">
+            <div class="bg-gradient-to-br from-green-800 to-emerald-900 rounded-2xl p-4 sm:p-6 shadow-xl text-white">
                 <p class="text-[10px] text-green-200 font-bold uppercase tracking-widest">Status do Caixa</p>
                 <p class="text-lg font-bold mt-2 flex items-center gap-2">
                     <span class="w-2.5 h-2.5 bg-green-300 rounded-full animate-pulse"></span> Aberto
