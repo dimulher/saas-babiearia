@@ -275,7 +275,38 @@ Route::prefix('panel')->name('panel.')->middleware('auth')->group(function () {
     // Configurações
     Route::prefix('configuracoes')->name('configuracoes.')->group(function () {
         Route::get('/sistema', function () { return view('panel.configuracoes.sistema'); })->name('sistema');
-        Route::get('/barbearia', function () { return view('panel.configuracoes.barbearia'); })->name('barbearia');
+        Route::get('/barbearia', function () {
+            return view('panel.configuracoes.barbearia', [
+                'barbearia' => auth()->user()->barbearia,
+            ]);
+        })->name('barbearia');
+        Route::post('/barbearia', function (\Illuminate\Http\Request $request) {
+            $barbearia = auth()->user()->barbearia;
+            $request->validate([
+                'nome'        => 'nullable|string|max:255',
+                'telefone'    => 'nullable|string|max:20',
+                'whatsapp'    => 'nullable|string|max:20',
+                'endereco'    => 'nullable|string|max:255',
+                'cidade'      => 'nullable|string|max:100',
+                'estado'      => 'nullable|string|max:2',
+                'instagram'   => 'nullable|string|max:100',
+                'logo_base64' => 'nullable|string|max:500000',
+            ]);
+            $updates = $request->only(['nome', 'telefone', 'whatsapp', 'endereco', 'cidade', 'estado', 'instagram']);
+            if ($request->filled('logo_base64')) {
+                $logo = $request->logo_base64;
+                if (str_starts_with($logo, 'data:image/')) {
+                    try {
+                        \Illuminate\Support\Facades\DB::statement(
+                            'ALTER TABLE barbearias ALTER COLUMN logo TYPE text'
+                        );
+                    } catch (\Exception $e) {}
+                    $updates['logo'] = $logo;
+                }
+            }
+            $barbearia->update(array_filter($updates, fn($v) => $v !== null));
+            return back()->with('success', 'Perfil do estabelecimento atualizado com sucesso!');
+        })->name('barbearia.update');
         Route::get('/agendamento', function () { return view('panel.configuracoes.agendamento'); })->name('agendamento');
         Route::get('/conta', function () { return view('panel.configuracoes.conta'); })->name('conta');
         Route::post('/conta/avatar', function (\Illuminate\Http\Request $request) {

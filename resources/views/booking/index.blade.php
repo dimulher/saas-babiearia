@@ -112,7 +112,11 @@
                             </div>
                         @endif
                     @elseif(!empty($barbearia?->logo))
-                        <img src="{{ Storage::url($barbearia->logo) }}" alt="{{ $barbearia->nome }}" class="w-full h-full object-cover">
+                        @if(str_starts_with($barbearia->logo, 'data:image/'))
+                            <img src="{{ $barbearia->logo }}" alt="{{ $barbearia->nome }}" class="w-full h-full object-cover">
+                        @else
+                            <img src="{{ Storage::url($barbearia->logo) }}" alt="{{ $barbearia->nome }}" class="w-full h-full object-cover">
+                        @endif
                     @else
                         <div class="w-full h-full bg-gradient-to-br from-green-600 to-emerald-900 flex items-center justify-center">
                             <span class="text-3xl font-black text-white select-none">{{ strtoupper(substr($barbearia?->nome ?? 'G',0,1)) }}</span>
