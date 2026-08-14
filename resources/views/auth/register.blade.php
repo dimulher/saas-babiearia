@@ -14,8 +14,11 @@
         <p class="text-gray-400 text-sm mt-1">Crie sua conta gratuitamente</p>
     </div>
 
-    <form method="POST" action="{{ route('register.post') }}" class="space-y-5 relative z-10">
+    <form method="POST" action="{{ route('register.post') }}" class="space-y-5 relative z-10" autocomplete="off">
         @csrf
+        {{-- Campos isca para enganar o autofill do navegador --}}
+        <input type="text"     style="display:none" tabindex="-1" aria-hidden="true">
+        <input type="password" style="display:none" tabindex="-1" aria-hidden="true">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-2">
@@ -45,7 +48,8 @@
             <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">E-mail de Acesso</label>
             <div class="relative">
                 <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 text-xs"></i>
-                <input type="email" name="email" value="{{ old('email') }}" required
+                <input type="email" name="email" value="{{ old('email') }}" required autocomplete="off" readonly
+                    onfocus="this.removeAttribute('readonly')"
                     class="block w-full pl-10 pr-4 py-3.5 bg-gray-900/60 border border-gray-700 rounded-xl text-sm text-white placeholder:text-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-600 transition-all outline-none"
                     placeholder="seu@contato.com">
             </div>
@@ -68,7 +72,8 @@
                 <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Senha</label>
                 <div class="relative">
                     <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 text-xs"></i>
-                    <input type="password" name="password" required
+                    <input type="password" name="password" required autocomplete="new-password" readonly
+                        onfocus="this.removeAttribute('readonly')"
                         class="block w-full pl-10 pr-4 py-3.5 bg-gray-900/60 border border-gray-700 rounded-xl text-sm text-white placeholder:text-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-600 transition-all outline-none"
                         placeholder="••••••••">
                 </div>
@@ -78,7 +83,8 @@
                 <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Confirmar Senha</label>
                 <div class="relative">
                     <i class="fa-solid fa-shield absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 text-xs"></i>
-                    <input type="password" name="password_confirmation" required
+                    <input type="password" name="password_confirmation" required autocomplete="new-password" readonly
+                        onfocus="this.removeAttribute('readonly')"
                         class="block w-full pl-10 pr-4 py-3.5 bg-gray-900/60 border border-gray-700 rounded-xl text-sm text-white placeholder:text-gray-600 focus:ring-2 focus:ring-green-500/50 focus:border-green-600 transition-all outline-none"
                         placeholder="••••••••">
                 </div>
