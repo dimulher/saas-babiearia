@@ -2,9 +2,9 @@
 @section('title', 'Recuperar Senha')
 
 @section('content')
-<div class="bg-[#111827] rounded-2xl border border-gray-800 p-10 glow-green relative z-10">
+<div class="bg-[#111827] rounded-2xl border border-gray-800 p-6 sm:p-10 glow-green relative z-10">
 
-    <a href="{{ route('login.proprietario') }}" class="absolute top-8 left-8 inline-flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-white uppercase tracking-widest transition-colors">
+    <a href="{{ route('login.proprietario') }}" class="absolute top-5 sm:top-8 left-5 sm:left-8 inline-flex items-center gap-2 text-[10px] font-black text-gray-500 hover:text-white uppercase tracking-widest transition-colors">
         <i class="fa-solid fa-arrow-left"></i> Voltar
     </a>
 

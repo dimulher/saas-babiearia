@@ -32,9 +32,11 @@ Tabela principal. Cada linha representa um atendimento (passado, presente ou fut
 | `lembrete_enviado`   | boolean               | Controle de disparo de lembrete (WhatsApp/SMS)         |
 | `created_at`         | timestamp             | —                                                      |
 | `updated_at`         | timestamp             | —                                                      |
+| `google_event_id`    | string (null)         | ID do evento no Google Calendar (salvo via callback Make) |
 | `deleted_at`         | timestamp (null)      | Soft-delete habilitado                                 |
 
 > **Arquivo de migration:** `database/migrations/2024_01_01_000006_create_agendamentos_table.php`
+> **Migration de adição:** `2026_06_11_000001_add_google_event_id_to_agendamentos_table.php`
 
 ---
 
@@ -72,14 +74,16 @@ Veja também: [[Rotas e Controllers]] · [[Autenticação e Perfis]]
 | GET    | `/webhooks/check-vip`             | `AgendamentoController@checkVip`            | `api.check-vip`       | Verifica se o telefone tem assinatura VIP ativa    |
 | GET    | `/b/{slug}`                       | redirect → `booking`                        | —                     | Alias legado de slug curto                         |
 | POST   | `/webhooks/google-calendar/sync`  | `GoogleCalendarSyncController@store`        | `api.google-calendar.sync` | Recebe eventos do Calendar via Make.com (token) |
+| POST   | `/webhooks/google-calendar/event-id` | `GoogleCalendarSyncController@storeEventId` | `api.google-calendar.event-id` | Callback do Make: salva `google_event_id` após criar evento |
 
 ### Painel Interno (middleware `auth`)
 
 Prefixo: `/panel` — Nome base: `panel.`
 
-| Método | URI                              | Controller / Ação                                  | Nome                           | Descrição                                    |
-|--------|----------------------------------|----------------------------------------------------|--------------------------------|----------------------------------------------|
-| GET    | `/panel/agendamentos`            | `AgendamentoController@index`                      | `panel.agendamentos`           | Lista agendamentos do dia (com filtros)       |
+| Método | URI                                          | Controller / Ação                     | Nome                           | Descrição                                        |
+|--------|----------------------------------------------|---------------------------------------|--------------------------------|--------------------------------------------------|
+| GET    | `/panel/agendamentos`                        | `AgendamentoController@index`         | `panel.agendamentos`           | Lista agendamentos do dia (com filtros)          |
+| PATCH  | `/panel/agendamentos/{agendamento}/status`   | `AgendamentoController@updateStatus`  | `panel.agendamentos.status`    | Altera status (pendente/confirmado/cancelado/faltou) e dispara sync Calendar |
 
 #### Agendamentos Recorrentes
 
@@ -98,11 +102,12 @@ Prefixo: `/panel` — Nome base: `panel.`
 
 ### `AgendamentoController`
 
-| Método      | Descrição                                                                                 |
-|-------------|-------------------------------------------------------------------------------------------|
-| `index()`   | Lista agendamentos do dia filtrados por `profissional_id` e/ou `status`                   |
-| `store()`   | Valida e cria agendamento online; aplica desconto VIP; dispara `Notificacao` para o painel|
-| `checkVip()`| API que verifica se o telefone informado possui assinatura ativa (retorna JSON)           |
+| Método           | Descrição                                                                                 |
+|------------------|-------------------------------------------------------------------------------------------|
+| `index()`        | Lista agendamentos do dia filtrados por `profissional_id` e/ou `status`                   |
+| `store()`        | Valida e cria agendamento online; aplica desconto VIP; dispara `Notificacao` e sync Calendar (`action=created`) |
+| `updateStatus()` | PATCH — altera `status` do agendamento; dispara sync Calendar (`updated` ou `cancelled`)  |
+| `checkVip()`     | API que verifica se o telefone informado possui assinatura ativa (retorna JSON)           |
 
 **Lógica VIP em `store()`:**
 1. Recebe flag `is_vip` do front
@@ -143,23 +148,35 @@ Cliente acessa /agendar/{slug}
 ### Sentido 1 — Plataforma → Google Calendar (escrita)
 
 ```
-AgendamentoController@store cria o Agendamento
-    └─► Dispara App\Jobs\SyncAgendamentoToGoogleCalendar (fila, ShouldQueue)
-            └─► POST para webhook do Make.com (config services.make.agendamento_webhook)
+Evento gerado por:
+  - AgendamentoController@store         → action=created
+  - AgendamentoController@updateStatus  → action=updated | cancelled
+  - FuncionarioController@finalizar     → action=updated  (status → concluido)
+
+    └─► App\Jobs\SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, $action)
+            └─► POST para webhook do Make.com (services.make.agendamento_webhook)
                     └─► Cenário Make 4771510 "Agendamento → Google Calendar (Barbearia)"
-                            ├─ Módulo 1: Custom Webhook (gateway:CustomWebHook, hook 2738899)
-                            └─ Módulo 2: google-calendar:createAnEvent (conexão vitorjpereira.12@gmail.com)
-                                    └─► Evento criado no Google Calendar do profissional
+                            ├─ Módulo 1: gateway:CustomWebHook (hook 2738899)
+                            └─ Módulo 2: builtin:BasicRouter → 3 ramos
+                                    ├─ Ramo A [filtro: action=created]
+                                    │       ├─ google-calendar:createAnEvent
+                                    │       └─ http:ActionSendData → POST /webhooks/google-calendar/event-id
+                                    │               └─► GoogleCalendarSyncController@storeEventId
+                                    │                       └─► agendamentos.google_event_id = event.id
+                                    ├─ Ramo B [filtro: action=updated + google_event_id existe]
+                                    │       └─ google-calendar:updateAnEvent (eventId = google_event_id)
+                                    └─ Ramo C [filtro: action=cancelled + google_event_id existe]
+                                            └─ google-calendar:deleteAnEvent (eventId = google_event_id)
 ```
 
-- **Job:** `app/Jobs/SyncAgendamentoToGoogleCalendar.php` — envia `cliente_nome`, `cliente_telefone`, `servico_nome`, `profissional_nome`, `data_inicio`, `data_fim`, `observacoes`, `status` e `action` (`created`) via `Http::post()`.
-- **Disparo:** `AgendamentoController@store` logo após criar a `Notificacao` — `SyncAgendamentoToGoogleCalendar::dispatch($agendamento->id, 'created')`.
+- **Job:** `app/Jobs/SyncAgendamentoToGoogleCalendar.php` — envia `agendamento_id`, `cliente_nome`, `cliente_telefone`, `servico_nome`, `profissional_nome`, `data_inicio`, `data_fim`, `observacoes`, `status`, `action` e `google_event_id` via `Http::post()`.
 - **Config:** `MAKE_AGENDAMENTO_WEBHOOK_URL` → `config/services.php` → `services.make.agendamento_webhook`.
-- **Make.com:** org 462751, time 181064, pasta 320545, cenário **4771510**, hook 2738899. Conexão Google: `vitorjpereira.12@gmail.com`.
+- **Make.com:** org 462751, time 181064, pasta 320545, cenário **4771510**, hook **2738899**. Conexão Google: `vitorjpereira.12@gmail.com`.
+- **Token callback:** `X-Calendar-Sync-Token` = mesmo token de `MAKE_CALENDAR_SYNC_TOKEN` — o Make envia no header para `/webhooks/google-calendar/event-id`.
 
-**⚠️ Polling, não instantâneo:** cenário usa `scheduling: {"type": "indefinitely", "interval": 60}` — o Make impõe ciclo mínimo de ~3 minutos. Evento aparece no Calendar em até 3 min após agendamento, mas sem nenhum clique manual (confirmado: execuções com `authorId: null`).
+**⚠️ Polling, não instantâneo:** cenário usa `scheduling: {"type": "indefinitely", "interval": 60}` — Make impõe ciclo mínimo de ~3 min. Evento aparece no Calendar em até 3 min após agendamento.
 
-**Escopo atual — só criação:** job disparado somente em `action: 'created'`. Updates/cancelamentos não sincronizam ainda (requer guardar `google_event_id` e lógica find-and-update no Make).
+**Agendamentos sem `google_event_id`:** Ramos B e C só executam se `google_event_id` existir (filtro no Make). Agendamentos criados antes da implementação (2026-06-11) não sincronizam updates/cancelamentos.
 
 ---
 
@@ -249,12 +266,13 @@ pendente → confirmado → concluido
 
 - [x] ~~Exibir `eventos_google_calendar` na tela `/panel/agendamentos` (visão unificada)~~ ✅ 2026-06-06
 - [x] ~~Sincronização Google Calendar → Plataforma (Make cenário 4771604)~~ ✅ 2026-06-07
+- [x] ~~Sincronizar updates/cancelamentos com o Google Calendar~~ ✅ 2026-06-11 — `google_event_id` salvo via callback Make, Make cenário 4771510 atualizado com router 3 ramos
+- [x] ~~Alterar status de agendamentos pelo painel~~ ✅ 2026-06-11 — `AgendamentoController@updateStatus` + botões na view
 - [ ] Registrar rotas de `agendamentos-recorrentes` no `web.php`
 - [ ] Implementar geração automática de `agendamentos` a partir dos recorrentes (command/scheduler)
 - [ ] Adicionar envio de lembrete (campo `lembrete_enviado` já existe na tabela)
 - [ ] Soft-delete: criar rota de restauração de agendamentos cancelados
-- [ ] Sincronizar updates/cancelamentos com o Google Calendar (guardar `google_event_id`, lógica de find-and-update no Make)
 
 ---
 
-*Última atualização: 2026-06-07 — corrigida migration eventos_google_calendar (sem FK), Make cenário corrigido (eventTypes: default, formatDate), sincronização bidirecional Google Calendar ↔ Plataforma funcionando*
+*Última atualização: 2026-06-11 — sync Google Calendar completo (3 ações: created/updated/cancelled), `google_event_id` na tabela agendamentos, `updateStatus()` + botões de status no painel, Make cenário 4771510 atualizado com router 3 ramos + callback endpoint*

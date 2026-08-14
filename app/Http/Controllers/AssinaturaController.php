@@ -84,6 +84,7 @@ class AssinaturaController
             'cliente_id' => 'nullable|exists:clientes,id',
             'novo_cliente_nome' => 'nullable|string|max:255',
             'novo_cliente_telefone' => 'nullable|string|max:255',
+            'novo_cliente_cpf' => 'nullable|string|max:14',
             'plano_id' => 'required|exists:planos,id',
             'dia_vencimento' => 'required|integer|min:1|max:31',
         ]);
@@ -104,6 +105,7 @@ class AssinaturaController
                 'barbearia_id' => $barbeariaId,
                 'nome' => $data['novo_cliente_nome'],
                 'telefone' => $data['novo_cliente_telefone'] ?? '',
+                'cpf' => $data['novo_cliente_cpf'] ?? null,
                 'tipo' => 'vip',
             ]);
             $clienteId = $cliente->id;

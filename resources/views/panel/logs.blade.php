@@ -47,7 +47,7 @@
             </div>
 
             <div class="flex items-end">
-                <button type="submit" class="w-full bg-gray-900 text-white py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-green-500 transition-all shadow-lg shadow-gray-100 active:scale-95 italic">Aplicar Filtros</button>
+                <button type="submit" class="w-full bg-gray-900 text-white py-3.5 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-green-500 transition-all active:scale-95 italic">Aplicar Filtros</button>
             </div>
         </form>
     </div>

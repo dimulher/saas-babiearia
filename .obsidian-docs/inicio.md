@@ -38,15 +38,18 @@
 
 ## Operação
 
-- [[Deploy e Ambiente]] — Variáveis, Vercel, limitações de produção
+- [[Deploy e Ambiente]] — Variáveis, Vercel, limitações de produção, gotchas de sessão/CSRF
+- [[Make.com - Automações]] — Cenários ativos, receitas de blueprint, gotchas ⭐
+- [[Bugs e Correções]] — Registro de todos os bugs resolvidos + causa raiz ⭐
+- [[Padrões de Código]] — Snippets reutilizáveis: cards, badges, AJAX, modais, controllers ⭐
 - [[Logs e Monitoramento]] — (a criar) `LogAtividadeService`, tabela `logs_atividades`
 
 ---
 
 ## Pendências do Projeto
 
-> [!WARNING]
-> **Rotas de `agendamentos-recorrentes` não registradas** no `web.php`. O controller existe mas as rotas ainda precisam ser adicionadas.
+> [!NOTE]
+> **Agendamentos Recorrentes:** rotas registradas e view criada em 2026-06-13. Controller, rotas e view completos. ✅
 
 > [!IMPORTANT]
 > **Integrações pendentes:** WhatsApp API e MercadoPago estão no `.env` mas não implementados.
@@ -67,4 +70,4 @@
 
 ---
 
-*Vault atualizado em: 2026-06-06*
+*Vault atualizado em: 2026-06-11 — Responsividade mobile: breakpoints, tabelas, dropdown, tabs, grids documentados em [[Padrões de Código]]*

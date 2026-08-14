@@ -5,18 +5,18 @@
 <div class="space-y-6 max-w-7xl mx-auto">
 
     {{-- ══════════ BOAS-VINDAS ══════════ --}}
-    <div class="relative bg-gradient-to-br from-[#052e16] via-[#14532d] to-[#064e3b] border border-green-900/30 rounded-2xl overflow-hidden px-6 py-6">
+    <div class="relative bg-gradient-to-br from-[#052e16] via-[#14532d] to-[#064e3b] border border-green-900/30 rounded-2xl overflow-hidden px-4 py-4 sm:px-6 sm:py-6">
         <div class="absolute top-0 right-0 w-72 h-72 bg-green-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
 
-        <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <p class="text-xs font-bold text-green-400 uppercase tracking-widest mb-1">Painel de Controle</p>
-                <h2 class="text-2xl font-extrabold text-white tracking-tight">Bem-vindo, {{ auth()->user()->name ?? 'Proprietário' }}!</h2>
-                <p class="text-sm text-gray-400 mt-1 font-medium">{{ now()->locale('pt_BR')->isoFormat('dddd, D [de] MMMM [de] YYYY') }}</p>
+        <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="min-w-0">
+                <p class="text-[10px] font-bold text-green-400 uppercase tracking-widest mb-0.5">Painel de Controle</p>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight truncate">Bem-vindo, {{ auth()->user()->name ?? 'Proprietário' }}!</h2>
+                <p class="text-xs text-gray-400 mt-0.5 font-medium">{{ now()->locale('pt_BR')->isoFormat('ddd, D [de] MMM [de] YYYY') }}</p>
             </div>
             <a href="{{ url('/agendar/' . auth()->user()->barbearia->slug) }}" target="_blank"
-               class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm px-5 py-3 rounded-xl font-bold uppercase tracking-wider transition-all shadow-lg shadow-green-900/30 w-full sm:w-auto justify-center">
+               class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-xs sm:text-sm px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl font-bold uppercase tracking-wider transition-all shadow-lg shadow-green-900/30 w-full sm:w-auto justify-center shrink-0">
                 <i class="fa-solid fa-link text-xs"></i>
                 Link do Estabelecimento
             </a>
@@ -24,22 +24,22 @@
     </div>
 
     {{-- ══════════ GRID DE MÉTRICAS ══════════ --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 
-        <div class="col-span-2 lg:col-span-1 bg-[#111827] border border-gray-800 hover:border-green-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-green-900/40 text-green-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-circle-dollar-to-slot text-lg"></i>
+        <div class="bg-[#111827] border border-gray-800 hover:border-green-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-900/40 text-green-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-circle-dollar-to-slot text-base sm:text-lg"></i>
             </div>
-            <div>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Faturamento Mês</p>
-                <p class="text-xl font-black text-white leading-none mt-1">R$ {{ number_format($faturamentoMes, 2, ',', '.') }}</p>
-                <p class="text-[10px] text-gray-500 font-medium mt-1">Hoje: R$ {{ number_format($faturamentoHoje, 2, ',', '.') }}</p>
+            <div class="min-w-0">
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Fat. Mês</p>
+                <p class="text-base sm:text-lg font-black text-white leading-none mt-1 whitespace-nowrap">R$ {{ number_format($faturamentoMes, 2, ',', '.') }}</p>
+                <p class="text-[10px] text-gray-500 font-medium mt-1 truncate">Hoje: R$ {{ number_format($faturamentoHoje, 2, ',', '.') }}</p>
             </div>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 hover:border-blue-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-blue-900/30 text-blue-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-calendar-check text-lg"></i>
+        <div class="bg-[#111827] border border-gray-800 hover:border-blue-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-900/30 text-blue-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-calendar-check text-base sm:text-lg"></i>
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Hoje</p>
@@ -48,9 +48,9 @@
             </div>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 hover:border-emerald-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-emerald-900/30 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-chart-line text-lg"></i>
+        <div class="bg-[#111827] border border-gray-800 hover:border-emerald-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-900/30 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-chart-line text-base sm:text-lg"></i>
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Mês</p>
@@ -59,9 +59,9 @@
             </div>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 hover:border-amber-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-amber-900/30 text-amber-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-hourglass-half text-lg"></i>
+        <div class="bg-[#111827] border border-gray-800 hover:border-amber-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-900/30 text-amber-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-hourglass-half text-base sm:text-lg"></i>
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pendentes</p>
@@ -72,21 +72,21 @@
     </div>
 
     {{-- Linha 2 de métricas --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-[#111827] border border-gray-800 hover:border-purple-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-purple-900/30 text-purple-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-receipt text-lg"></i>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div class="bg-[#111827] border border-gray-800 hover:border-purple-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-900/30 text-purple-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-receipt text-base sm:text-lg"></i>
             </div>
-            <div>
+            <div class="min-w-0">
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Ticket Médio</p>
-                <p class="text-xl font-black text-white leading-none mt-1">R$ {{ number_format($ticketMedio, 2, ',', '.') }}</p>
+                <p class="text-base sm:text-xl font-black text-white leading-none mt-1 whitespace-nowrap">R$ {{ number_format($ticketMedio, 2, ',', '.') }}</p>
                 <p class="text-[10px] text-purple-500 font-bold mt-1">Por atendimento</p>
             </div>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 hover:border-teal-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-teal-900/30 text-teal-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-teal-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-users text-lg"></i>
+        <div class="bg-[#111827] border border-gray-800 hover:border-teal-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-teal-900/30 text-teal-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-teal-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-users text-base sm:text-lg"></i>
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Clientes</p>
@@ -95,9 +95,9 @@
             </div>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 hover:border-green-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-green-900/30 text-green-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-user-group text-lg"></i>
+        <div class="bg-[#111827] border border-gray-800 hover:border-green-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-900/30 text-green-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-green-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-user-group text-base sm:text-lg"></i>
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Equipe</p>
@@ -106,9 +106,9 @@
             </div>
         </div>
 
-        <div class="bg-[#111827] border border-gray-800 hover:border-orange-800/50 rounded-2xl p-5 flex items-center gap-4 transition-all group">
-            <div class="w-12 h-12 bg-orange-900/30 text-orange-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-all">
-                <i class="fa-solid fa-magic-wand-sparkles text-lg"></i>
+        <div class="bg-[#111827] border border-gray-800 hover:border-orange-800/50 rounded-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 transition-all group">
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-orange-900/30 text-orange-400 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-all">
+                <i class="fa-solid fa-magic-wand-sparkles text-base sm:text-lg"></i>
             </div>
             <div>
                 <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Catálogo</p>
@@ -119,7 +119,7 @@
     </div>
 
     {{-- ══════════ AGENDA + COLUNA DIREITA ══════════ --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {{-- AGENDAMENTOS HOJE --}}
         <div class="lg:col-span-2 bg-[#111827] border border-gray-800/50 rounded-2xl p-5">
@@ -216,8 +216,8 @@
                 @endif
             </div>
 
-            {{-- Acesso Rápido --}}
-            <div class="bg-[#111827] border border-gray-800/50 rounded-2xl p-5">
+            {{-- Acesso Rápido (oculto em mobile — bottom nav cobre) --}}
+            <div class="hidden sm:block bg-[#111827] border border-gray-800/50 rounded-2xl p-5">
                 <h4 class="font-bold text-white mb-3 text-sm uppercase tracking-tight flex items-center gap-2">
                     <i class="fa-solid fa-bolt text-amber-400"></i> Acesso Rápido
                 </h4>

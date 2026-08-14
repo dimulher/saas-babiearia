@@ -294,9 +294,16 @@
                                 </div>
                                 <div>
                                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Telefone / WhatsApp</label>
-                                    <input type="tel" name="novo_cliente_telefone" placeholder="(00) 00000-0000" 
+                                    <input type="tel" name="novo_cliente_telefone" placeholder="(00) 00000-0000"
                                         x-data="{ telInput: '' }" x-model="telInput"
                                         @input="telInput = $event.target.value.replace(/\D/g, '').substring(0, 11).replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d)(\d{4})$/, '$1-$2')"
+                                        class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-green-500 transition-colors">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 mb-2 block">CPF</label>
+                                    <input type="text" name="novo_cliente_cpf" placeholder="000.000.000-00" maxlength="14"
+                                        x-data="{ cpfInput: '' }" x-model="cpfInput"
+                                        @input="let r = $event.target.value.replace(/\D/g,'').substring(0,11); cpfInput = r.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2')"
                                         class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white font-bold focus:outline-none focus:border-green-500 transition-colors">
                                 </div>
                             </div>

@@ -40,7 +40,8 @@ if (!getenv('APP_DEBUG'))        putenv('APP_DEBUG=false');
 if (!getenv('LOG_CHANNEL'))      putenv('LOG_CHANNEL=stderr');
 if (!getenv('CACHE_STORE'))      putenv('CACHE_STORE=array');
 if (!getenv('CACHE_DRIVER'))     putenv('CACHE_DRIVER=array');
-if (!getenv('SESSION_DRIVER'))   putenv('SESSION_DRIVER=database');
+if (!getenv('SESSION_DRIVER'))   putenv('SESSION_DRIVER=cookie');  // cookie = zero DB queries por request (ideal para serverless)
+if (!getenv('SESSION_LIFETIME')) putenv('SESSION_LIFETIME=1440');  // 24h — padrão de 2h é curto para uso mobile
 if (!getenv('QUEUE_CONNECTION')) putenv('QUEUE_CONNECTION=sync');
 
 // Diretórios de cache no /tmp (único diretório gravável no Vercel)
@@ -75,15 +76,19 @@ require $basePath . '/vendor/autoload.php';
 
 $app = require_once $basePath . '/bootstrap/app.php';
 
-// Gera cache de rotas e config na primeira requisição do container
-// (fica em /tmp e persiste enquanto o container estiver quente)
+// Cold start: gera cache de config e rotas (bloqueante — obrigatório antes de servir)
 if (!file_exists('/tmp/routes.php') || !file_exists('/tmp/config.php')) {
     try {
         $console = $app->make(Illuminate\Contracts\Console\Kernel::class);
-        $console->call('migrate', ['--force' => true]);
+        // Migrate apenas uma vez por deployment (VERCEL_DEPLOYMENT_ID é único por deploy)
+        $deployId = getenv('VERCEL_DEPLOYMENT_ID') ?: md5(filemtime(__FILE__));
+        $migrateFlag = '/tmp/migrated_' . $deployId;
+        if (!file_exists($migrateFlag)) {
+            $console->call('migrate', ['--force' => true]);
+            touch($migrateFlag);
+        }
         $console->call('config:cache');
         $console->call('route:cache');
-        $console->call('view:cache');
     } catch (\Throwable $e) {
         // Falha silenciosa — continua sem cache se der erro
     }

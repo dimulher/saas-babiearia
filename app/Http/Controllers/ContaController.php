@@ -56,7 +56,7 @@ class ContaController
 
         LogAtividadeService::log('conta_criada', "Nova conta cadastrada: {$conta->descricao} (R$ {$conta->valor})", 'Conta', $conta->id);
 
-        return redirect()->route('panel.contas.todas')->with('success', 'Conta cadastrada com sucesso!');
+        return redirect()->route('panel.financeiro.index', ['tab' => 'contas'])->with('success', 'Conta cadastrada com sucesso!');
     }
 
     public function pagar(Conta $conta)
@@ -68,7 +68,7 @@ class ContaController
 
         LogAtividadeService::log('conta_paga', "Conta marcada como paga: {$conta->descricao}", 'Conta', $conta->id);
 
-        return back()->with('success', 'Conta marcada como paga!');
+        return redirect()->route('panel.financeiro.index', ['tab' => 'contas'])->with('success', 'Conta marcada como paga!');
     }
 
     public function destroy(Conta $conta)
@@ -78,6 +78,6 @@ class ContaController
 
         LogAtividadeService::log('conta_excluida', "Conta excluída: {$descricao}", 'Conta');
 
-        return redirect()->route('panel.contas.todas')->with('success', 'Conta excluída com sucesso!');
+        return redirect()->route('panel.financeiro.index', ['tab' => 'contas'])->with('success', 'Conta excluída com sucesso!');
     }
 }

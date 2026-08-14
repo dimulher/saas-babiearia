@@ -32,9 +32,10 @@ Veja também: [[Autenticação e Perfis]] · [[Agendamentos]] · [[Financeiro]] 
 
 > ⚠️ Devem usar prefixo `/webhooks/` — não `/api/`. Ver [[Deploy e Ambiente]] sobre conflito com o runtime do Vercel.
 
-| Método | URI                              | Controller / Action                      | Nome                      |
-|--------|----------------------------------|------------------------------------------|---------------------------|
-| POST   | `/webhooks/google-calendar/sync` | `GoogleCalendarSyncController@store`     | `api.google-calendar.sync`|
+| Método | URI                                    | Controller / Action                          | Nome                               |
+|--------|----------------------------------------|----------------------------------------------|------------------------------------|
+| POST   | `/webhooks/google-calendar/sync`       | `GoogleCalendarSyncController@store`         | `api.google-calendar.sync`         |
+| POST   | `/webhooks/google-calendar/event-id`   | `GoogleCalendarSyncController@storeEventId`  | `api.google-calendar.event-id`     |
 
 ### Funcionário
 
@@ -68,11 +69,21 @@ Veja também: [[Autenticação e Perfis]] · [[Agendamentos]] · [[Financeiro]] 
 
 ### Agendamentos
 
-| Método | URI                     | Controller / Action           | Nome                  |
-|--------|-------------------------|-------------------------------|-----------------------|
-| GET    | `/panel/agendamentos`   | `AgendamentoController@index` | `panel.agendamentos`  |
+| Método | URI                                          | Controller / Action                    | Nome                           |
+|--------|----------------------------------------------|----------------------------------------|--------------------------------|
+| GET    | `/panel/agendamentos`                        | `AgendamentoController@index`          | `panel.agendamentos`           |
+| PATCH  | `/panel/agendamentos/{agendamento}/status`   | `AgendamentoController@updateStatus`   | `panel.agendamentos.status`    |
 
-> ⚠️ Rotas de agendamentos-recorrentes ainda não registradas. Ver [[Agendamentos]].
+### Agendamentos Recorrentes
+
+| Método | URI                                                    | Controller / Action                          | Nome                                      |
+|--------|--------------------------------------------------------|----------------------------------------------|-------------------------------------------|
+| GET    | `/panel/agendamentos-recorrentes`                      | `AgendamentoRecorrenteController@index`      | `panel.agendamentos-recorrentes`          |
+| POST   | `/panel/agendamentos-recorrentes`                      | `AgendamentoRecorrenteController@store`      | `panel.agendamentos-recorrentes.store`    |
+| PATCH  | `/panel/agendamentos-recorrentes/{rec}/toggle`         | `AgendamentoRecorrenteController@toggle`     | `panel.agendamentos-recorrentes.toggle`   |
+| DELETE | `/panel/agendamentos-recorrentes/{rec}`                | `AgendamentoRecorrenteController@destroy`    | `panel.agendamentos-recorrentes.destroy`  |
+
+> View esperada: `resources/views/panel/agendamentos-recorrentes.blade.php`
 
 ### Clube VIP (Assinaturas)
 
@@ -172,7 +183,8 @@ Prefixo `/panel/contas`, nome `panel.contas.*`
 
 | Controller                       | Responsabilidade                             |
 |----------------------------------|----------------------------------------------|
-| `AgendamentoController`          | Listagem e criação de agendamentos           |
+| `AgendamentoController`          | Listagem, criação e mudança de status de agendamentos |
+| `GoogleCalendarSyncController`   | Webhooks de sync com Google Calendar (recebe eventos + salva google_event_id) |
 | `AgendamentoRecorrenteController`| CRUD de agendamentos recorrentes             |
 | `AssinaturaController`           | Clube VIP (planos + assinaturas)             |
 | `BloqueioController`             | Bloqueio de horários                         |
@@ -192,4 +204,4 @@ Prefixo `/panel/contas`, nome `panel.contas.*`
 
 ---
 
-*Última atualização: 2026-06-06*
+*Última atualização: 2026-06-11 — adicionadas rotas `PATCH /panel/agendamentos/{id}/status` e `POST /webhooks/google-calendar/event-id`; GoogleCalendarSyncController incluído na lista*

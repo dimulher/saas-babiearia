@@ -11,9 +11,6 @@
     <a href="/panel/agendamentos" class="sidebar-item {{ request()->is('panel/agendamentos') ? 'active' : '' }} flex items-center gap-2.5 px-3 py-2 text-gray-400 text-sm">
         <i class="fa-solid fa-calendar-days w-4 text-center"></i> Agendamentos
     </a>
-    <a href="/panel/comandas" class="sidebar-item {{ request()->is('panel/comandas*') ? 'active' : '' }} flex items-center gap-2.5 px-3 py-2 text-gray-400 text-sm">
-        <i class="fa-solid fa-receipt w-4 text-center"></i> Comandas
-    </a>
     <a href="/panel/bloquear-horarios" class="sidebar-item {{ request()->is('panel/bloquear-horarios*') ? 'active' : '' }} flex items-center gap-2.5 px-3 py-2 text-gray-400 text-sm">
         <i class="fa-solid fa-calendar-xmark w-4 text-center"></i> Horários Bloqueados
     </a>
@@ -24,9 +21,6 @@
 <div class="px-3 space-y-0.5">
     <a href="/panel/financeiro" class="sidebar-item {{ request()->is('panel/financeiro*') ? 'active' : '' }} flex items-center gap-2.5 px-3 py-2 text-gray-400 text-sm">
         <i class="fa-solid fa-chart-line w-4 text-center"></i> Financeiro
-    </a>
-    <a href="/panel/contas" class="sidebar-item {{ request()->is('panel/contas*') ? 'active' : '' }} flex items-center gap-2.5 px-3 py-2 text-gray-400 text-sm">
-        <i class="fa-solid fa-coins w-4 text-center"></i> Contas
     </a>
     <a href="/panel/relatorios" class="sidebar-item {{ request()->is('panel/relatorios*') ? 'active' : '' }} flex items-center gap-2.5 px-3 py-2 text-gray-400 text-sm">
         <i class="fa-solid fa-chart-pie w-4 text-center"></i> Relatórios

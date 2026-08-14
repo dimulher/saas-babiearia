@@ -2,7 +2,7 @@
 @section('title', 'Escolha seu Acesso')
 
 @section('content')
-<div class="bg-[#111827] rounded-2xl border border-gray-800 p-10 max-w-lg mx-auto glow-green relative z-10">
+<div class="bg-[#111827] rounded-2xl border border-gray-800 p-6 sm:p-10 max-w-lg mx-auto glow-green relative z-10">
 
     <div class="text-center mb-10">
         <div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4 float shadow-xl shadow-green-900/40">

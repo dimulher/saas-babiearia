@@ -36,7 +36,8 @@ class Profissional extends Model
 
     public function getLinkAgendamentoAttribute(): string
     {
-        return url('/agendar?funcionario=' . $this->id);
+        $slug = $this->barbearia?->slug ?? '';
+        return url('/agendar/' . $slug . '?funcionario=' . $this->id);
     }
 
     public function agendamentosHoje()
